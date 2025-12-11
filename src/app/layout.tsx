@@ -13,8 +13,32 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ProductCase - Premium Product Protection",
-  description: "Your premium destination for high-quality product cases. Protecting what matters most.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
+  title: {
+    default: "ProductCase - Premium Product Protection",
+    template: "%s | ProductCase",
+  },
+  description: "Your premium destination for high-quality product cases. Protecting what matters most with style and durability.",
+  keywords: ["phone cases", "laptop sleeves", "tech accessories", "premium cases", "protective gear", "Poor and rich", "Poor and Rich cases"],
+  authors: [{ name: "ProductCase Team" }],
+  creator: "ProductCase",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    title: "ProductCase - Premium Product Protection",
+    description: "Your premium destination for high-quality product cases. Protecting what matters most.",
+    siteName: "ProductCase",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ProductCase - Premium Product Protection",
+    description: "Your premium destination for high-quality product cases.",
+    creator: "@productcase",
+  },
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({

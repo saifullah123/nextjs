@@ -23,7 +23,25 @@ export function CategoryFormClient({
 }: CategoryFormClientProps) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [slug, setSlug] = useState(initialData?.slug || '');
   const router = useRouter();
+
+  // Function to convert text to URL-friendly slug
+  const generateSlug = (text: string): string => {
+    return text
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')           // Replace spaces with dashes
+      .replace(/[^\w\-]+/g, '')       // Remove all non-word chars except dashes
+      .replace(/\-\-+/g, '-')         // Replace multiple dashes with single dash
+      .replace(/^-+/, '')             // Trim dashes from start
+      .replace(/-+$/, '');            // Trim dashes from end
+  };
+
+  const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formattedSlug = generateSlug(e.target.value);
+    setSlug(formattedSlug);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -34,7 +52,11 @@ export function CategoryFormClient({
     startTransition(async () => {
       try {
         await onSubmit(formData);
-      } catch (err) {
+      } catch (err: any) {
+        // Don't catch Next.js redirect errors - let them propagate
+        if (err?.digest?.startsWith('NEXT_REDIRECT')) {
+          throw err;
+        }
         setError(err instanceof Error ? err.message : 'An error occurred');
       }
     });
@@ -73,16 +95,17 @@ export function CategoryFormClient({
           name="slug"
           required
           readOnly={isEdit}
-          defaultValue={initialData?.slug}
+          value={slug}
+          onChange={handleSlugChange}
           className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition font-mono ${
             isEdit ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : ''
           }`}
-          placeholder="e.g. electronics"
+          placeholder="e.g. electronics or phone-cases"
         />
         {isEdit ? (
           <p className="text-xs text-gray-500 mt-1">Slug is permanent to prevent breaking links</p>
         ) : (
-          <p className="text-xs text-gray-500 mt-1">Must be unique</p>
+          <p className="text-xs text-green-600 mt-1">✓ Spaces will automatically convert to dashes</p>
         )}
       </div>
 

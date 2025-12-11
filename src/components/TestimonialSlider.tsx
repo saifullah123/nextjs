@@ -45,7 +45,9 @@ export default function TestimonialSlider({ testimonials }: TestimonialSliderPro
           {[...Array(5)].map((_, i) => (
             <span
               key={i}
-              className={`text-2xl ${i < current.rating ? 'text-yellow-400' : 'text-gray-300'}`}
+              className={`text-2xl transition-colors duration-300 ${
+                i < Number(current.rating || 0) ? 'text-yellow-400' : 'text-gray-300'
+              }`}
             >
               ⭐
             </span>

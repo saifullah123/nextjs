@@ -36,10 +36,11 @@ export function ProductFormClient({
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
-  const [galleryPreviews, setGalleryPreviews] = useState<string[]>(
+  const [existingImages, setExistingImages] = useState<string[]>(
     initialData?.galleryImages ? initialData.galleryImages.split(',').filter(Boolean) : []
   );
+  const [newFiles, setNewFiles] = useState<File[]>([]);
+  const [newPreviews, setNewPreviews] = useState<string[]>([]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -47,15 +48,23 @@ export function ProductFormClient({
 
     const formData = new FormData(e.currentTarget);
     
-    // Add gallery images to formData
-    galleryFiles.forEach((file, index) => {
-      formData.append(`galleryImages-${index}`, file);
+    // Add existing images
+    formData.append('existingGalleryImages', JSON.stringify(existingImages));
+
+    // Add new gallery images
+    // Add new gallery images
+    newFiles.forEach((file) => {
+      formData.append('galleryImages', file);
     });
 
     startTransition(async () => {
       try {
         await onSubmit(formData);
-      } catch (err) {
+      } catch (err: any) {
+        // Don't catch Next.js redirect errors - let them propagate
+        if (err?.digest?.startsWith('NEXT_REDIRECT')) {
+          throw err;
+        }
         setError(err instanceof Error ? err.message : 'An error occurred');
       }
     });
@@ -65,22 +74,49 @@ export function ProductFormClient({
     const files = e.target.files;
     if (!files) return;
 
-    const newFiles = Array.from(files);
-    setGalleryFiles([...galleryFiles, ...newFiles]);
+    const newFilesList = Array.from(files);
+    const totalCurrentImages = existingImages.length + newFiles.length;
+    const remainingSlots = 5 - totalCurrentImages;
+
+    if (newFilesList.length > remainingSlots) {
+      setError(`You can only upload ${remainingSlots} more image${remainingSlots !== 1 ? 's' : ''}`);
+      e.target.value = '';
+      return;
+    }
+
+    const validFiles: File[] = [];
+    for (const file of newFilesList) {
+      if (file.size > 10 * 1024 * 1024) {
+        setError(`File "${file.name}" exceeds the 10MB limit`);
+        e.target.value = '';
+        return;
+      }
+      validFiles.push(file);
+    }
+
+    setNewFiles(prev => [...prev, ...validFiles]);
 
     // Generate previews
-    newFiles.forEach(file => {
+    validFiles.forEach(file => {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setGalleryPreviews(prev => [...prev, reader.result as string]);
+        setNewPreviews(prev => [...prev, reader.result as string]);
       };
       reader.readAsDataURL(file);
     });
+    
+    // Reset input to allow selecting the same file again
+    e.target.value = '';
+    setError(null);
   };
 
-  const removeGalleryImage = (index: number) => {
-    setGalleryFiles(galleryFiles.filter((_, i) => i !== index));
-    setGalleryPreviews(galleryPreviews.filter((_, i) => i !== index));
+  const removeExistingImage = (index: number) => {
+    setExistingImages(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const removeNewImage = (index: number) => {
+    setNewFiles(prev => prev.filter((_, i) => i !== index));
+    setNewPreviews(prev => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -177,7 +213,7 @@ export function ProductFormClient({
             required
             min="0"
             step="1"
-            defaultValue={initialData?.quantity ?? 0}
+            defaultValue={initialData?.quantity}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
             placeholder="0"
           />
@@ -264,14 +300,28 @@ export function ProductFormClient({
             Gallery Images (Max 5)
           </label>
           
-          {galleryPreviews.length > 0 && (
+          {(existingImages.length > 0 || newPreviews.length > 0) && (
             <div className="grid grid-cols-3 gap-3 mb-4">
-              {galleryPreviews.map((src, idx) => (
-                <div key={idx} className="relative aspect-square rounded-lg overflow-hidden border-2 border-gray-200 group">
-                  <img src={src} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover" />
+              {existingImages.map((src, idx) => (
+                <div key={`existing-${idx}`} className="relative aspect-square rounded-lg overflow-hidden border-2 border-gray-200 group">
+                  <img src={src} alt={`Gallery Existing ${idx + 1}`} className="w-full h-full object-cover" />
                   <button
                     type="button"
-                    onClick={() => removeGalleryImage(idx)}
+                    onClick={() => removeExistingImage(idx)}
+                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              ))}
+              {newPreviews.map((src, idx) => (
+                <div key={`new-${idx}`} className="relative aspect-square rounded-lg overflow-hidden border-2 border-gray-200 group">
+                  <img src={src} alt={`Gallery New ${idx + 1}`} className="w-full h-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => removeNewImage(idx)}
                     className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -283,7 +333,7 @@ export function ProductFormClient({
             </div>
           )}
 
-          {galleryPreviews.length < 5 && (
+          {(existingImages.length + newPreviews.length) < 5 && (
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition">
               <input
                 type="file"

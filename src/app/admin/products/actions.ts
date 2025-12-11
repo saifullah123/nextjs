@@ -10,7 +10,12 @@ export async function createProduct(formData: FormData) {
     const slug = formData.get('slug') as string;
     const sku = formData.get('sku') as string || null;
     const price = parseFloat(formData.get('price') as string);
-    const quantity = parseInt(formData.get('quantity') as string) || 0;
+    const quantityStr = formData.get('quantity') as string;
+    const quantity = quantityStr !== '' ? parseInt(quantityStr) : NaN;
+
+    if (isNaN(quantity)) {
+        throw new Error('Quantity is required');
+    }
     const shortDescription = formData.get('shortDescription') as string;
     const longDescription = formData.get('longDescription') as string;
     const isFeatured = formData.get('isFeatured') === 'on';
@@ -45,16 +50,11 @@ export async function createProduct(formData: FormData) {
     }
 
     // Handle gallery images upload
+    // Handle gallery images upload
     let galleryImages = '';
-    const galleryFiles: File[] = [];
-    let i = 0;
-    while (formData.has(`galleryImages-${i}`)) {
-        const file = formData.get(`galleryImages-${i}`) as File;
-        if (file && file.size > 0) {
-            galleryFiles.push(file);
-        }
-        i++;
-    }
+    const rawGalleryFiles = formData.getAll('galleryImages') as File[];
+    const galleryFiles = rawGalleryFiles.filter(file => file.size > 0);
+    console.log('Total gallery files to upload:', galleryFiles.length);
 
     if (galleryFiles.length > 0) {
         const galleryPaths = await saveMultipleFiles(galleryFiles, 'products/gallery');
@@ -80,6 +80,8 @@ export async function createProduct(formData: FormData) {
     });
 
     revalidatePath('/admin/products');
+    revalidatePath('/products');
+    revalidatePath('/');
     redirect('/admin/products');
 }
 
@@ -88,7 +90,12 @@ export async function updateProduct(id: string, formData: FormData) {
     // Slug is not updatable
     const sku = formData.get('sku') as string || null;
     const price = parseFloat(formData.get('price') as string);
-    const quantity = parseInt(formData.get('quantity') as string) || 0;
+    const quantityStr = formData.get('quantity') as string;
+    const quantity = quantityStr !== '' ? parseInt(quantityStr) : NaN;
+
+    if (isNaN(quantity)) {
+        throw new Error('Quantity is required');
+    }
     const shortDescription = formData.get('shortDescription') as string;
     const longDescription = formData.get('longDescription') as string;
     const isFeatured = formData.get('isFeatured') === 'on';
@@ -120,21 +127,27 @@ export async function updateProduct(id: string, formData: FormData) {
     }
 
     // Handle gallery images upload
-    let galleryImages = currentProduct?.galleryImages || '';
-    const galleryFiles: File[] = [];
-    let i = 0;
-    while (formData.has(`galleryImages-${i}`)) {
-        const file = formData.get(`galleryImages-${i}`) as File;
-        if (file && file.size > 0) {
-            galleryFiles.push(file);
+    // Handle gallery images upload
+    const existingGalleryImagesJson = formData.get('existingGalleryImages') as string;
+    let existingGalleryImages: string[] = [];
+    if (existingGalleryImagesJson) {
+        try {
+            existingGalleryImages = JSON.parse(existingGalleryImagesJson);
+        } catch (e) {
+            console.error('Failed to parse existingGalleryImages', e);
         }
-        i++;
     }
 
+    const rawGalleryFiles = formData.getAll('galleryImages') as File[];
+    const galleryFiles = rawGalleryFiles.filter(file => file.size > 0);
+    console.log('Update: Total gallery files to upload:', galleryFiles.length);
+
+    let newGalleryPaths: string[] = [];
     if (galleryFiles.length > 0) {
-        const galleryPaths = await saveMultipleFiles(galleryFiles, 'products/gallery');
-        galleryImages = galleryPaths.join(',');
+        newGalleryPaths = await saveMultipleFiles(galleryFiles, 'products/gallery');
     }
+
+    const galleryImages = [...existingGalleryImages, ...newGalleryPaths].join(',');
 
     await prisma.product.update({
         where: { id },
@@ -156,6 +169,8 @@ export async function updateProduct(id: string, formData: FormData) {
     });
 
     revalidatePath('/admin/products');
+    revalidatePath('/products');
+    revalidatePath('/');
     redirect('/admin/products');
 }
 
@@ -165,4 +180,6 @@ export async function deleteProduct(id: string) {
     });
 
     revalidatePath('/admin/products');
+    revalidatePath('/products');
+    revalidatePath('/');
 }

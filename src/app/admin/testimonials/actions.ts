@@ -31,6 +31,7 @@ export async function createTestimonial(formData: FormData) {
     });
 
     revalidatePath('/admin/testimonials');
+    revalidatePath('/', 'layout');
     redirect('/admin/testimonials');
 }
 
@@ -52,6 +53,7 @@ export async function updateTestimonial(id: string, formData: FormData) {
         avatar = await saveUploadedFile(avatarFile, 'testimonials');
     }
 
+    console.log(`Updating testimonial ${id} with rating: ${rating}`);
     await prisma.testimonial.update({
         where: { id },
         data: {
@@ -65,6 +67,7 @@ export async function updateTestimonial(id: string, formData: FormData) {
     });
 
     revalidatePath('/admin/testimonials');
+    revalidatePath('/', 'layout');
     redirect('/admin/testimonials');
 }
 
@@ -74,4 +77,5 @@ export async function deleteTestimonial(id: string) {
     });
 
     revalidatePath('/admin/testimonials');
+    revalidatePath('/', 'layout');
 }

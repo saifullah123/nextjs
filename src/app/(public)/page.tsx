@@ -3,8 +3,22 @@ import Link from 'next/link';
 import CategoryTabs from '@/components/CategoryTabs';
 import TestimonialSlider from '@/components/TestimonialSlider';
 import HeroSlider from '@/components/HeroSlider';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Home',
+  alternates: {
+    canonical: '/',
+  },
+};
+
+import { unstable_noStore as noStore } from 'next/cache';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function HomePage() {
+  noStore();
   const [categories, testimonials, banners] = await Promise.all([
     prisma.category.findMany({
       where: { isActive: true },
@@ -27,6 +41,8 @@ export default async function HomePage() {
       orderBy: { order: 'asc' },
     }),
   ]);
+  
+  console.log('HomePage Testimonials Ratings:', testimonials.map(t => ({ id: t.id, rating: t.rating, name: t.name })));
 
   return (
     <div>
@@ -89,7 +105,7 @@ export default async function HomePage() {
               <p className="text-gray-600 text-lg">Real reviews from real customers</p>
             </div>
             
-            <TestimonialSlider testimonials={testimonials} />
+            <TestimonialSlider testimonials={testimonials} key={JSON.stringify(testimonials)} />
           </div>
         </section>
       )}

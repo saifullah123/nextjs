@@ -38,7 +38,9 @@ export default async function EditProductPage({
           initialData={{
             title: product.title,
             slug: product.slug,
+            sku: product.sku || '',
             price: Number(product.price),
+            quantity: product.quantity,
             categoryId: product.categoryId,
             shortDescription: product.shortDescription || '',
             longDescription: product.longDescription || '',

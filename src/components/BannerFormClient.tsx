@@ -35,7 +35,11 @@ export function BannerFormClient({
     startTransition(async () => {
       try {
         await onSubmit(formData);
-      } catch (err) {
+      } catch (err: any) {
+        // Don't catch Next.js redirect errors - let them propagate
+        if (err?.digest?.startsWith('NEXT_REDIRECT')) {
+          throw err;
+        }
         setError(err instanceof Error ? err.message : 'An error occurred');
       }
     });

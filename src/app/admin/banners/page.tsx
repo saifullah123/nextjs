@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { deleteBanner } from './actions';
 import { GenericDeleteButton } from '@/components/GenericDeleteButton';
 
+export const dynamic = 'force-dynamic';
+
 export default async function BannersPage() {
   const banners = await prisma.banner.findMany({
     orderBy: { order: 'asc' },

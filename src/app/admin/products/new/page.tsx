@@ -2,6 +2,8 @@ import { prisma } from '@/lib/prisma';
 import { createProduct } from '../actions';
 import { ProductFormClient } from '@/components/ProductFormClient';
 
+export const dynamic = 'force-dynamic';
+
 export default async function NewProductPage() {
   const categories = await prisma.category.findMany({
     where: { isActive: true },

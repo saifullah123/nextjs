@@ -1,0 +1,69 @@
+╔══════════════════════════════════════════════════════════════════╗
+║                    🔧 QUICK FIX - 2 MINUTES                      ║
+╚══════════════════════════════════════════════════════════════════╝
+
+Your login is failing because of a DATABASE_URL configuration issue.
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 1: Open your .env file                                      │
+│ Location: e:\nextjs\.env                                         │
+└──────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 2: Find this line:                                          │
+│                                                                   │
+│ DATABASE_URL="postgresql://...pooler.supabase.com:6543/postgres" │
+│                                                    ^^^^           │
+│                                                    FIND THIS      │
+└──────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 3: Change 6543 to 5432:                                     │
+│                                                                   │
+│ DATABASE_URL="postgresql://...pooler.supabase.com:5432/postgres" │
+│                                                    ^^^^           │
+│                                                    CHANGE TO THIS │
+└──────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 4: Save the file (Ctrl+S)                                   │
+└──────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 5: Restart dev server                                       │
+│                                                                   │
+│ In terminal:                                                      │
+│   1. Press Ctrl+C to stop                                        │
+│   2. Run: npm run dev                                            │
+└──────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────┐
+│ STEP 6: Try login again                                          │
+│                                                                   │
+│ URL: http://localhost:3000/admin/login                           │
+│ Email: admin@example.com                                         │
+│ Password: admin123                                               │
+└──────────────────────────────────────────────────────────────────┘
+
+╔══════════════════════════════════════════════════════════════════╗
+║ ✅ That's it! Login will work after this change.                 ║
+╚══════════════════════════════════════════════════════════════════╝
+
+WHY THIS WORKS:
+• Port 6543 = Supabase Connection Pooler (pgBouncer) ❌
+  - Faster but doesn't support prepared statements
+  - Causes "prepared statement does not exist" error
+
+• Port 5432 = Direct Database Connection ✅
+  - Fully compatible with Prisma
+  - Slightly slower but works perfectly
+
+NEED HELP FINDING YOUR .env FILE?
+If you don't have a .env file, create one in e:\nextjs\ with:
+
+DATABASE_URL="your-supabase-connection-string-here"
+JWT_SECRET="your-secret-key"
+
+Get your connection string from:
+Supabase Dashboard → Project Settings → Database → Connection string
+Choose "Session mode" (port 5432)

@@ -33,6 +33,7 @@ export async function createBanner(formData: FormData) {
     });
 
     revalidatePath('/admin/banners');
+    revalidatePath('/');
     redirect('/admin/banners');
 }
 
@@ -71,6 +72,7 @@ export async function updateBanner(id: string, formData: FormData) {
     });
 
     revalidatePath('/admin/banners');
+    revalidatePath('/');
     redirect('/admin/banners');
 }
 
@@ -80,4 +82,5 @@ export async function deleteBanner(id: string) {
     });
 
     revalidatePath('/admin/banners');
+    revalidatePath('/');
 }

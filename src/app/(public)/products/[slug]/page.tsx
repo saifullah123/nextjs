@@ -94,6 +94,11 @@ export default async function ProductDetailPage({
                   {product.category.name}
                 </span>
                 {getStatusBadge(product.status)}
+                {product.status === 'in_stock' && product.quantity > 0 && (
+                  <span className="text-sm font-medium text-gray-600 bg-gray-50 px-3 py-1 rounded-full border border-gray-100">
+                    {product.quantity} items left
+                  </span>
+                )}
               </div>
 
               <h1 className="text-4xl font-bold text-gray-800 mb-4">{product.title}</h1>

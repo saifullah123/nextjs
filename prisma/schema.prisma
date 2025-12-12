@@ -26,6 +26,9 @@ model Category {
   slug        String    @unique
   description String?
   isActive    Boolean   @default(true)
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String?
   products    Product[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -45,6 +48,9 @@ model Product {
   isFeatured       Boolean  @default(false)
   status           String   @default("in_stock") // in_stock, out_of_stock, pre_order, discontinued
   isActive         Boolean  @default(true)
+  metaTitle        String?
+  metaDescription  String?
+  metaKeywords     String?
   categoryId       String
   category         Category @relation(fields: [categoryId], references: [id])
   createdAt        DateTime @default(now())

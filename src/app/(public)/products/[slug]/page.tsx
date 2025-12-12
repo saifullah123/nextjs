@@ -25,8 +25,9 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${product.title} - ${product.category.name} - ProductCase`,
-    description: product.shortDescription || product.longDescription || `Buy ${product.title} at the best price.`,
+    title: product.metaTitle || `${product.title} - ${product.category.name} - ProductCase`,
+    description: product.metaDescription || product.shortDescription || product.longDescription || `Buy ${product.title} at the best price.`,
+    keywords: product.metaKeywords ? product.metaKeywords.split(',').map((k: string) => k.trim()) : [],
   };
 }
 

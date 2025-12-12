@@ -76,6 +76,9 @@ export async function createProduct(formData: FormData) {
             status,
             isActive: formData.get('isActive') === 'on',
             categoryId,
+            metaTitle: formData.get('metaTitle') as string,
+            metaDescription: formData.get('metaDescription') as string,
+            metaKeywords: formData.get('metaKeywords') as string,
         },
     });
 
@@ -102,6 +105,9 @@ export async function updateProduct(id: string, formData: FormData) {
     const isActive = formData.get('isActive') === 'on';
     const status = formData.get('status') as string || 'in_stock';
     const categoryId = formData.get('categoryId') as string;
+    const metaTitle = formData.get('metaTitle') as string;
+    const metaDescription = formData.get('metaDescription') as string;
+    const metaKeywords = formData.get('metaKeywords') as string;
 
     // Check if SKU is unique (if provided and changed)
     if (sku) {
@@ -165,6 +171,9 @@ export async function updateProduct(id: string, formData: FormData) {
             status,
             isActive,
             categoryId,
+            metaTitle,
+            metaDescription,
+            metaKeywords,
         },
     });
 

@@ -9,6 +9,9 @@ export async function createCategory(formData: FormData) {
     const slug = formData.get('slug') as string;
     const description = formData.get('description') as string;
     const isActive = formData.get('isActive') === 'on';
+    const metaTitle = formData.get('metaTitle') as string;
+    const metaDescription = formData.get('metaDescription') as string;
+    const metaKeywords = formData.get('metaKeywords') as string;
 
     // Check if slug is unique
     const existingCategory = await prisma.category.findUnique({
@@ -25,6 +28,9 @@ export async function createCategory(formData: FormData) {
             slug,
             description,
             isActive,
+            metaTitle,
+            metaDescription,
+            metaKeywords,
         },
     });
 
@@ -37,6 +43,9 @@ export async function updateCategory(id: string, formData: FormData) {
     const name = formData.get('name') as string;
     const description = formData.get('description') as string;
     const isActive = formData.get('isActive') === 'on';
+    const metaTitle = formData.get('metaTitle') as string;
+    const metaDescription = formData.get('metaDescription') as string;
+    const metaKeywords = formData.get('metaKeywords') as string;
 
     // Note: Slug is not updatable after creation (intentionally omitted)
     // This prevents breaking existing URLs and links
@@ -47,6 +56,9 @@ export async function updateCategory(id: string, formData: FormData) {
             name,
             description,
             isActive,
+            metaTitle,
+            metaDescription,
+            metaKeywords,
         },
     });
 

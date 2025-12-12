@@ -35,6 +35,9 @@ export default async function EditCategoryPage({
             slug: category.slug,
             description: category.description || '',
             isActive: category.isActive,
+            metaTitle: category.metaTitle || '',
+            metaDescription: category.metaDescription || '',
+            metaKeywords: category.metaKeywords || '',
           }}
           submitLabel="Update Category"
           isEdit={true}

@@ -11,6 +11,9 @@ import Link from 'next/link';
 
 
 
+
+export const dynamic = 'force-dynamic';
+
 export default async function AdminDashboard() {
   const [productCount, categoryCount, testimonialCount, messageCount] = await Promise.all([
     prisma.product.count(),

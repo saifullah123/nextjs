@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { ImageUpload } from '@/components/ImageUpload';
+import { VideoUpload } from '@/components/VideoUpload';
 import { FullScreenLoader } from '@/components/FullScreenLoader';
 
 interface BannerFormClientProps {
@@ -11,6 +12,7 @@ interface BannerFormClientProps {
     title?: string;
     subtitle?: string;
     image?: string;
+    video?: string | null;
     link?: string;
     order?: number;
     isActive?: boolean;
@@ -118,9 +120,18 @@ export function BannerFormClient({
         <div>
           <ImageUpload
             name="image"
-            label="Banner Image"
-            required={!initialData?.image}
+            label="Banner Image (Poster for video)"
+            required={false}
             currentImage={initialData?.image}
+          />
+        </div>
+
+        <div>
+          <VideoUpload
+            name="video"
+            label="Banner Video (Optional)"
+            required={false}
+            currentVideo={initialData?.video}
           />
         </div>
 

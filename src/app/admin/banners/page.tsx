@@ -5,6 +5,9 @@ import { GenericDeleteButton } from '@/components/GenericDeleteButton';
 
 
 
+
+export const dynamic = 'force-dynamic';
+
 export default async function BannersPage() {
   const banners = await prisma.banner.findMany({
     orderBy: { order: 'asc' },
@@ -43,7 +46,7 @@ export default async function BannersPage() {
                 <td className="px-6 py-4">
                   <div className="w-24 h-12 rounded-lg overflow-hidden border border-gray-200">
                     <img
-                      src={banner.image}
+                      src={banner.image || undefined}
                       alt={banner.title}
                       className="w-full h-full object-cover"
                     />

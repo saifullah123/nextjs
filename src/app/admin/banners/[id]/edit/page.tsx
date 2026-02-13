@@ -33,7 +33,8 @@ export default async function EditBannerPage({
           initialData={{
             title: banner.title,
             subtitle: banner.subtitle || '',
-            image: banner.image,
+            image: banner.image || undefined,
+            video: banner.video,
             link: banner.link || '',
             order: banner.order,
             isActive: banner.isActive,

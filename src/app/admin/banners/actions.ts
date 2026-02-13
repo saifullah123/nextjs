@@ -17,15 +17,26 @@ export async function createBanner(formData: FormData) {
     const imageFile = formData.get('image') as File;
     if (imageFile && imageFile.size > 0) {
         image = await saveUploadedFile(imageFile, 'banners');
-    } else {
-        throw new Error('Banner image is required');
+    }
+
+    // Handle video upload
+    let video = '';
+    const videoFile = formData.get('video') as File;
+    if (videoFile && videoFile.size > 0) {
+        video = await saveUploadedFile(videoFile, 'banners/videos');
+    }
+
+    // Validation: Require at least one media
+    if (!image && !video) {
+        throw new Error('Either an image or a video is required');
     }
 
     await prisma.banner.create({
         data: {
             title,
             subtitle,
-            image,
+            image: image || null,
+            video: video || null,
             link,
             order,
             isActive,
@@ -59,12 +70,20 @@ export async function updateBanner(id: string, formData: FormData) {
         image = await saveUploadedFile(imageFile, 'banners');
     }
 
+    // Handle video upload
+    let video = currentBanner.video;
+    const videoFile = formData.get('video') as File;
+    if (videoFile && videoFile.size > 0) {
+        video = await saveUploadedFile(videoFile, 'banners/videos');
+    }
+
     await prisma.banner.update({
         where: { id },
         data: {
             title,
             subtitle,
-            image,
+            image: image || null,
+            video: video || null,
             link,
             order,
             isActive,

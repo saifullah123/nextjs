@@ -5,6 +5,9 @@ import { deleteCategory } from './actions';
 
 
 
+
+export const dynamic = 'force-dynamic';
+
 export default async function CategoriesPage() {
   const categories = await prisma.category.findMany({
     orderBy: { createdAt: 'desc' },

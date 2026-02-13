@@ -5,6 +5,9 @@ import { GenericDeleteButton } from '@/components/GenericDeleteButton';
 
 
 
+
+export const dynamic = 'force-dynamic';
+
 export default async function ProductsPage() {
   console.log("Rendering Admin Products Page");
   

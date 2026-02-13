@@ -2,6 +2,9 @@ import { prisma } from '@/lib/prisma';
 
 
 
+
+export const dynamic = 'force-dynamic';
+
 export default async function MessagesPage() {
   const messages = await prisma.contactMessage.findMany({
     orderBy: { createdAt: 'desc' },

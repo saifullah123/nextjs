@@ -1,23 +1,23 @@
-import { prisma } from '@/lib/prisma';
+import { createServerSupabaseClient } from '@/lib/supabase';
 import Link from 'next/link';
 import { deleteProduct } from './actions';
 import { GenericDeleteButton } from '@/components/GenericDeleteButton';
-
-
-
 
 export const dynamic = 'force-dynamic';
 
 export default async function ProductsPage() {
   console.log("Rendering Admin Products Page");
+  const supabase = createServerSupabaseClient();
   
   try {
-    const products = await prisma.product.findMany({
-      orderBy: { createdAt: 'desc' },
-      include: {
-        category: true,
-      },
-    });
+    const { data: products, error } = await supabase
+      .from('Product')
+      .select('*, category:Category(*)')
+      .order('createdAt', { ascending: false });
+
+    if (error) {
+      throw error;
+    }
 
     return (
       <div>
@@ -50,7 +50,7 @@ export default async function ProductsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {products.map((product) => {
+              {(products || []).map((product) => {
                 const getStatusBadge = (status: string) => {
                   const badges: Record<string, { text: string; class: string }> = {
                     in_stock: { text: '✅ In Stock', class: 'bg-green-100 text-green-700' },
@@ -62,6 +62,13 @@ export default async function ProductsPage() {
                 };
                 const statusBadge = getStatusBadge(product.status);
                 
+                // Supabase returns category as an object (single) or array depending on relation type.
+                // Assuming One-to-Many (Category -> Products), product.category should be a single object.
+                // However, TS might complain or it might be an array if not strict. 
+                // But in runtime, selects on foreign key usually return single object for belongsTo.
+                // Type casting to any to avoid strict TS issues for now if types aren't generated.
+                const categoryName = (product.category as any)?.name || 'Uncategorized';
+
                 return (
                 <tr key={product.id} className="hover:bg-slate-50 transition">
                   <td className="px-6 py-4">
@@ -88,7 +95,7 @@ export default async function ProductsPage() {
                       <span className="text-gray-400 text-sm">—</span>
                     )}
                   </td>
-                  <td className="px-6 py-4 text-gray-600">{product.category.name}</td>
+                  <td className="px-6 py-4 text-gray-600">{categoryName}</td>
                   <td className="px-6 py-4 font-semibold text-gray-800">${product.price.toString()}</td>
                   <td className="px-6 py-4">
                     <span className={`font-semibold ${product.quantity === 0 ? 'text-red-600' : product.quantity < 10 ? 'text-orange-600' : 'text-green-600'}`}>
@@ -143,7 +150,7 @@ export default async function ProductsPage() {
             </tbody>
           </table>
 
-          {products.length === 0 && (
+          {(!products || products.length === 0) && (
             <div className="text-center py-12 text-gray-500">
               No products yet. Create your first product!
             </div>

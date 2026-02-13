@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import { createServerSupabaseClient } from '@/lib/supabase';
 import { updateProduct } from '../../actions';
 import { ProductFormClient } from '@/components/ProductFormClient';
 import { notFound } from 'next/navigation';
@@ -9,13 +9,15 @@ export default async function EditProductPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [product, categories] = await Promise.all([
-    prisma.product.findUnique({ where: { id } }),
-    prisma.category.findMany({
-      where: { isActive: true },
-      orderBy: { name: 'asc' },
-    }),
+  const supabase = createServerSupabaseClient();
+
+  const [productResponse, categoriesResponse] = await Promise.all([
+    supabase.from('Product').select('*').eq('id', id).single(),
+    supabase.from('Category').select('*').eq('isActive', true).order('name', { ascending: true }),
   ]);
+
+  const product = productResponse.data;
+  const categories = categoriesResponse.data || [];
 
   if (!product) {
     notFound();

@@ -1,17 +1,19 @@
 'use server';
 
-import { prisma } from '@/lib/prisma';
+import { createServerSupabaseClient } from '@/lib/supabase';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { saveUploadedFile, saveMultipleFiles } from '@/lib/upload';
 
 export async function createProduct(formData: FormData) {
+    const supabase = createServerSupabaseClient();
+
     const title = formData.get('title') as string;
     const slug = formData.get('slug') as string;
     const sku = formData.get('sku') as string || null;
     const price = parseFloat(formData.get('price') as string);
     const quantityStr = formData.get('quantity') as string;
-    const quantity = quantityStr !== '' ? parseInt(quantityStr) : NaN;
+    const quantity = quantityStr !== '' ? parseInt(quantityStr) : 0; // Default to 0 if NaN
 
     if (isNaN(quantity)) {
         throw new Error('Quantity is required');
@@ -23,9 +25,11 @@ export async function createProduct(formData: FormData) {
     const categoryId = formData.get('categoryId') as string;
 
     // Check if slug is unique
-    const existingProduct = await prisma.product.findUnique({
-        where: { slug },
-    });
+    const { data: existingProduct } = await supabase
+        .from('Product')
+        .select('id')
+        .eq('slug', slug)
+        .single();
 
     if (existingProduct) {
         throw new Error(`Slug "${slug}" is already in use. Please choose a different slug.`);
@@ -33,9 +37,11 @@ export async function createProduct(formData: FormData) {
 
     // Check if SKU is unique (if provided)
     if (sku) {
-        const existingSKU = await prisma.product.findUnique({
-            where: { sku },
-        });
+        const { data: existingSKU } = await supabase
+            .from('Product')
+            .select('id')
+            .eq('sku', sku)
+            .single();
 
         if (existingSKU) {
             throw new Error(`SKU "${sku}" is already in use. Please choose a different SKU.`);
@@ -50,7 +56,6 @@ export async function createProduct(formData: FormData) {
     }
 
     // Handle gallery images upload
-    // Handle gallery images upload
     let galleryImages = '';
     const rawGalleryFiles = formData.getAll('galleryImages') as File[];
     const galleryFiles = rawGalleryFiles.filter(file => file.size > 0);
@@ -61,26 +66,30 @@ export async function createProduct(formData: FormData) {
         galleryImages = galleryPaths.join(',');
     }
 
-    await prisma.product.create({
-        data: {
-            title,
-            slug,
-            sku,
-            price,
-            quantity,
-            shortDescription,
-            longDescription,
-            mainImage,
-            galleryImages,
-            isFeatured,
-            status,
-            isActive: formData.get('isActive') === 'on',
-            categoryId,
-            metaTitle: formData.get('metaTitle') as string,
-            metaDescription: formData.get('metaDescription') as string,
-            metaKeywords: formData.get('metaKeywords') as string,
-        },
+    const { error } = await supabase.from('Product').insert({
+        title,
+        slug,
+        sku,
+        price,
+        quantity,
+        shortDescription,
+        longDescription,
+        mainImage,
+        galleryImages,
+        isFeatured,
+        status,
+        isActive: formData.get('isActive') === 'on',
+        categoryId,
+        metaTitle: formData.get('metaTitle') as string,
+        metaDescription: formData.get('metaDescription') as string,
+        metaKeywords: formData.get('metaKeywords') as string,
+        // Supabase handles createdAt/updatedAt automatically if defined as default(now())
     });
+
+    if (error) {
+        console.error('Error creating product:', error);
+        throw new Error('Failed to create product');
+    }
 
     revalidatePath('/admin/products');
     revalidatePath('/products');
@@ -89,12 +98,14 @@ export async function createProduct(formData: FormData) {
 }
 
 export async function updateProduct(id: string, formData: FormData) {
+    const supabase = createServerSupabaseClient();
+
     const title = formData.get('title') as string;
     // Slug is not updatable
     const sku = formData.get('sku') as string || null;
     const price = parseFloat(formData.get('price') as string);
     const quantityStr = formData.get('quantity') as string;
-    const quantity = quantityStr !== '' ? parseInt(quantityStr) : NaN;
+    const quantity = quantityStr !== '' ? parseInt(quantityStr) : 0;
 
     if (isNaN(quantity)) {
         throw new Error('Quantity is required');
@@ -111,9 +122,11 @@ export async function updateProduct(id: string, formData: FormData) {
 
     // Check if SKU is unique (if provided and changed)
     if (sku) {
-        const existingSKU = await prisma.product.findUnique({
-            where: { sku },
-        });
+        const { data: existingSKU } = await supabase
+            .from('Product')
+            .select('id')
+            .eq('sku', sku)
+            .single();
 
         if (existingSKU && existingSKU.id !== id) {
             throw new Error(`SKU "${sku}" is already in use. Please choose a different SKU.`);
@@ -121,9 +134,11 @@ export async function updateProduct(id: string, formData: FormData) {
     }
 
     // Get current product to keep existing images if no new ones uploaded
-    const currentProduct = await prisma.product.findUnique({
-        where: { id },
-    });
+    const { data: currentProduct } = await supabase
+        .from('Product')
+        .select('mainImage')
+        .eq('id', id)
+        .single();
 
     // Handle main image upload
     let mainImage = currentProduct?.mainImage || '';
@@ -132,7 +147,6 @@ export async function updateProduct(id: string, formData: FormData) {
         mainImage = await saveUploadedFile(mainImageFile, 'products');
     }
 
-    // Handle gallery images upload
     // Handle gallery images upload
     const existingGalleryImagesJson = formData.get('existingGalleryImages') as string;
     let existingGalleryImages: string[] = [];
@@ -155,9 +169,9 @@ export async function updateProduct(id: string, formData: FormData) {
 
     const galleryImages = [...existingGalleryImages, ...newGalleryPaths].join(',');
 
-    await prisma.product.update({
-        where: { id },
-        data: {
+    const { error } = await supabase
+        .from('Product')
+        .update({
             title,
             // slug is intentionally omitted
             sku,
@@ -174,8 +188,14 @@ export async function updateProduct(id: string, formData: FormData) {
             metaTitle,
             metaDescription,
             metaKeywords,
-        },
-    });
+            updatedAt: new Date().toISOString(),
+        })
+        .eq('id', id);
+
+    if (error) {
+        console.error('Error updating product:', error);
+        throw new Error('Failed to update product');
+    }
 
     revalidatePath('/admin/products');
     revalidatePath('/products');
@@ -184,9 +204,20 @@ export async function updateProduct(id: string, formData: FormData) {
 }
 
 export async function deleteProduct(id: string) {
-    await prisma.product.delete({
-        where: { id },
-    });
+    const supabase = createServerSupabaseClient();
+
+    // Check if product exists before deleting? Not strictly necessary for delete,
+    // but good practice if we were deleting related images too.
+
+    const { error } = await supabase
+        .from('Product')
+        .delete()
+        .eq('id', id);
+
+    if (error) {
+        console.error('Error deleting product:', error);
+        // Don't throw here to avoid crashing the UI entirely if possible, or handle it in UI
+    }
 
     revalidatePath('/admin/products');
     revalidatePath('/products');

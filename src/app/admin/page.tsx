@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import { createServerSupabaseClient } from '@/lib/supabase';
 import { 
   Package, 
   Folder, 
@@ -15,11 +15,12 @@ import Link from 'next/link';
 export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboard() {
+  const supabase = createServerSupabaseClient();
   const [productCount, categoryCount, testimonialCount, messageCount] = await Promise.all([
-    prisma.product.count(),
-    prisma.category.count(),
-    prisma.testimonial.count(),
-    prisma.contactMessage.count(),
+    supabase.from('Product').select('*', { count: 'exact', head: true }).then(res => res.count || 0),
+    supabase.from('Category').select('*', { count: 'exact', head: true }).then(res => res.count || 0),
+    supabase.from('Testimonial').select('*', { count: 'exact', head: true }).then(res => res.count || 0),
+    supabase.from('ContactMessage').select('*', { count: 'exact', head: true }).then(res => res.count || 0),
   ]);
 
   const stats = [

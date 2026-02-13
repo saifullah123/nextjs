@@ -1,6 +1,6 @@
 'use server';
 
-import { prisma } from '@/lib/prisma';
+import { createServerSupabaseClient } from '@/lib/supabase';
 import { verifyPassword, createToken, setAuthCookie, clearAuthCookie } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
@@ -17,9 +17,17 @@ export async function loginAction(prevState: any, formData: FormData) {
         }
 
         console.log('🔍 Looking up user...');
-        const user = await prisma.user.findUnique({
-            where: { email },
-        });
+        const supabase = createServerSupabaseClient();
+        const { data: user, error } = await supabase
+            .from('User')
+            .select('*')
+            .eq('email', email)
+            .maybeSingle();
+
+        if (error) {
+            console.error('❌ Supabase error:', error);
+            return { error: 'Database error' };
+        }
 
         if (!user) {
             console.log('❌ User not found');

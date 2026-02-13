@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { ImageUpload } from '@/components/ImageUpload';
 import { SeoAnalysis } from '@/components/SeoAnalysis';
 import { useRouter } from 'next/navigation';
+import { FullScreenLoader } from '@/components/FullScreenLoader';
 
 interface ProductFormClientProps {
   categories: Array<{ id: string; name: string }>;
@@ -39,6 +40,7 @@ export function ProductFormClient({
 }: ProductFormClientProps) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [galleryError, setGalleryError] = useState<string | null>(null);
   const router = useRouter();
   const [existingImages, setExistingImages] = useState<string[]>(
     initialData?.galleryImages ? initialData.galleryImages.split(',').filter(Boolean) : []
@@ -54,6 +56,7 @@ export function ProductFormClient({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
+    setGalleryError(null);
 
     const formData = new FormData(e.currentTarget);
     
@@ -88,7 +91,7 @@ export function ProductFormClient({
     const remainingSlots = 5 - totalCurrentImages;
 
     if (newFilesList.length > remainingSlots) {
-      setError(`You can only upload ${remainingSlots} more image${remainingSlots !== 1 ? 's' : ''}`);
+      setGalleryError(`You can only upload ${remainingSlots} more image${remainingSlots !== 1 ? 's' : ''}`);
       e.target.value = '';
       return;
     }
@@ -96,7 +99,7 @@ export function ProductFormClient({
     const validFiles: File[] = [];
     for (const file of newFilesList) {
       if (file.size > 10 * 1024 * 1024) {
-        setError(`File "${file.name}" exceeds the 10MB limit`);
+        setGalleryError(`File "${file.name}" exceeds the 10MB limit`);
         e.target.value = '';
         return;
       }
@@ -116,7 +119,7 @@ export function ProductFormClient({
     
     // Reset input to allow selecting the same file again
     e.target.value = '';
-    setError(null);
+    setGalleryError(null);
   };
 
   const removeExistingImage = (index: number) => {
@@ -129,7 +132,9 @@ export function ProductFormClient({
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <>
+      {isPending && <FullScreenLoader />}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div className="lg:col-span-2">
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
@@ -312,59 +317,62 @@ export function ProductFormClient({
                 Gallery Images (Max 5)
               </label>
               
-              {(existingImages.length > 0 || newPreviews.length > 0) && (
-                <div className="grid grid-cols-3 gap-3 mb-4">
-                  {existingImages.map((src, idx) => (
-                    <div key={`existing-${idx}`} className="relative aspect-square rounded-lg overflow-hidden border-2 border-gray-200 group">
-                      <img src={src} alt={`Gallery Existing ${idx + 1}`} className="w-full h-full object-cover" />
-                      <button
-                        type="button"
-                        onClick={() => removeExistingImage(idx)}
-                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                    </div>
-                  ))}
-                  {newPreviews.map((src, idx) => (
-                    <div key={`new-${idx}`} className="relative aspect-square rounded-lg overflow-hidden border-2 border-gray-200 group">
-                      <img src={src} alt={`Gallery New ${idx + 1}`} className="w-full h-full object-cover" />
-                      <button
-                        type="button"
-                        onClick={() => removeNewImage(idx)}
-                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {(existingImages.length + newPreviews.length) < 5 && (
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition">
-                  <input
-                    type="file"
-                    id="galleryImages"
-                    accept="image/*"
-                    multiple
-                    onChange={handleGalleryChange}
-                    className="hidden"
-                  />
-                  <label htmlFor="galleryImages" className="cursor-pointer block">
-                    <div className="text-gray-600">
-                      <svg className="mx-auto h-12 w-12 text-gray-400 mb-3" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                      <p className="text-sm font-medium">Add more gallery images</p>
-                      <p className="text-xs text-gray-500 mt-1">PNG, JPG, GIF up to 10MB each</p>
-                    </div>
+              <div className="mb-4">
+                {(existingImages.length + newPreviews.length) < 5 && (
+                  <label className="w-full border-2 border-dashed border-gray-300 rounded-lg p-8 flex flex-col items-center justify-center cursor-pointer hover:border-purple-500 hover:bg-purple-50 transition">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleGalleryChange}
+                      className="hidden"
+                    />
+                    <svg className="h-10 w-10 text-gray-400 mb-2" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                      <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <span className="text-sm text-gray-600 font-medium">Click to add gallery images</span>
+                    <span className="text-xs text-gray-500 mt-1">
+                      {existingImages.length + newPreviews.length === 0 
+                        ? 'Add up to 5 images' 
+                        : `${5 - (existingImages.length + newPreviews.length)} slots remaining`}
+                    </span>
                   </label>
-                </div>
+                )}
+              </div>
+
+              <div className="grid grid-cols-4 lg:grid-cols-5 gap-4">
+                {existingImages.map((src, idx) => (
+                  <div key={`existing-${idx}`} className="relative aspect-square rounded-lg overflow-hidden border-2 border-gray-200 group">
+                    <img src={src} alt={`Gallery Existing ${idx + 1}`} className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => removeExistingImage(idx)}
+                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
+                    >
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                ))}
+                
+                {newPreviews.map((src, idx) => (
+                  <div key={`new-${idx}`} className="relative aspect-square rounded-lg overflow-hidden border-2 border-gray-200 group">
+                    <img src={src} alt={`Gallery New ${idx + 1}`} className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => removeNewImage(idx)}
+                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
+                    >
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                ))}
+              </div>
+              {galleryError && (
+                <p className="text-sm text-red-600 mt-2">{galleryError}</p>
               )}
             </div>
 
@@ -452,7 +460,7 @@ export function ProductFormClient({
               disabled={isPending}
               className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition shadow-lg disabled:opacity-50"
             >
-              {isPending ? 'Saving...' : submitLabel}
+              {submitLabel}
             </button>
             <button
               type="button"
@@ -476,5 +484,6 @@ export function ProductFormClient({
         </div>
       </div>
     </div>
+    </>
   );
 }

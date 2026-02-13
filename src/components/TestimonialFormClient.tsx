@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { ImageUpload } from '@/components/ImageUpload';
+import { FullScreenLoader } from '@/components/FullScreenLoader';
 
 interface TestimonialFormClientProps {
   onSubmit: (formData: FormData) => Promise<void>;
@@ -47,7 +48,9 @@ export function TestimonialFormClient({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <>
+      {isPending && <FullScreenLoader />}
+      <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
           {error}
@@ -150,7 +153,7 @@ export function TestimonialFormClient({
           disabled={isPending}
           className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition shadow-lg disabled:opacity-50"
         >
-          {isPending ? 'Saving...' : submitLabel}
+          {submitLabel}
         </button>
         <button
           type="button"
@@ -161,5 +164,6 @@ export function TestimonialFormClient({
         </button>
       </div>
     </form>
+    </>
   );
 }

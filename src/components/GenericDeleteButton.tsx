@@ -1,6 +1,7 @@
 'use client';
 
 import { useTransition } from 'react';
+import { FullScreenLoader } from '@/components/FullScreenLoader';
 
 interface GenericDeleteButtonProps {
   itemId: string;
@@ -28,13 +29,16 @@ export function GenericDeleteButton({
   };
 
   return (
-    <button
-      type="button"
-      onClick={handleDelete}
-      className={className}
-      disabled={isPending}
-    >
-      {isPending ? 'Deleting...' : 'Delete'}
-    </button>
+    <>
+      {isPending && <FullScreenLoader />}
+      <button
+        type="button"
+        onClick={handleDelete}
+        className={className}
+        disabled={isPending}
+      >
+        Delete
+      </button>
+    </>
   );
 }

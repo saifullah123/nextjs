@@ -49,7 +49,7 @@ export default async function ProductDetailPage({
   }
 
   const galleryImages = product.galleryImages
-    ? product.galleryImages.split(',').map((url: string) => url.trim())
+    ? product.galleryImages.split(',').map((url: string) => url.trim()).filter(item => item.length > 0)
     : [];
 
   const getStatusBadge = (status: string) => {

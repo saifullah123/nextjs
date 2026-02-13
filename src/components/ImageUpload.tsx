@@ -93,8 +93,8 @@ export function ImageUpload({
       );
     } else if (typeof preview === 'string' && preview) {
       return (
-        <div className="mt-3 relative w-full h-48 rounded-lg overflow-hidden border-2 border-gray-200">
-          <img src={preview} alt="Preview" className="w-full h-full object-cover" />
+        <div className="mt-3 relative w-full rounded-lg overflow-hidden border-2 border-gray-200 bg-gray-50">
+          <img src={preview} alt="Preview" className="w-full h-auto object-contain max-h-[500px]" />
         </div>
       );
     }

@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { SeoAnalysis } from '@/components/SeoAnalysis';
+import { FullScreenLoader } from '@/components/FullScreenLoader';
 
 interface CategoryFormClientProps {
   onSubmit: (formData: FormData) => Promise<void>;
@@ -72,7 +73,9 @@ export function CategoryFormClient({
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <>
+      {isPending && <FullScreenLoader />}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div className="lg:col-span-2">
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
@@ -205,7 +208,7 @@ export function CategoryFormClient({
               disabled={isPending}
               className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition shadow-lg disabled:opacity-50"
             >
-              {isPending ? 'Saving...' : submitLabel}
+              {submitLabel}
             </button>
             <button
               type="button"
@@ -229,5 +232,6 @@ export function CategoryFormClient({
         </div>
       </div>
     </div>
+    </>
   );
 }

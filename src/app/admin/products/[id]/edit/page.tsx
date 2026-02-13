@@ -28,7 +28,7 @@ export default async function EditProductPage({
         <p className="text-gray-600">Update product information</p>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-lg p-8 max-w-3xl">
+      <div className="bg-white rounded-2xl shadow-lg p-8">
         <ProductFormClient
           categories={categories}
           onSubmit={async (formData) => {

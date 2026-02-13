@@ -4,14 +4,25 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { logoutAction } from './actions';
 import { useState } from 'react';
+import { 
+  LayoutDashboard, 
+  Folder, 
+  Package, 
+  Image as ImageIcon, 
+  Star, 
+  MessageSquare, 
+  LogOut,
+  Menu,
+  X 
+} from 'lucide-react';
 
 const navItems = [
-  { href: '/admin', label: 'Dashboard', icon: '📊' },
-  { href: '/admin/categories', label: 'Categories', icon: '📁' },
-  { href: '/admin/products', label: 'Products', icon: '📦' },
-  { href: '/admin/banners', label: 'Banners', icon: '🖼️' },
-  { href: '/admin/testimonials', label: 'Testimonials', icon: '⭐' },
-  { href: '/admin/messages', label: 'Messages', icon: '✉️' },
+  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/admin/categories', label: 'Categories', icon: Folder },
+  { href: '/admin/products', label: 'Products', icon: Package },
+  { href: '/admin/banners', label: 'Banners', icon: ImageIcon },
+  { href: '/admin/testimonials', label: 'Testimonials', icon: Star },
+  { href: '/admin/messages', label: 'Messages', icon: MessageSquare },
 ];
 
 export default function AdminLayout({
@@ -39,13 +50,9 @@ export default function AdminLayout({
           aria-label="Toggle menu"
         >
           {isSidebarOpen ? (
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <X className="w-6 h-6" />
           ) : (
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            <Menu className="w-6 h-6" />
           )}
         </button>
       </div>
@@ -71,7 +78,7 @@ export default function AdminLayout({
                     : 'hover:bg-white/10'
                 }`}
               >
-                <span className="text-xl">{item.icon}</span>
+                <item.icon className="w-5 h-5" />
                 <span className="font-medium">{item.label}</span>
               </Link>
             );
@@ -84,7 +91,7 @@ export default function AdminLayout({
               type="submit"
               className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-600/20 transition text-red-400 hover:text-red-300"
             >
-              <span className="text-xl">🚪</span>
+              <span className="text-xl"><LogOut className="w-5 h-5" /></span>
               <span className="font-medium">Logout</span>
             </button>
           </form>
@@ -122,7 +129,7 @@ export default function AdminLayout({
                         : 'hover:bg-white/10'
                     }`}
                   >
-                    <span className="text-xl">{item.icon}</span>
+                    <item.icon className="w-5 h-5" />
                     <span className="font-medium">{item.label}</span>
                   </Link>
                 );
@@ -135,7 +142,7 @@ export default function AdminLayout({
                   type="submit"
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-600/20 transition text-red-400 hover:text-red-300"
                 >
-                  <span className="text-xl">🚪</span>
+                  <span className="text-xl"><LogOut className="w-5 h-5" /></span>
                   <span className="font-medium">Logout</span>
                 </button>
               </form>

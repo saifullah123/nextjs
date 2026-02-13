@@ -1,9 +1,9 @@
 import { prisma } from '@/lib/prisma';
-import DeleteCategoryButton from '@/components/DeleteCategoryButton';
+import { GenericDeleteButton } from '@/components/GenericDeleteButton';
 import Link from 'next/link';
 import { deleteCategory } from './actions';
 
-export const dynamic = 'force-dynamic';
+
 
 export default async function CategoriesPage() {
   const categories = await prisma.category.findMany({
@@ -60,7 +60,14 @@ export default async function CategoriesPage() {
                 </td>
                 <td className="px-6 py-4 text-right space-x-2">
                   <Link href={`/admin/categories/${category.id}/edit`} className="text-blue-600 hover:text-blue-800 font-medium">Edit</Link>
-                  <DeleteCategoryButton id={category.id} />
+                  <GenericDeleteButton 
+                    itemId={category.id} 
+                    itemName="category" 
+                    onDelete={async () => {
+                      'use server';
+                      await deleteCategory(category.id);
+                    }}
+                  />
                 </td>
               </tr>
             ))}

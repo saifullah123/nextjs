@@ -43,11 +43,13 @@ export async function loginAction(prevState: any, formData: FormData) {
         await setAuthCookie(token);
 
         console.log('✅ Login successful, redirecting to /admin');
-        redirect('/admin');
+
     } catch (error) {
         console.error('❌ Login error:', error);
         return { error: 'An error occurred during login. Please try again.' };
     }
+
+    redirect('/admin');
 }
 
 export async function logoutAction() {

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { deleteTestimonial } from './actions';
 import { GenericDeleteButton } from '@/components/GenericDeleteButton';
 
-export const dynamic = 'force-dynamic';
+
 
 export default async function TestimonialsPage() {
   const testimonials = await prisma.testimonial.findMany({

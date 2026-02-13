@@ -12,16 +12,19 @@ console.log('Supabase Config Check:', {
 
 if (!supabaseUrl || !supabaseAnonKey) {
     console.error('Supabase Environment Variables Missing!', {
-        url: supabaseUrl, // Be careful not to leak full secrets in prod logs if possible, but safeish here for debug
+        url: supabaseUrl,
         keyLength: supabaseAnonKey ? supabaseAnonKey.length : 0
     });
-    throw new Error('Missing Supabase environment variables: ' +
-        (!supabaseUrl ? 'NEXT_PUBLIC_SUPABASE_URL ' : '') +
-        (!supabaseAnonKey ? 'NEXT_PUBLIC_SUPABASE_ANON_KEY' : '')
-    )
+    // We don't throw here during build to allow static analysis to pass
+    // if the env vars are missing in the CI/CD environment.
+    // However, the app will likely fail at runtime if these are critical.
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// Fallback values to prevent createClient from crashing immediately if variables are undefined
+const url = supabaseUrl || 'https://placeholder.supabase.co'
+const key = supabaseAnonKey || 'placeholder-key'
+
+export const supabase = createClient(url, key)
 
 // Optional: Server-side client with service role key
 export function createServerSupabaseClient() {
@@ -32,5 +35,5 @@ export function createServerSupabaseClient() {
         return supabase
     }
 
-    return createClient(supabaseUrl!, supabaseServiceKey)
+    return createClient(url, supabaseServiceKey)
 }

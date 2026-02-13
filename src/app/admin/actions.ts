@@ -29,8 +29,8 @@ export async function loginAction(prevState: any, formData: FormData) {
             return { error: 'Database error' };
         }
 
-        if (!user) {
-            console.log('❌ User not found');
+        if (!user || !user.password) {
+            console.log('❌ User not found or no password set');
             return { error: 'Invalid credentials' };
         }
 
@@ -52,9 +52,9 @@ export async function loginAction(prevState: any, formData: FormData) {
 
         console.log('✅ Login successful, redirecting to /admin');
 
-    } catch (error) {
+    } catch (error: any) {
         console.error('❌ Login error:', error);
-        return { error: 'An error occurred during login. Please try again.' };
+        return { error: `Login failed: ${error.message || 'Unknown error'}` };
     }
 
     redirect('/admin');

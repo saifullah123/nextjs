@@ -1,6 +1,6 @@
 'use server';
 
-import { createServerSupabaseClient } from '@/lib/supabase';
+import { prisma } from '@/lib/prisma';
 import { verifyPassword, createToken, setAuthCookie, clearAuthCookie } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
@@ -16,21 +16,18 @@ export async function loginAction(prevState: any, formData: FormData) {
             return { error: 'Email and password are required' };
         }
 
+
+
         console.log('🔍 Looking up user...');
-        const supabase = createServerSupabaseClient();
-        const { data: user, error } = await supabase
-            .from('User')
-            .select('*')
-            .eq('email', email)
-            .maybeSingle();
 
-        if (error) {
-            console.error('❌ Supabase error:', error);
-            return { error: 'Database error' };
-        }
+        // Use Prisma for direct database access instead of Supabase client
+        // This avoids RLS/Auth API key issues on the server side
+        const user = await prisma.user.findFirst({
+            where: { email: email }
+        });
 
-        if (!user || !user.password) {
-            console.log('❌ User not found or no password set');
+        if (!user) {
+            console.log('❌ User not found');
             return { error: 'Invalid credentials' };
         }
 

@@ -1,18 +1,17 @@
-import { createServerSupabaseClient } from '@/lib/supabase';
+import { prisma } from '@/lib/prisma';
 import { createProduct } from '../actions';
 import { ProductFormClient } from '@/components/ProductFormClient';
 
 export const dynamic = 'force-dynamic';
 
 export default async function NewProductPage() {
-  const supabase = createServerSupabaseClient();
-  const { data: categories, error } = await supabase
-    .from('Category')
-    .select('*')
-    .eq('isActive', true)
-    .order('name', { ascending: true });
-    
-  if (error) {
+  let categories: { id: string; name: string }[] = [];
+  try {
+    categories = await prisma.category.findMany({
+      where: { isActive: true },
+      orderBy: { name: 'asc' },
+    });
+  } catch (error) {
     console.error('Error fetching categories:', error);
   }
 

@@ -9,14 +9,30 @@ import { deleteCategory } from './actions';
 export const dynamic = 'force-dynamic';
 
 export default async function CategoriesPage() {
-  const categories = await prisma.category.findMany({
-    orderBy: { createdAt: 'desc' },
-    include: {
-      _count: {
-        select: { products: true },
+  let categories;
+  try {
+    categories = await prisma.category.findMany({
+      orderBy: { createdAt: 'desc' },
+      include: {
+        _count: {
+          select: { products: true },
+        },
       },
-    },
-  });
+    });
+  } catch (error: any) {
+    console.error('Failed to fetch categories:', error);
+    return (
+      <div className="p-8 text-center">
+        <div className="bg-red-50 text-red-600 p-4 rounded-lg inline-block text-left">
+          <h3 className="font-bold text-lg mb-2">Database Connection Error</h3>
+          <p className="mb-4">Could not load categories. Please check your database settings.</p>
+          <pre className="bg-white p-4 rounded border border-red-200 text-xs overflow-auto max-w-2xl">
+            {error.message || JSON.stringify(error, null, 2)}
+          </pre>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>

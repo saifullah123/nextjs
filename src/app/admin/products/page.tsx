@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from '@/lib/supabase';
+import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import { deleteProduct } from './actions';
 import { GenericDeleteButton } from '@/components/GenericDeleteButton';
@@ -7,17 +7,15 @@ export const dynamic = 'force-dynamic';
 
 export default async function ProductsPage() {
   console.log("Rendering Admin Products Page");
-  const supabase = createServerSupabaseClient();
-  
   try {
-    const { data: products, error } = await supabase
-      .from('Product')
-      .select('*, category:Category(*)')
-      .order('createdAt', { ascending: false });
+    const products = await prisma.product.findMany({
+      include: {
+        category: true
+      },
+      orderBy: { createdAt: 'desc' }
+    });
 
-    if (error) {
-      throw error;
-    }
+
 
     return (
       <div>
@@ -62,12 +60,7 @@ export default async function ProductsPage() {
                 };
                 const statusBadge = getStatusBadge(product.status);
                 
-                // Supabase returns category as an object (single) or array depending on relation type.
-                // Assuming One-to-Many (Category -> Products), product.category should be a single object.
-                // However, TS might complain or it might be an array if not strict. 
-                // But in runtime, selects on foreign key usually return single object for belongsTo.
-                // Type casting to any to avoid strict TS issues for now if types aren't generated.
-                const categoryName = (product.category as any)?.name || 'Uncategorized';
+                const categoryName = product.category?.name || 'Uncategorized';
 
                 return (
                 <tr key={product.id} className="hover:bg-slate-50 transition">

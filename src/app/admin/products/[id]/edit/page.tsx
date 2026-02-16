@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from '@/lib/supabase';
+import { prisma } from '@/lib/prisma';
 import { updateProduct } from '../../actions';
 import { ProductFormClient } from '@/components/ProductFormClient';
 import { notFound } from 'next/navigation';
@@ -9,15 +9,13 @@ export default async function EditProductPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const supabase = createServerSupabaseClient();
-
-  const [productResponse, categoriesResponse] = await Promise.all([
-    supabase.from('Product').select('*').eq('id', id).single(),
-    supabase.from('Category').select('*').eq('isActive', true).order('name', { ascending: true }),
+  const [product, categories] = await Promise.all([
+    prisma.product.findUnique({ where: { id } }),
+    prisma.category.findMany({
+      where: { isActive: true },
+      orderBy: { name: 'asc' },
+    }),
   ]);
-
-  const product = productResponse.data;
-  const categories = categoriesResponse.data || [];
 
   if (!product) {
     notFound();
@@ -35,7 +33,8 @@ export default async function EditProductPage({
           categories={categories}
           onSubmit={async (formData) => {
             'use server';
-            await updateProduct(id, formData);
+            const result = await updateProduct(id, formData);
+            if (result?.error) return result;
           }}
           initialData={{
             title: product.title,

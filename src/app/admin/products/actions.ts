@@ -9,55 +9,52 @@ import { redirect } from 'next/navigation';
 import { saveUploadedFile, saveMultipleFiles } from '@/lib/upload';
 
 export async function createProduct(formData: FormData) {
-    // 1. Validate Basic Inputs first
-    const title = formData.get('title') as string;
-    const slug = formData.get('slug') as string;
-    const sku = formData.get('sku') as string || null;
-    const price = parseFloat(formData.get('price') as string);
-    const quantityStr = formData.get('quantity') as string;
-    const quantity = quantityStr !== '' ? parseInt(quantityStr) : 0;
-    const categoryId = formData.get('categoryId') as string;
-
-    if (isNaN(quantity)) throw new Error('Quantity is required');
-    if (!title || !slug || !price || !categoryId) throw new Error('Missing required fields');
-
-    // 2. Check Uniqueness using Prisma
-    const existingSlug = await prisma.product.findUnique({ where: { slug } });
-    if (existingSlug) throw new Error(`Slug "${slug}" is already in use.`);
-
-    if (sku) {
-        const existingSKU = await prisma.product.findUnique({ where: { sku } });
-        if (existingSKU) throw new Error(`SKU "${sku}" is already in use.`);
-    }
-
-    // 3. Handle Images (Note: Local file writes fail on Vercel)
-    let mainImage = '';
-    // Temporary fix: If on Vercel/Production, we might skip file writing or need real storage.
-    // For now, let's just Log it if it fails but continue creating the product.
     try {
-        const mainImageFile = formData.get('mainImage') as File;
-        if (mainImageFile && mainImageFile.size > 0) {
-            // This will fail on Vercel usually
-            mainImage = await saveUploadedFile(mainImageFile, 'products');
+        // 1. Validate Basic Inputs first
+        const title = formData.get('title') as string;
+        const slug = formData.get('slug') as string;
+        const sku = formData.get('sku') as string || null;
+        const price = parseFloat(formData.get('price') as string);
+        const quantityStr = formData.get('quantity') as string;
+        const quantity = quantityStr !== '' ? parseInt(quantityStr) : 0;
+        const categoryId = formData.get('categoryId') as string;
+
+        if (isNaN(quantity)) return { error: 'Quantity is required' };
+        if (!title || !slug || !price || !categoryId) return { error: 'Missing required fields' };
+
+        // 2. Check Uniqueness using Prisma
+        const existingSlug = await prisma.product.findUnique({ where: { slug } });
+        if (existingSlug) return { error: `Slug "${slug}" is already in use.` };
+
+        if (sku) {
+            const existingSKU = await prisma.product.findUnique({ where: { sku } });
+            if (existingSKU) return { error: `SKU "${sku}" is already in use.` };
         }
-    } catch (e) {
-        console.error("Image upload failed (likely read-only fs):", e);
-    }
 
-    let galleryImages = '';
-    try {
-        const rawGalleryFiles = formData.getAll('galleryImages') as File[];
-        const galleryFiles = rawGalleryFiles.filter(file => file.size > 0);
-        if (galleryFiles.length > 0) {
-            const galleryPaths = await saveMultipleFiles(galleryFiles, 'products/gallery');
-            galleryImages = galleryPaths.join(',');
+        // 3. Handle Images (Note: Local file writes fail on Vercel)
+        let mainImage = '';
+        try {
+            const mainImageFile = formData.get('mainImage') as File;
+            if (mainImageFile && mainImageFile.size > 0) {
+                mainImage = await saveUploadedFile(mainImageFile, 'products');
+            }
+        } catch (e) {
+            console.error("Image upload failed (likely read-only fs):", e);
         }
-    } catch (e) {
-        console.error("Gallery upload failed:", e);
-    }
 
-    // 4. Create in Database using Prisma
-    try {
+        let galleryImages = '';
+        try {
+            const rawGalleryFiles = formData.getAll('galleryImages') as File[];
+            const galleryFiles = rawGalleryFiles.filter(file => file.size > 0);
+            if (galleryFiles.length > 0) {
+                const galleryPaths = await saveMultipleFiles(galleryFiles, 'products/gallery');
+                galleryImages = galleryPaths.join(',');
+            }
+        } catch (e) {
+            console.error("Gallery upload failed:", e);
+        }
+
+        // 4. Create in Database using Prisma
         await prisma.product.create({
             data: {
                 title,
@@ -78,9 +75,10 @@ export async function createProduct(formData: FormData) {
                 metaKeywords: formData.get('metaKeywords') as string,
             }
         });
+
     } catch (error: any) {
-        console.error('Prisma Create Error:', error);
-        throw new Error(`Failed to create product: ${error.message}`);
+        console.error('Create Product Error:', error);
+        return { error: `Failed to create product: ${error.message}` };
     }
 
     revalidatePath('/admin/products');
@@ -90,65 +88,65 @@ export async function createProduct(formData: FormData) {
 }
 
 export async function updateProduct(id: string, formData: FormData) {
-    const title = formData.get('title') as string;
-    const sku = formData.get('sku') as string || null;
-    const price = parseFloat(formData.get('price') as string);
-    const quantityStr = formData.get('quantity') as string;
-    const quantity = quantityStr !== '' ? parseInt(quantityStr) : 0;
-    const categoryId = formData.get('categoryId') as string;
-
-    if (isNaN(quantity)) throw new Error('Quantity is required');
-
-    // Check SKU uniqueness if changed
-    if (sku) {
-        const existingSKU = await prisma.product.findUnique({ where: { sku } });
-        if (existingSKU && existingSKU.id !== id) {
-            throw new Error(`SKU "${sku}" is already in use.`);
-        }
-    }
-
-    // Get current product to keep existing images
-    const currentProduct = await prisma.product.findUnique({
-        where: { id },
-        select: { mainImage: true }
-    });
-
-    // Handle main image upload
-    let mainImage = currentProduct?.mainImage || '';
     try {
-        const mainImageFile = formData.get('mainImage') as File;
-        if (mainImageFile && mainImageFile.size > 0) {
-            mainImage = await saveUploadedFile(mainImageFile, 'products');
-        }
-    } catch (e) {
-        console.error("Image upload failed:", e);
-    }
+        const title = formData.get('title') as string;
+        const sku = formData.get('sku') as string || null;
+        const price = parseFloat(formData.get('price') as string);
+        const quantityStr = formData.get('quantity') as string;
+        const quantity = quantityStr !== '' ? parseInt(quantityStr) : 0;
+        const categoryId = formData.get('categoryId') as string;
 
-    // Handle gallery images
-    const existingGalleryImagesJson = formData.get('existingGalleryImages') as string;
-    let existingGalleryImages: string[] = [];
-    if (existingGalleryImagesJson) {
+        if (isNaN(quantity)) return { error: 'Quantity is required' };
+
+        // Check SKU uniqueness if changed
+        if (sku) {
+            const existingSKU = await prisma.product.findUnique({ where: { sku } });
+            if (existingSKU && existingSKU.id !== id) {
+                return { error: `SKU "${sku}" is already in use.` };
+            }
+        }
+
+        // Get current product to keep existing images
+        const currentProduct = await prisma.product.findUnique({
+            where: { id },
+            select: { mainImage: true }
+        });
+
+        // Handle main image upload
+        let mainImage = currentProduct?.mainImage || '';
         try {
-            existingGalleryImages = JSON.parse(existingGalleryImagesJson);
+            const mainImageFile = formData.get('mainImage') as File;
+            if (mainImageFile && mainImageFile.size > 0) {
+                mainImage = await saveUploadedFile(mainImageFile, 'products');
+            }
         } catch (e) {
-            console.error('Failed to parse existingGalleryImages', e);
+            console.error("Image upload failed:", e);
         }
-    }
 
-    let newGalleryPaths: string[] = [];
-    try {
-        const rawGalleryFiles = formData.getAll('galleryImages') as File[];
-        const galleryFiles = rawGalleryFiles.filter(file => file.size > 0);
-        if (galleryFiles.length > 0) {
-            newGalleryPaths = await saveMultipleFiles(galleryFiles, 'products/gallery');
+        // Handle gallery images
+        const existingGalleryImagesJson = formData.get('existingGalleryImages') as string;
+        let existingGalleryImages: string[] = [];
+        if (existingGalleryImagesJson) {
+            try {
+                existingGalleryImages = JSON.parse(existingGalleryImagesJson);
+            } catch (e) {
+                console.error('Failed to parse existingGalleryImages', e);
+            }
         }
-    } catch (e) {
-        console.error("Gallery upload failed:", e);
-    }
 
-    const galleryImages = [...existingGalleryImages, ...newGalleryPaths].join(',');
+        let newGalleryPaths: string[] = [];
+        try {
+            const rawGalleryFiles = formData.getAll('galleryImages') as File[];
+            const galleryFiles = rawGalleryFiles.filter(file => file.size > 0);
+            if (galleryFiles.length > 0) {
+                newGalleryPaths = await saveMultipleFiles(galleryFiles, 'products/gallery');
+            }
+        } catch (e) {
+            console.error("Gallery upload failed:", e);
+        }
 
-    try {
+        const galleryImages = [...existingGalleryImages, ...newGalleryPaths].join(',');
+
         await prisma.product.update({
             where: { id },
             data: {
@@ -170,8 +168,8 @@ export async function updateProduct(id: string, formData: FormData) {
             }
         });
     } catch (error: any) {
-        console.error('Prisma Update Error:', error);
-        throw new Error(`Failed to update product: ${error.message}`);
+        console.error('Update Product Error:', error);
+        return { error: `Failed to update product: ${error.message}` };
     }
 
     revalidatePath('/admin/products');

@@ -8,7 +8,7 @@ import { FullScreenLoader } from '@/components/FullScreenLoader';
 
 interface ProductFormClientProps {
   categories: Array<{ id: string; name: string }>;
-  onSubmit: (formData: FormData) => Promise<void>;
+  onSubmit: (formData: FormData) => Promise<{ error?: string } | void>;
   initialData?: {
     title?: string;
     slug?: string;
@@ -64,14 +64,16 @@ export function ProductFormClient({
     formData.append('existingGalleryImages', JSON.stringify(existingImages));
 
     // Add new gallery images
-    // Add new gallery images
     newFiles.forEach((file) => {
       formData.append('galleryImages', file);
     });
 
     startTransition(async () => {
       try {
-        await onSubmit(formData);
+        const result = await onSubmit(formData);
+        if (result && result.error) {
+          setError(result.error);
+        }
       } catch (err: any) {
         // Don't catch Next.js redirect errors - let them propagate
         if (err?.digest?.startsWith('NEXT_REDIRECT')) {

@@ -93,7 +93,7 @@ export async function GET(
                     status: 206,
                     headers: {
                         'Content-Type': contentType,
-                        'Content-Range': response.headers['content-range'] || `bytes 0-${(fileMetadata.data.size || 1) - 1}/${fileMetadata.data.size}`,
+                        'Content-Range': response.headers['content-range'] || `bytes 0-${Number(fileMetadata.data.size || 1) - 1}/${fileMetadata.data.size}`,
                         'Accept-Ranges': 'bytes',
                         'Content-Length': response.headers['content-length'] || '',
                         'Cache-Control': 'no-cache',

@@ -1,0 +1,143 @@
+{
+  "Header": {
+    "products": "Handwerkliches Zubehör",
+    "collections": "Reitsport-Kollektionen",
+    "about": "Unser Erbe",
+    "contact": "Concierge",
+    "searchPlaceholder": "Suche nach Sätteln, Zaumzeugen...",
+    "shopNow": "Jetzt shoppen",
+    "masterpieces": "Alle Meisterwerke",
+    "showcase": "Schaukasten",
+    "selectLanguage": "Sprache auswählen",
+    "globalLanguage": "Globale Sprache"
+  },
+  "PromoBar": {
+    "summerDrop": "Exklusive Sommerkollektion 2026",
+    "freeShipping": "Premium-Stalllieferung verfügbar",
+    "limitedStock": "Nur noch wenige handgefertigte Stücke"
+  },
+  "Hero": {
+    "badge": "Reitsport-Exzellenz 2026",
+    "title": "Unvergleichlicher Komfort <br/><span>für Ihren Begleiter.</span>",
+    "subtitle": "Entdecken Sie die perfekte Fusion aus traditioneller Lederarbeit und ergonomischem Design. Mit Leidenschaft für den modernen Reiter und seinen equinen Partner gefertigt.",
+    "explore": "Kollektion erkunden",
+    "ourStory": "Unsere Geschichte"
+  },
+  "Featured": {
+    "label": "Kuratierte Handwerkskunst",
+    "title": "Entdecken Sie unsere <span>Signature-Auswahl</span>",
+    "subtitle": "Finden Sie die perfekte Ausrüstung, die Ihren Reitstil und Ihre professionellen Bedürfnisse widerspiegelt. Jedes Stück ist ein Zeugnis für Qualität.",
+    "viewAll": "Gesamtkatalog anzeigen"
+  },
+  "WhyUs": {
+    "title": "Alles, was Ihr Pferd <span>schon immer verdient hat.</span>",
+    "military": {
+      "title": "Handwerkliches Leder",
+      "desc": "Handverlesenes, hochwertiges Leder, das wunderschön altert und dauerhafte Haltbarkeit gewährleistet."
+    },
+    "eco": {
+      "title": "Ergonomisches Design",
+      "desc": "Entwickelt für optimale Gewichtsverteilung und maximalen Komfort für Pferd und Reiter."
+    },
+    "life": {
+      "title": "Erbstück-Qualität",
+      "desc": "Zeitlose Designs, die für Generationen gebaut wurden. Einfach pure Reitsport-Exzellenz."
+    }
+  },
+  "Newsletter": {
+    "title": "Treten Sie unserem Elite-Circle bei.",
+    "subtitle": "Abonnieren Sie unsere exklusive Mailingliste für einen frühen Zugang zu neuen Kollektionen und privaten Reitsport-Events.",
+    "placeholder": "Ihre E-Mail-Adresse...",
+    "button": "Abonnieren"
+  },
+  "Footer": {
+    "tagline": "Herstellung von Premium-Reitsportausrüstung, die jahrhundertealte Sattlereitraditionen mit moderner Leistungsinnovation verbindet.",
+    "shopTitle": "Die Kollektion",
+    "shopAll": "Alle Zubehörteile anzeigen",
+    "shopFeatured": "Signature-Sättel",
+    "shopNew": "Neuheiten",
+    "supportTitle": "Concierge-Services",
+    "supportFAQ": "Pflege & Wartung",
+    "supportShipping": "Weltweite Lieferung",
+    "supportReturns": "Umtauschrecht",
+    "contactTitle": "Direkte Anfragen",
+    "luxuryTack": "Luxusausrüstung",
+    "clientService": "Kundenservice",
+    "contactPhone": "Kontakttelefon",
+    "verifiedMerchant": "Verifizierter Händler",
+    "fastShipping": "Schneller Weltweiter Versand",
+    "copyright": "© {year} EquineElite Archiv. Alle Rechte vorbehalten.",
+    "madeBy": "Mit Leidenschaft für die Reitsportgemeinschaft gefertigt."
+  },
+  "Common": {
+    "learnMore": "Mehr erfahren",
+    "discoverMore": "Mehr entdecken",
+    "back": "Zurück",
+    "home": "Startseite",
+    "clearAll": "Alles löschen",
+    "activeFilters": "Aktive Filter",
+    "price": "Preis",
+    "msrp": "UVP",
+    "investment": "Investition",
+    "inStock": "Auf Lager",
+    "outOfStock": "Nicht vorrätig",
+    "preOrder": "Vorbestellung",
+    "shipsWithin": "Versand innerhalb von 24h",
+    "exclusivePreOrder": "Exklusive Vorbestellung",
+    "temporarilyUnavailable": "Vorübergehend nicht verfügbar",
+    "specifications": "Raffinierte Details",
+    "craftsmanship": "Meisterhafte Handwerkskunst",
+    "security": "Stabilität",
+    "material": "Lederqualität",
+    "logistics": "Logistik",
+    "handFinished": "Handgefertigt",
+    "eliteWarranty": "Erbe-Garantie",
+    "spaceGrade": "Profi-Qualität",
+    "globalPriority": "Global Express"
+  },
+  "Showcase": {
+    "badge": "Neue Luxuskollektion",
+    "title": "Das <span>Heritage</span> <br/> Meisterstück",
+    "description": "Gefertigt aus bestem vollnarbigem Mahagoni-Leder, verstärkt mit brünierten Goldbeschlägen und von Meisterhand genäht. Ein Sattel, der eine neue Ära der Reitsport-Exzellenz definiert.",
+    "premium": "Premium",
+    "materials": "Materialien",
+    "ergonomic": "Ergonomisch",
+    "construction": "Konstruktion",
+    "inquire": "Jetzt anfragen",
+    "owners": "+120 Besitzer",
+    "hotspot1": "Handgenähtes Leder",
+    "hotspot2": "Vergoldete Beschläge",
+    "hotspot3": "Ergonomischer Sitz",
+    "detailsTitle": "Details zählen",
+    "feature1": {
+      "title": "Italienisches Leder",
+      "desc": "Unser Leder stammt aus dem Herzen der Toskana und durchläuft einen 6-monatigen pflanzlichen Gerbprozess."
+    },
+    "feature2": {
+      "title": "Reines Gold-Zubehör",
+      "desc": "Jede Schnalle und jeder Niet ist dreifach mit 24 Karat Gold beschichtet für einen zeitlosen Glanz, der nie verblasst."
+    },
+    "feature3": {
+      "title": "Maßgeschneidert",
+      "desc": "Fortschrittliche 3D-Scan-Technologie sorgt dafür, dass jeder Sattel perfekt auf die Anatomie Ihres Pferdes abgestimmt ist."
+    }
+  },
+  "Community": {
+    "badge": "Reitsport-Exzellenz 2026",
+    "title": "Vertraut von <br/> <span>Elite-Sammlern.</span>",
+    "description": "Schließen Sie sich über 50.000 Elite-Reitern an, die bei ihrer Wettbewerbsleistung und ihrem täglichen Training auf EquineElite vertrauen.",
+    "stat1": "Vollnarbiges Leder",
+    "stat2": "Reiter-Bewertung",
+    "quote": "\"Die einzige Ausrüstung, die sich so anmutig anfühlt wie das Pferd, das sie schmückt.\"",
+    "artisan": "Handwerksmeister",
+    "experience": "12 Jahre Handwerk"
+  },
+  "Testimonials": {
+    "label": "Der Elite-Circle",
+    "title": "Stimmen der <br/><span>Advokaten.</span>"
+  },
+  "HeroSlider": {
+    "badge": "Luxuriöses Reiterlebnis",
+    "explore": "Kollektion erkunden"
+  }
+}

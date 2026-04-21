@@ -5,27 +5,25 @@ import { verifyToken } from './lib/auth';
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    // Protect admin routes (except login)
-    if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
-        const token = request.cookies.get('auth-token');
+    // 1. Handle admin routes specifically (bypass intl)
+    if (pathname.startsWith('/admin')) {
+        if (!pathname.startsWith('/admin/login')) {
+            const token = request.cookies.get('auth-token');
+            if (!token) {
+                return NextResponse.redirect(new URL('/admin/login', request.url));
+            }
 
-        if (!token) {
-            return NextResponse.redirect(new URL('/admin/login', request.url));
-        }
-
-        const payload = await verifyToken(token.value);
-        if (!payload) {
-            return NextResponse.redirect(new URL('/admin/login', request.url));
-        }
-    }
-
-    // Redirect to dashboard if already logged in and trying to access login
-    if (pathname === '/admin/login') {
-        const token = request.cookies.get('auth-token');
-        if (token) {
             const payload = await verifyToken(token.value);
-            if (payload) {
-                return NextResponse.redirect(new URL('/admin', request.url));
+            if (!payload) {
+                return NextResponse.redirect(new URL('/admin/login', request.url));
+            }
+        } else {
+            const token = request.cookies.get('auth-token');
+            if (token) {
+                const payload = await verifyToken(token.value);
+                if (payload) {
+                    return NextResponse.redirect(new URL('/admin', request.url));
+                }
             }
         }
     }
@@ -34,5 +32,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: '/admin/:path*',
+    matcher: ['/((?!api|_next|_vercel|.*\\..*).*)']
 };

@@ -3,7 +3,7 @@
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { saveUploadedFile } from '@/lib/upload';
+import { saveUploadedFile, deleteFromStorage } from '@/lib/upload';
 
 export async function createBanner(formData: FormData) {
     const title = formData.get('title') as string;
@@ -14,21 +14,17 @@ export async function createBanner(formData: FormData) {
 
     // Handle image upload
     let image = '';
+    const imageUrl = formData.get('imageUrl') as string;
     const imageFile = formData.get('image') as File;
     if (imageFile && imageFile.size > 0) {
         image = await saveUploadedFile(imageFile, 'banners');
-    }
-
-    // Handle video upload
-    let video = '';
-    const videoFile = formData.get('video') as File;
-    if (videoFile && videoFile.size > 0) {
-        video = await saveUploadedFile(videoFile, 'banners/videos');
+    } else if (imageUrl) {
+        image = imageUrl;
     }
 
     // Validation: Require at least one media
-    if (!image && !video) {
-        throw new Error('Either an image or a video is required');
+    if (!image) {
+        throw new Error('An image is required');
     }
 
     await prisma.banner.create({
@@ -36,7 +32,7 @@ export async function createBanner(formData: FormData) {
             title,
             subtitle,
             image: image || null,
-            video: video || null,
+            video: null,
             link,
             order,
             isActive,
@@ -65,16 +61,12 @@ export async function updateBanner(id: string, formData: FormData) {
 
     // Handle image upload
     let image = currentBanner.image;
+    const imageUrl = formData.get('imageUrl') as string;
     const imageFile = formData.get('image') as File;
     if (imageFile && imageFile.size > 0) {
         image = await saveUploadedFile(imageFile, 'banners');
-    }
-
-    // Handle video upload
-    let video = currentBanner.video;
-    const videoFile = formData.get('video') as File;
-    if (videoFile && videoFile.size > 0) {
-        video = await saveUploadedFile(videoFile, 'banners/videos');
+    } else if (imageUrl) {
+        image = imageUrl;
     }
 
     await prisma.banner.update({
@@ -83,7 +75,7 @@ export async function updateBanner(id: string, formData: FormData) {
             title,
             subtitle,
             image: image || null,
-            video: video || null,
+            video: null,
             link,
             order,
             isActive,
@@ -96,10 +88,29 @@ export async function updateBanner(id: string, formData: FormData) {
 }
 
 export async function deleteBanner(id: string) {
-    await prisma.banner.delete({
-        where: { id },
-    });
+    return await deleteMultipleBanners([id]);
+}
 
-    revalidatePath('/admin/banners');
-    revalidatePath('/');
+export async function deleteMultipleBanners(ids: string[]) {
+    try {
+        const banners = await prisma.banner.findMany({
+            where: { id: { in: ids } },
+        });
+
+        for (const banner of banners) {
+            if (banner.image) await deleteFromStorage(banner.image);
+            if (banner.video) await deleteFromStorage(banner.video);
+        }
+
+        await prisma.banner.deleteMany({
+            where: { id: { in: ids } },
+        });
+
+        revalidatePath('/admin/banners');
+        revalidatePath('/');
+        return { success: true };
+    } catch (error) {
+        console.error('Error deleting multiple banners:', error);
+        return { error: 'Failed to delete selected banners' };
+    }
 }

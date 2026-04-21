@@ -18,6 +18,7 @@ import {
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/admin/media', label: 'Media Library', icon: ImageIcon },
   { href: '/admin/categories', label: 'Categories', icon: Folder },
   { href: '/admin/products', label: 'Products', icon: Package },
   { href: '/admin/banners', label: 'Banners', icon: ImageIcon },

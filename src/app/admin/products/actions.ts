@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 // Note: Local file system saving will not work on Vercel.
 // We need to move to Supabase Storage for production efficiently.
 // For now, we'll try to keep the logic but wrap it to not crash if it fails, or better yet, just fix the DB part.
-import { saveUploadedFile, saveMultipleFiles } from '@/lib/upload';
+import { saveUploadedFile, saveMultipleFiles, deleteFromStorage } from '@/lib/upload';
 
 export async function createProduct(formData: FormData) {
     try {
@@ -31,28 +31,46 @@ export async function createProduct(formData: FormData) {
             if (existingSKU) return { error: `SKU "${sku}" is already in use.` };
         }
 
-        // 3. Handle Images (Note: Local file writes fail on Vercel)
+        // 3. Handle Images
         let mainImage = '';
         try {
+            const mainImageUrl = formData.get('mainImageUrl') as string;
             const mainImageFile = formData.get('mainImage') as File;
+            
             if (mainImageFile && mainImageFile.size > 0) {
+                // New file uploaded
                 mainImage = await saveUploadedFile(mainImageFile, 'products');
+            } else if (mainImageUrl) {
+                // Existing image picked from library
+                mainImage = mainImageUrl;
             }
         } catch (e) {
-            console.error("Image upload failed (likely read-only fs):", e);
+            console.error("Image upload failed:", e);
         }
 
-        let galleryImages = '';
+        // Handle gallery images
+        const existingGalleryImagesJson = formData.get('existingGalleryImages') as string;
+        let existingGalleryImages: string[] = [];
+        if (existingGalleryImagesJson) {
+            try {
+                existingGalleryImages = JSON.parse(existingGalleryImagesJson);
+            } catch (e) {
+                console.error('Failed to parse existingGalleryImages', e);
+            }
+        }
+
+        let newGalleryPaths: string[] = [];
         try {
             const rawGalleryFiles = formData.getAll('galleryImages') as File[];
             const galleryFiles = rawGalleryFiles.filter(file => file.size > 0);
             if (galleryFiles.length > 0) {
-                const galleryPaths = await saveMultipleFiles(galleryFiles, 'products/gallery');
-                galleryImages = galleryPaths.join(',');
+                newGalleryPaths = await saveMultipleFiles(galleryFiles, 'products/gallery');
             }
         } catch (e) {
             console.error("Gallery upload failed:", e);
         }
+
+        const galleryImages = [...existingGalleryImages, ...newGalleryPaths].join(',');
 
         // 4. Create in Database using Prisma
         await prisma.product.create({
@@ -115,9 +133,13 @@ export async function updateProduct(id: string, formData: FormData) {
         // Handle main image upload
         let mainImage = currentProduct?.mainImage || '';
         try {
+            const mainImageUrl = formData.get('mainImageUrl') as string;
             const mainImageFile = formData.get('mainImage') as File;
+
             if (mainImageFile && mainImageFile.size > 0) {
                 mainImage = await saveUploadedFile(mainImageFile, 'products');
+            } else if (mainImageUrl) {
+                mainImage = mainImageUrl;
             }
         } catch (e) {
             console.error("Image upload failed:", e);
@@ -179,15 +201,41 @@ export async function updateProduct(id: string, formData: FormData) {
 }
 
 export async function deleteProduct(id: string) {
-    try {
-        await prisma.product.delete({
-            where: { id }
-        });
-    } catch (error) {
-        console.error('Error deleting product:', error);
-    }
+    return await deleteMultipleProducts([id]);
+}
 
-    revalidatePath('/admin/products');
-    revalidatePath('/products');
-    revalidatePath('/');
+export async function deleteMultipleProducts(ids: string[]) {
+    try {
+        // Fetch all products first to get image URLs for cleanup
+        const products = await prisma.product.findMany({
+            where: { id: { in: ids } },
+            select: { mainImage: true, galleryImages: true }
+        });
+
+        for (const product of products) {
+            // Delete main image
+            if (product.mainImage) {
+                await deleteFromStorage(product.mainImage);
+            }
+            // Delete gallery images
+            if (product.galleryImages) {
+                const gallery = product.galleryImages.split(',');
+                for (const img of gallery) {
+                    await deleteFromStorage(img);
+                }
+            }
+        }
+
+        await prisma.product.deleteMany({
+            where: { id: { in: ids } }
+        });
+
+        revalidatePath('/admin/products');
+        revalidatePath('/products');
+        revalidatePath('/');
+        return { success: true };
+    } catch (error) {
+        console.error('Error deleting multiple products:', error);
+        return { error: 'Failed to delete selected products' };
+    }
 }

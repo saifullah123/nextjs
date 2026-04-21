@@ -1,0 +1,143 @@
+{
+  "Header": {
+    "products": "Équipement Artisanal",
+    "collections": "Collections Équestres",
+    "about": "Notre Héritage",
+    "contact": "Conciergerie",
+    "searchPlaceholder": "Rechercher des selles, brides...",
+    "shopNow": "Acheter Maintenant",
+    "masterpieces": "Chefs-d'œuvre",
+    "showcase": "Vitrine",
+    "selectLanguage": "Choisir la Langue",
+    "globalLanguage": "Langue Globale"
+  },
+  "PromoBar": {
+    "summerDrop": "Collection Exclusive Été 2026",
+    "freeShipping": "Livraison en Écurie Premium Disponible",
+    "limitedStock": "Pièces Artisanales Limitées Restantes"
+  },
+  "Hero": {
+    "badge": "Excellence Équestre 2026",
+    "title": "Confort Inégalé <br/><span>pour votre compagnon.</span>",
+    "subtitle": "Découvrez la fusion parfaite du travail du cuir traditionnel et du design ergonomique. Conçu avec passion pour le cavalier moderne et son partenaire équin.",
+    "explore": "Explorer la Collection",
+    "ourStory": "Notre Héritage"
+  },
+  "Featured": {
+    "label": "Savoir-faire Sélectionné",
+    "title": "Explorez Notre <span>Sélection Signature</span>",
+    "subtitle": "Trouvez l'équipement parfait qui reflète votre style équestre et vos besoins professionnels. Chaque pièce est un témoignage de qualité.",
+    "viewAll": "Voir le Catalogue Complet"
+  },
+  "WhyUs": {
+    "title": "Tout ce que votre cheval <span>a toujours mérité.</span>",
+    "military": {
+      "title": "Cuir Artisanal",
+      "desc": "Cuir de qualité supérieure sélectionné à la main qui vieillit magnifiquement et assure une durabilité durable."
+    },
+    "eco": {
+      "title": "Design Ergonomique",
+      "desc": "Conçu pour une répartition optimale du poids et un confort maximum pour le cheval et le cavalier."
+    },
+    "life": {
+      "title": "Qualité Héritage",
+      "desc": "Des designs intemporels conçus pour durer des générations. Juste l'excellence équestre pure."
+    }
+  },
+  "Newsletter": {
+    "title": "Rejoignez Notre Cercle Élite.",
+    "subtitle": "Abonnez-vous à notre liste de diffusion exclusive pour un accès anticipé aux nouvelles collections et aux événements équestres privés.",
+    "placeholder": "Votre adresse e-mail...",
+    "button": "S'abonner"
+  },
+  "Footer": {
+    "tagline": "Conception d'équipement équestre premium fusionnant les traditions séculaires de la sellerie avec l'innovation de performance moderne.",
+    "shopTitle": "La Collection",
+    "shopAll": "Voir Tout l'Équipement",
+    "shopFeatured": "Selles Signature",
+    "shopNew": "Nouveautés",
+    "supportTitle": "Services Conciergerie",
+    "supportFAQ": "Entretien & Maintenance",
+    "supportShipping": "Livraison Mondiale",
+    "supportReturns": "Politique d'Échange",
+    "contactTitle": "Demandes Directes",
+    "luxuryTack": "Équipement de Luxe",
+    "clientService": "Service Client",
+    "contactPhone": "Téléphone de Contact",
+    "verifiedMerchant": "Marchand Vérifié",
+    "fastShipping": "Expédition Mondiale Rapide",
+    "copyright": "© {year} Écurie de l'Élite. Tous droits réservés.",
+    "madeBy": "Conçu avec passion pour la communauté équestre."
+  },
+  "Community": {
+    "badge": "Excellence Équestre 2026",
+    "title": "Approuvé par des <br/> <span>Collectionneurs d'Élite.</span>",
+    "description": "Rejoignez plus de 50 000 cavaliers d'élite qui font confiance à EquineElite pour leurs performances en compétition et leur entraînement quotidien.",
+    "stat1": "Cuir Pleine Fleur",
+    "stat2": "Note du Cavalier",
+    "quote": "\"Le seul équipement qui se sent aussi gracieux que le cheval qu'il orne.\"",
+    "artisan": "Maître Artisan",
+    "experience": "12 Ans de Savoir-faire"
+  },
+  "Testimonials": {
+    "label": "Le Cercle Élite",
+    "title": "Les Voix de nos <br/><span>Ambassadeurs.</span>"
+  },
+  "HeroSlider": {
+    "badge": "Expérience Équestre de Luxe",
+    "explore": "Explorer le Catalogue"
+  },
+  "Common": {
+    "learnMore": "En savoir plus",
+    "discoverMore": "Découvrir plus",
+    "back": "Retour",
+    "home": "Accueil",
+    "clearAll": "Tout effacer",
+    "activeFilters": "Filtres Actifs",
+    "price": "Prix",
+    "msrp": "PVC",
+    "investment": "Investissement",
+    "inStock": "En Stock",
+    "outOfStock": "Rupture de Stock",
+    "preOrder": "Réservé",
+    "shipsWithin": "Expédié sous 24h",
+    "exclusivePreOrder": "Pré-commande Exclusive",
+    "temporarilyUnavailable": "Temporairement Indisponible",
+    "specifications": "Détails Raffinés",
+    "craftsmanship": "Maîtrise Artisanale",
+    "security": "Stabilité",
+    "material": "Qualité du Cuir",
+    "logistics": "Logistique",
+    "handFinished": "Fini à la Main",
+    "eliteWarranty": "Garantie Héritage",
+    "spaceGrade": "Qualité Pro",
+    "globalPriority": "Express Global"
+  },
+  "Showcase": {
+    "badge": "Nouvelle Collection de Luxe",
+    "title": "Le Chef-d'œuvre <span>Héritage</span>",
+    "description": "Façonné à partir du cuir d'acajou de première qualité, renforcé par du matériel en or bruni et cousu main par des maîtres artisans. Une selle qui définit une nouvelle ère de l'excellence équestre.",
+    "premium": "Premium",
+    "materials": "Matériaux",
+    "ergonomic": "Ergonomique",
+    "construction": "Fabrication",
+    "inquire": "Demander Maintenant",
+    "owners": "+120 Propriétaires",
+    "hotspot1": "Cuir Cousu Main",
+    "hotspot2": "Matériel Plaqué Or",
+    "hotspot3": "Siège Ergonomique",
+    "detailsTitle": "Le Détail Compte",
+    "feature1": {
+      "title": "Cuir Italien",
+      "desc": "Provenant du cœur de la Toscane, notre cuir subit un processus de tannage végétal de 6 mois."
+    },
+    "feature2": {
+      "title": "Matériel en Or Pur",
+      "desc": "Chaque boucle et rivet est triple-plaqué or 24 carats pour un éclat intemporel qui ne se ternit jamais."
+    },
+    "feature3": {
+      "title": "Ajustement Sur Mesure",
+      "desc": "La technologie de scan 3D avancée garantit que chaque selle est parfaitement adaptée à l'anatomie de votre cheval."
+    }
+  }
+}

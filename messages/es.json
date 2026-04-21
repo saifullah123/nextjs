@@ -1,0 +1,153 @@
+{
+  "Header": {
+    "products": "Equipamiento Artesanal",
+    "collections": "Colecciones Ecuestres",
+    "about": "Nuestro Legado",
+    "contact": "Conserjería",
+    "searchPlaceholder": "Buscar monturas, bridas...",
+    "shopNow": "Comprar Ahora",
+    "masterpieces": "Obras Maestras",
+    "showcase": "Expositor",
+    "selectLanguage": "Seleccionar Idioma",
+    "globalLanguage": "Idioma Global"
+  },
+  "PromoBar": {
+    "summerDrop": "Colección Exclusiva Verano 2026",
+    "freeShipping": "Entrega Premium en Establo Disponible",
+    "limitedStock": "Pocas Piezas Artesanales Restantes"
+  },
+  "Hero": {
+    "badge": "Excelencia Ecuestre 2026",
+    "title": "Confort Inigualable <br/><span>para su compañero.</span>",
+    "subtitle": "Descubra la fusión perfecta entre el trabajo tradicional del cuero y el diseño ergonómico. Creado con pasión para el jinete moderno y su compañero equino.",
+    "explore": "Explorar Colección",
+    "ourStory": "Nuestra Historia"
+  },
+  "Featured": {
+    "label": "Artesanía Seleccionada",
+    "title": "Explore nuestra <span>Selección Signature</span>",
+    "subtitle": "Encuentre el equipo perfecto que refleje su estilo ecuestre y sus necesidades profesionales. Cada pieza es un testimonio de calidad.",
+    "viewAll": "Ver Catálogo Complet"
+  },
+  "WhyUs": {
+    "title": "Todo lo que su caballo <span>siempre ha merecido.</span>",
+    "military": {
+      "title": "Cuero Artesanal",
+      "desc": "Cuero de calidad superior seleccionado a mano que envejece bellamente y garantiza una durabilidad duradera."
+    },
+    "eco": {
+      "title": "Diseño Ergonómico",
+      "desc": "Diseñado para una distribución óptima del peso y el máximo confort tanto para el caballo como para el jinete."
+    },
+    "life": {
+      "title": "Calidad de Legado",
+      "desc": "Diseños atemporales construidos para durar generaciones. Simplemente pura excelencia ecuestre."
+    }
+  },
+  "Newsletter": {
+    "title": "Únase a nuestro Círculo Élite.",
+    "subtitle": "Suscríbase a nuestra lista de correo exclusiva para acceso anticipado a nuevas colecciones y eventos ecuestres privados.",
+    "placeholder": "Su dirección de correo electrónico...",
+    "button": "Suscribirse"
+  },
+  "Footer": {
+    "tagline": "Creación de equipo ecuestre premium que fusiona tradiciones de talabartería centenarias con innovación de rendimiento moderno.",
+    "shopTitle": "La Colección",
+    "shopAll": "Ver Todo el Equipo",
+    "shopFeatured": "Sillas Signature",
+    "shopNew": "Novedades",
+    "supportTitle": "Servicios de Conserjería",
+    "supportFAQ": "Cuidado y Mantenimiento",
+    "supportShipping": "Envío Mundial",
+    "supportReturns": "Política de Cambios",
+    "contactTitle": "Consultas Directas",
+    "luxuryTack": "Equipo de Lujo",
+    "clientService": "Servicio al Cliente",
+    "contactPhone": "Teléfono de Contacto",
+    "verifiedMerchant": "Comerciante Verificado",
+    "fastShipping": "Envío Global Rápido",
+    "copyright": "© {year} Archivo EquineElite. Todos los derechos reservados.",
+    "madeBy": "Creado con pasión para la comunidad ecuestre."
+  },
+  "Common": {
+    "learnMore": "Saber más",
+    "discoverMore": "Descubrir más",
+    "back": "Atrás",
+    "home": "Inicio",
+    "clearAll": "Limpiar todo",
+    "activeFilters": "Filtros Activos",
+    "price": "Precio",
+    "msrp": "PVP",
+    "investment": "Inversión",
+    "inStock": "En Stock",
+    "outOfStock": "Agotado",
+    "preOrder": "Reserva",
+    "shipsWithin": "Envío en 24h",
+    "exclusivePreOrder": "Reserva Exclusiva",
+    "temporarilyUnavailable": "Temporalmente no disponible",
+    "specifications": "Detalles Refinados",
+    "craftsmanship": "Maestría Artesanal",
+    "security": "Estabilidad",
+    "material": "Grado del Cuero",
+    "logistics": "Logística",
+    "handFinished": "Acabado a mano",
+    "eliteWarranty": "Garantía de Legado",
+    "spaceGrade": "Grado Profesional",
+    "globalPriority": "Express Global"
+  },
+  "Showcase": {
+    "badge": "Nueva Colección de Lujo",
+    "title": "La Obra Maestra <span>Legacy</span>",
+    "description": "Elaborada con el mejor cuero de caoba de grano completo, reforzada con herrajes de oro bruñido y cosida a mano por maestros artesanos. Una silla que define una nueva era de excelencia ecuestre.",
+    "premium": "Premium",
+    "materials": "Materiales",
+    "ergonomic": "Ergonómico",
+    "construction": "Construcción",
+    "inquire": "Consultar Ahora",
+    "owners": "+120 Propietarios",
+    "hotspot1": "Cuero Cosido a Mano",
+    "hotspot2": "Herrajes Bañados en Oro",
+    "hotspot3": "Asiento Ergonómico",
+    "detailsTitle": "El Detalle Importa",
+    "feature1": {
+      "title": "Cuero Italiano",
+      "desc": "Proveniente del corazón de la Toscana, nuestro cuero se somete a un proceso de curtido vegetal de 6 meses."
+    },
+    "feature2": {
+      "title": "Herrajes de Oro Puro",
+      "desc": "Cada hebilla y tachuela está triple bañada en oro de 24k para un brillo eterno que nunca se desvanece."
+    },
+    "feature3": {
+      "title": "Ajuste a Medida",
+      "desc": "La tecnología avanzada de escaneo 3D garantiza que cada silla se adapte perfectamente a la anatomía de su caballo."
+    }
+  },
+  "Community": {
+    "badge": "Excelencia Ecuestre 2026",
+    "title": "Confiado por <br/> <span>Coleccionistas de Élite.</span>",
+    "description": "Únase a más de 50,000 jinetes de élite que confían en EquineElite para su rendimiento competitivo y entrenamiento diario.",
+    "stat1": "Cuero de Grano Completo",
+    "stat2": "Calificación del Jinete",
+    "quote": "\"El único equipo que se siente tan elegante como el caballo al que adorna.\"",
+    "artisan": "Maestro Artesano",
+    "experience": "12 Años de Oficio"
+  },
+  "Community": {
+    "badge": "Excelencia Ecuestre 2026",
+    "title": "Confiado por <br/> <span>Coleccionistas de Élite.</span>",
+    "description": "Únase a más de 50,000 jinetes de élite que confían en EquineElite para su rendimiento competitivo y entrenamiento diario.",
+    "stat1": "Cuero de Grano Completo",
+    "stat2": "Calificación del Jinete",
+    "quote": "\"El único equipo que se siente tan elegante como el caballo al que adorna.\"",
+    "artisan": "Maestro Artesano",
+    "experience": "12 Años de Oficio"
+  },
+  "Testimonials": {
+    "label": "El Círculo Élite",
+    "title": "Voces de <br/><span>Defensores.</span>"
+  },
+  "HeroSlider": {
+    "badge": "Experiencia Ecuestre de Lujo",
+    "explore": "Explorar Colección"
+  }
+}

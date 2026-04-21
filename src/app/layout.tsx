@@ -1,40 +1,39 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Outfit, Inter } from "next/font/google";
 import "./globals.css";
 
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
   title: {
-    default: "ProductCase - Premium Product Protection",
+    default: "ProductCase - Elite Product Protection & Aesthetics",
     template: "%s | ProductCase",
   },
-  description: "Your premium destination for high-quality product cases. Protecting what matters most with style and durability.",
-  keywords: ["phone cases", "laptop sleeves", "tech accessories", "premium cases", "protective gear", "Poor and rich", "Poor and Rich cases"],
-  authors: [{ name: "ProductCase Team" }],
-  creator: "ProductCase",
+  description: "Experience the pinnacle of device protection. ProductCase offers military-grade security with high-end luxury aesthetics for perfectionists.",
+  keywords: ["premium phone cases", "luxury tech accessories", "military grade protection", "elite device gear", "ProductCase"],
+  authors: [{ name: "ProductCase Design Team" }],
+  creator: "ProductCase Luxury",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "/",
-    title: "ProductCase - Premium Product Protection",
-    description: "Your premium destination for high-quality product cases. Protecting what matters most.",
+    title: "ProductCase - Elite Product Protection",
+    description: "The only case that feels more premium than the device it protects.",
     siteName: "ProductCase",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ProductCase - Premium Product Protection",
-    description: "Your premium destination for high-quality product cases.",
+    title: "ProductCase - Elite Product Protection",
+    description: "The only case that feels more premium than the device it protects.",
     creator: "@productcase",
   },
   icons: {
@@ -44,15 +43,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <div className="relative z-10">
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${outfit.variable} ${inter.variable} antialiased font-inter bg-mesh`}>
+        <div className="relative min-h-screen flex flex-col">
           {children}
         </div>
       </body>

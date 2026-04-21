@@ -68,10 +68,20 @@ export async function updateCategory(id: string, formData: FormData) {
 }
 
 export async function deleteCategory(id: string) {
-    await prisma.category.delete({
-        where: { id },
-    });
+    return await deleteMultipleCategories([id]);
+}
 
-    revalidatePath('/admin/categories');
-    revalidatePath('/');
+export async function deleteMultipleCategories(ids: string[]) {
+    try {
+        await prisma.category.deleteMany({
+            where: { id: { in: ids } },
+        });
+
+        revalidatePath('/admin/categories');
+        revalidatePath('/');
+        return { success: true };
+    } catch (error) {
+        console.error('Error deleting multiple categories:', error);
+        return { error: 'Failed to delete selected categories' };
+    }
 }

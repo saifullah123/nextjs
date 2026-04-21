@@ -1,0 +1,143 @@
+{
+  "Header": {
+    "products": "Artisanal Tack",
+    "collections": "Equestrian Collections",
+    "about": "Our Heritage",
+    "contact": "Concierge",
+    "searchPlaceholder": "Search for saddles, bridles...",
+    "shopNow": "Shop Now",
+    "masterpieces": "All Masterpieces",
+    "showcase": "Showcase",
+    "selectLanguage": "Select Language",
+    "globalLanguage": "Global Language"
+  },
+  "PromoBar": {
+    "summerDrop": "Exclusive Summer Collection 2026",
+    "freeShipping": "Premium Stable Delivery Available",
+    "limitedStock": "Limited Artisanal Pieces Remaining"
+  },
+  "Hero": {
+    "badge": "Equestrian Excellence 2026",
+    "title": "Unrivaled Comfort <br/><span>for your companion.</span>",
+    "subtitle": "Discover the perfect fusion of traditional leatherwork and ergonomic design. Crafted with passion for the modern rider and their equine partner.",
+    "explore": "Explore Collection",
+    "ourStory": "Our Heritage"
+  },
+  "Featured": {
+    "label": "Curated Craftsmanship",
+    "title": "Explore Our <span>Signature Selection</span>",
+    "subtitle": "Find the perfect gear that reflects your equestrian style and professional needs. Every piece is a testament to quality.",
+    "viewAll": "View Full Catalog"
+  },
+  "WhyUs": {
+    "title": "Everything your horse <span>ever deserved.</span>",
+    "military": {
+      "title": "Artisanal Leather",
+      "desc": "Hand-selected, premium grade leather that ages beautifully and ensures lasting durability."
+    },
+    "eco": {
+      "title": "Ergonomic Design",
+      "desc": "Engineered for optimal weight distribution and maximum comfort for both horse and rider."
+    },
+    "life": {
+      "title": "Heirloom Quality",
+      "desc": "Timeless designs built to last generations. Just pure equestrian excellence."
+    }
+  },
+  "Newsletter": {
+    "title": "Join Our Elite Circle.",
+    "subtitle": "Subscribe to our exclusive mailing list for early access to new collections and private equestrian events.",
+    "placeholder": "Your email address...",
+    "button": "Subscribe"
+  },
+  "Footer": {
+    "tagline": "Crafting premium equestrian gear that merges centuries-old saddlery traditions with modern performance innovation.",
+    "shopTitle": "The Collection",
+    "shopAll": "View All Tack",
+    "shopFeatured": "Signature Saddles",
+    "shopNew": "New Arrivals",
+    "supportTitle": "Concierge Services",
+    "supportFAQ": "Care & Maintenance",
+    "supportShipping": "Worldwide Delivery",
+    "supportReturns": "Exchange Policy",
+    "contactTitle": "Direct Inquiries",
+    "luxuryTack": "Luxury Tack",
+    "clientService": "Client Service",
+    "contactPhone": "Contact Phone",
+    "verifiedMerchant": "Verified Merchant",
+    "fastShipping": "Fast Global Shipping",
+    "copyright": "© {year} EquineCase Archive. All Rights Reserved.",
+    "madeBy": "Crafted with passion for the equestrian community."
+  },
+  "Community": {
+    "badge": "Equestrian Excellence 2026",
+    "title": "Trusted by <br/> <span>Elite Collectors.</span>",
+    "description": "Join over 50,000+ elite riders who trust EquineElite with their competitive performance and daily training.",
+    "stat1": "Full Grain Leather",
+    "stat2": "Rider Rating",
+    "quote": "\"The only tack that feels as graceful as the horse it adorns.\"",
+    "artisan": "Master Artisan",
+    "experience": "12 Years Crafting"
+  },
+  "Testimonials": {
+    "label": "The Elite Circle",
+    "title": "Voices of <br/><span>Advocates.</span>"
+  },
+  "HeroSlider": {
+    "badge": "Luxury Equestrian Experience",
+    "explore": "Explore Collection"
+  },
+  "Common": {
+    "learnMore": "Learn More",
+    "discoverMore": "Discover More",
+    "back": "Back",
+    "home": "Home",
+    "clearAll": "Clear All",
+    "activeFilters": "Active Filters",
+    "price": "Price",
+    "msrp": "MSRP",
+    "investment": "Investment",
+    "inStock": "In Stable",
+    "outOfStock": "Out of Stock",
+    "preOrder": "Reserved",
+    "shipsWithin": "Dispatched within 24 Hours",
+    "exclusivePreOrder": "Exclusive Pre-Order",
+    "temporarilyUnavailable": "Temporarily Unavailable",
+    "specifications": "Refined Details",
+    "craftsmanship": "Master Craftsmanship",
+    "security": "Stability",
+    "material": "Leather Grade",
+    "logistics": "Logistics",
+    "handFinished": "Hand-Finished",
+    "eliteWarranty": "Legacy Warranty",
+    "spaceGrade": "Pro Grade",
+    "globalPriority": "Global Express"
+  },
+  "Showcase": {
+    "badge": "New Luxury Collection",
+    "title": "The <span>Heritage</span> <br/> Masterpiece",
+    "description": "Crafted from the finest full-grain mahogany leather, reinforced with burnished gold hardware and hand-stitched by master artisans. A saddle that defines a new era of equestrian excellence.",
+    "premium": "Premium",
+    "materials": "Materials",
+    "ergonomic": "Ergonomic",
+    "construction": "Construction",
+    "inquire": "Inquire Now",
+    "owners": "+120 Owners",
+    "hotspot1": "Hand-Stitched Leather",
+    "hotspot2": "Gold-Plated Hardware",
+    "hotspot3": "Ergonomic Seat",
+    "detailsTitle": "Detail Matters",
+    "feature1": {
+      "title": "Italian Leather",
+      "desc": "Sourced from the heart of Tuscany, our leather undergoes a 6-month vegetable tanning process."
+    },
+    "feature2": {
+      "title": "Pure Gold Hardware",
+      "desc": "Every buckle and stud is triple-plated in 24k gold for a timeless luster that never fades."
+    },
+    "feature3": {
+      "title": "Custom Fit",
+      "desc": "Advanced 3D scanning technology ensures each saddle is matched perfectly to your horse's anatomy."
+    }
+  }
+}

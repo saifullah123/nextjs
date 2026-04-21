@@ -39,8 +39,8 @@ Update your `.env` file with the following:
 DATABASE_URL="postgresql://postgres.nvymbbrilznoqrsqbwqy:[YOUR-PASSWORD]@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres"
 
 # Supabase Client (Optional - for Storage, Auth, Realtime)
-NEXT_PUBLIC_SUPABASE_URL="https://nvymbbrilznoqrsqbwqy.supabase.co"
-NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key-here"
+NEXT_PUBLIC_SUPABASE_URL=https://nvymbbrilznoqrsqbwqy.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im52eW1iYnJpbHpub3Fyc3Fid3F5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODQ5NjAsImV4cCI6MjA4MDI2MDk2MH0.9nlXzbtUFg7JOIaVJWc1FEiy5w7d9lAE4mR_7X_2tik
 
 # Optional: Service Role Key (for admin operations)
 SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"

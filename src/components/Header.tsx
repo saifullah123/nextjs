@@ -1,9 +1,19 @@
 'use client';
 
+import { useTranslations, useLocale } from '@/hooks/useTranslations';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState, useEffect, useRef } from 'react';
 import { getCategories, getFeaturedProducts } from '@/lib/actions';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Search, Menu, X, ChevronDown, ShoppingBag, Globe, ArrowRight, Sparkles, Box, ShieldCheck, Zap } from 'lucide-react';
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+import { getMediaUrl } from '@/lib/media_utils';
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 interface Category {
   id: string;
@@ -21,23 +31,61 @@ interface Product {
 }
 
 export default function Header() {
+  const t = useTranslations('Header');
+  const tc = useTranslations('Common');
+  const locale = useLocale();
+  const pathname = usePathname();
   const [isProductsOpen, setIsProductsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLangOpen, setIsLangOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [categories, setCategories] = useState<Category[]>([]);
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [isScrolled, setIsScrolled] = useState(false);
   const router = useRouter();
+  const langRef = useRef<HTMLDivElement>(null);
+
+  const languages = [
+    { code: 'en', name: 'English', flag: '🇺🇸' },
+    { code: 'hi', name: 'हिन्दी', flag: '🇮🇳' },
+    { code: 'ar', name: 'العربية', flag: '🇦🇪' },
+    { code: 'fr', name: 'Français', flag: '🇫🇷' },
+    { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+    { code: 'es', name: 'Español', flag: '🇪🇸' },
+  ];
+
+  const currentLang = languages.find(l => l.code === locale) || languages[0];
 
   useEffect(() => {
     const fetchData = async () => {
-      const [cats, products] = await Promise.all([
-        getCategories(),
-        getFeaturedProducts()
-      ]);
-      setCategories(cats);
-      setFeaturedProducts(products);
+      try {
+        const [cats, products] = await Promise.all([
+          getCategories(),
+          getFeaturedProducts()
+        ]);
+        setCategories(cats);
+        setFeaturedProducts(products);
+      } catch (error) {
+        console.error("Error fetching header data:", error);
+      }
     };
     fetchData();
+
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    const handleClickOutside = (event: MouseEvent) => {
+      if (langRef.current && !langRef.current.contains(event.target as Node)) {
+        setIsLangOpen(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -49,319 +97,376 @@ export default function Header() {
     }
   };
 
+  const handleLanguageChange = (newLocale: string) => {
+    router.replace(pathname);
+  };
+
+  const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => {
+    const isActive = pathname === href || (href !== '/' && pathname.startsWith(href));
+    return (
+      <Link
+        href={href}
+        className={cn(
+          "text-xs font-black uppercase tracking-[0.3em] transition-all duration-500 relative py-2 px-1 group flex items-center gap-1 whitespace-nowrap",
+          "text-slate-900"
+        )}
+      >
+        <span>{children}</span>
+        <span className={cn(
+          "absolute bottom-0 left-0 h-[2px] bg-amber-600 transition-all duration-500 rounded-full",
+          isActive ? "w-full" : "w-0 group-hover:w-full"
+        )}></span>
+      </Link>
+    );
+  };
+
   return (
-    <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100">
-      <div className="container mx-auto px-6 py-4">
-        <div className="flex items-center justify-between gap-4" suppressHydrationWarning>
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 shrink-0 group">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:scale-105 transition-transform duration-300">
-              P
+    <header 
+      className={cn(
+        "sticky top-0 z-50 transition-all duration-700 ease-in-out border-b",
+        isScrolled 
+          ? "py-3 bg-white/95 backdrop-blur-2xl border-gray-100/80 shadow-[0_15px_50px_-15px_rgba(0,0,0,0.1)]" 
+          : "py-6 bg-white/40 backdrop-blur-md border-white/20 shadow-sm"
+      )}
+    >
+      <div className="container mx-auto px-6 max-w-screen-2xl">
+        <div className="flex items-center justify-between gap-12">
+          {/* Logo Section */}
+          <Link href="/" className="flex items-center gap-5 shrink-0 group relative z-10">
+            <div className="relative w-14 h-14">
+               <div className="absolute inset-0 bg-slate-900 rounded-[1.25rem] group-hover:scale-105 group-hover:rotate-6 transition-all duration-700 shadow-2xl" />
+               <div className="absolute inset-0 bg-gradient-to-br from-amber-500 to-amber-700 rounded-[1.25rem] opacity-0 group-hover:opacity-100 transition-all duration-700 scale-95" />
+               <div className="absolute inset-0 flex items-center justify-center">
+                  <Sparkles className="w-7 h-7 text-amber-500 group-hover:text-white transition-colors duration-700" />
+               </div>
             </div>
-            <span className="text-2xl font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent tracking-tight">
-              ProductCase
-            </span>
+            <div className="flex flex-col">
+              <span className={cn(
+                "text-3xl font-black tracking-[-0.05em] leading-[0.8] mb-1.5 transition-colors duration-500",
+                "text-slate-950"
+              )}>
+                NET GATE
+              </span>
+              <div className="flex items-center gap-2">
+                 <div className="w-6 h-[1px] bg-amber-600" />
+                 <span className={cn(
+                   "text-[9px] uppercase tracking-[0.5em] font-black transition-all duration-500",
+                   "text-amber-700"
+                 )}>
+                   Luxury Performance
+                 </span>
+              </div>
+            </div>
           </Link>
 
-          {/* Search Bar - Desktop */}
-          <form onSubmit={handleSearch} className="hidden lg:flex items-center flex-1 max-w-md mx-8">
-            <div className="relative w-full group">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search premium products..."
-                className="w-full px-5 py-2.5 pl-12 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 focus:bg-white transition-all duration-300 outline-none"
-              />
-              <svg
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-purple-600 transition-colors"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </div>
-          </form>
-
           {/* Navigation - Desktop */}
-          <nav className="hidden lg:flex items-center gap-8 shrink-0">
-            <Link
-              href="/"
-              className="text-gray-600 hover:text-purple-600 font-semibold transition-colors duration-200 relative group py-2"
-            >
-              Home
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full"></span>
-            </Link>
+          <nav className="hidden lg:flex items-center gap-12">
+            <NavLink href="/">{tc('home')}</NavLink>
             
             <div
-              className="static py-2"
+              className="relative py-2"
               onMouseEnter={() => setIsProductsOpen(true)}
               onMouseLeave={() => setIsProductsOpen(false)}
             >
-              <button className="text-gray-600 hover:text-purple-600 font-semibold transition-colors duration-200 flex items-center gap-1.5 group relative">
-                Products
-                <svg 
-                  className={`w-4 h-4 transition-transform duration-300 ${isProductsOpen ? 'rotate-180' : ''}`} 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-                <span className="absolute bottom-[-8px] left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full"></span>
+              <button className={cn(
+                "text-xs font-black uppercase tracking-[0.3em] transition-all duration-500 flex items-center gap-2 group cursor-pointer whitespace-nowrap",
+                "text-slate-900 hover:text-amber-700"
+              )}>
+                {t('products')}
+                <ChevronDown className={cn("w-3.5 h-3.5 transition-transform duration-500", isProductsOpen && "rotate-180")} />
               </button>
               
-              {/* Mega Menu */}
-              {isProductsOpen && (
-                <div className="absolute top-full left-0 w-full bg-white shadow-2xl border-t border-gray-100 transition-all duration-300 ease-out opacity-100 translate-y-0">
-                  <div className="container mx-auto px-6 py-10">
-                    <div className="grid grid-cols-12 gap-10">
-                      {/* Categories Column */}
-                      <div className="col-span-3">
-                        <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">Explore Categories</h3>
-                        <div className="space-y-4">
-                          <Link 
-                            href="/products" 
-                            className="block text-gray-900 font-bold hover:text-purple-600 transition-colors flex items-center gap-2 group"
-                            onClick={() => setIsProductsOpen(false)}
-                          >
-                            <span className="w-1.5 h-1.5 rounded-full bg-purple-600 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                            All Products
-                          </Link>
-                          {categories.map((cat) => (
-                            <Link
-                              key={cat.id}
-                              href={`/products?category=${cat.slug}`}
-                              className="group flex flex-col items-start pl-3.5 border-l-2 border-transparent hover:border-purple-600 transition-all"
-                              onClick={() => setIsProductsOpen(false)}
-                            >
-                              <span className="text-gray-700 font-semibold group-hover:text-purple-600 transition-colors">
-                                {cat.name}
-                              </span>
-                              {cat.description && (
-                                <span className="text-[11px] text-gray-400 group-hover:text-gray-500 transition-colors line-clamp-1 mt-0.5">
-                                  {cat.description}
-                                </span>
-                              )}
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
+              <AnimatePresence>
+                {isProductsOpen && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 15, scale: 0.98, filter: 'blur(10px)' }}
+                    animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+                    exit={{ opacity: 0, y: 15, scale: 0.98, filter: 'blur(10px)' }}
+                    transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+                    className="absolute top-full -left-48 w-[1000px] mt-6 pointer-events-auto"
+                  >
+                    <div className="bg-white rounded-[3rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.2)] border border-gray-100/50 overflow-hidden p-2 backdrop-blur-3xl">
+                      <div className="grid grid-cols-12">
+                        {/* Sidebar */}
+                        <div className="col-span-4 bg-slate-950 p-12 rounded-[2.5rem] flex flex-col justify-between relative overflow-hidden">
+                           <div className="relative z-10">
+                              <span className="text-amber-500 font-black text-[9px] uppercase tracking-[0.5em] mb-8 block">Exclusive Selection</span>
+                              <h3 className="text-4xl font-black text-white tracking-tighter leading-none mb-12 uppercase italic">
+                                Masterpieces <br /> Of <span className="text-amber-500">Tack</span>
+                              </h3>
+                              
+                              <div className="flex flex-col gap-2">
+                                <Link 
+                                  href="/products" 
+                                  className="group flex items-center justify-between p-5 rounded-2xl bg-white/5 hover:bg-white text-white hover:text-slate-900 transition-all duration-500"
+                                  onClick={() => setIsProductsOpen(false)}
+                                >
+                                  <span className="font-bold text-sm">{t('masterpieces')}</span>
+                                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                                </Link>
+                                
+                                {categories.slice(0, 3).map((cat) => (
+                                  <Link
+                                    key={cat.id}
+                                    href={`/products?category=${cat.slug}`}
+                                    className="group flex items-center justify-between p-5 rounded-2xl hover:bg-white/10 text-white/60 hover:text-white transition-all duration-500"
+                                    onClick={() => setIsProductsOpen(false)}
+                                  >
+                                    <span className="font-medium text-sm">{cat.name}</span>
+                                    <div className="w-1.5 h-1.5 rounded-full bg-amber-500 scale-0 group-hover:scale-100 transition-transform" />
+                                  </Link>
+                                ))}
+                              </div>
+                           </div>
 
-                      {/* Quick Links Column */}
-                      <div className="col-span-3">
-                        <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">Curated Collections</h3>
-                        <div className="space-y-4">
-                          {[
-                            { label: 'New Arrivals', href: '/products?sort=newest', color: 'text-gray-700' },
-                            { label: 'Featured Items', href: '/products?featured=true', color: 'text-gray-700' },
-                            { label: 'Most Popular', href: '/products?sort=popular', color: 'text-gray-700' },
-                            { label: 'Special Offers', href: '/products?onSale=true', color: 'text-pink-600' },
-                          ].map((item) => (
-                            <Link 
-                              key={item.label}
-                              href={item.href} 
-                              className={`block ${item.color} font-semibold hover:text-purple-600 transition-colors flex items-center gap-2 group`}
-                            >
-                              <svg className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
-                              {item.label}
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
+                           <div className="relative z-10 pt-12 border-t border-white/10 mt-12">
+                              <p className="text-white/40 text-[10px] font-medium leading-relaxed italic">
+                                "Handcrafted for elite equestrians who demand nothing but the absolute pinnacle of performance."
+                              </p>
+                           </div>
 
-                      {/* Featured Products Column */}
-                      <div className="col-span-6">
-                        <div className="flex items-center justify-between mb-6">
-                          <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Featured Selection</h3>
-                          <Link href="/products" className="text-xs font-bold text-purple-600 hover:text-purple-700 flex items-center gap-1 group">
-                            View All Showcase
-                            <span className="group-hover:translate-x-1 transition-transform">→</span>
-                          </Link>
+                           {/* Decor */}
+                           <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl" />
                         </div>
-                        <div className="grid grid-cols-2 gap-6">
-                          {featuredProducts.length > 0 ? (
-                            featuredProducts.map((product) => (
+
+                        {/* Product Grid */}
+                        <div className="col-span-8 p-12">
+                          <div className="flex items-center justify-between mb-10">
+                             <div className="flex items-center gap-3">
+                                <div className="w-8 h-[1px] bg-gray-200" />
+                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em]">{t('collections')}</span>
+                             </div>
+                             <Link href="/products" className="group flex items-center gap-2 text-[10px] font-black text-slate-900 uppercase tracking-widest hover:text-amber-700 transition-colors">
+                                View Entire Archive
+                                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                             </Link>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-8">
+                             {featuredProducts.slice(0, 4).map((product) => (
                               <Link 
                                 key={product.id}
                                 href={`/products/${product.slug}`}
-                                className="group flex gap-4 p-4 rounded-2xl border border-gray-50 hover:border-purple-100 hover:bg-purple-50/30 transition-all duration-300"
+                                className="group flex items-center gap-6 p-4 rounded-3xl hover:bg-gray-50 transition-all duration-700 border border-transparent hover:border-gray-100"
                                 onClick={() => setIsProductsOpen(false)}
                               >
-                                <div className="w-24 h-24 bg-gray-100 rounded-xl overflow-hidden shrink-0 shadow-inner">
+                                <div className="w-24 h-24 bg-white rounded-2xl overflow-hidden shrink-0 shadow-sm border border-gray-100 group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-700 flex items-center justify-center p-4">
                                   {product.mainImage ? (
                                     <img 
-                                      src={product.mainImage} 
+                                      src={getMediaUrl(product.mainImage)} 
                                       alt={product.title}
-                                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                      className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-1000 ease-[0.16, 1, 0.3, 1]"
                                     />
                                   ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-gray-300">
-                                      <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                      </svg>
-                                    </div>
+                                    <Box className="w-8 h-8 text-gray-200" strokeWidth={1} />
                                   )}
                                 </div>
-                                <div className="flex flex-col justify-center">
-                                  <h4 className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors line-clamp-1">{product.title}</h4>
-                                  <p className="text-lg font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mt-1">
-                                    ${Number(product.price).toFixed(2)}
-                                  </p>
+                                <div className="flex flex-col gap-1">
+                                  <span className="text-[9px] font-black text-amber-600 uppercase tracking-widest opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500">Elite Series</span>
+                                  <h4 className="font-black text-slate-950 text-base leading-tight group-hover:text-amber-700 transition-colors duration-500 truncate max-w-[180px]">{product.title}</h4>
+                                  <div className="flex items-center gap-2 mt-1">
+                                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                                     <span className="text-[10px] font-bold text-gray-400">Limited Collection</span>
+                                  </div>
                                 </div>
                               </Link>
-                            ))
-                          ) : (
-                             <div className="col-span-2 py-8 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200">
-                               <p className="text-sm text-gray-400 font-medium">No featured products at the moment.</p>
+                            ))}
+                          </div>
+
+                          <div className="mt-12 p-8 bg-amber-50 rounded-[2rem] border border-amber-100/50 flex items-center justify-between group cursor-pointer overflow-hidden relative">
+                             <div className="relative z-10">
+                                <h5 className="font-black text-slate-900 text-lg tracking-tight mb-1">Join the Elite Club</h5>
+                                <p className="text-amber-800/60 text-[10px] font-bold uppercase tracking-widest">Early access to artisanal drops</p>
                              </div>
-                          )}
+                             <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-amber-700 group-hover:bg-slate-900 group-hover:text-white transition-all duration-700 shadow-lg relative z-10">
+                                <ShieldCheck size={24} />
+                             </div>
+                             <div className="absolute top-0 right-0 w-32 h-32 bg-amber-200/20 rounded-full blur-3xl" />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  {/* Decorative Bottom Bar */}
-                  <div className="h-1 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600"></div>
-                </div>
-              )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
-            <Link
-              href="/about"
-              className="text-gray-600 hover:text-purple-600 font-semibold transition-colors duration-200 relative group py-2"
-            >
-              About Us
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full"></span>
-            </Link>
-            
-            <Link
-              href="/contact"
-              className="text-gray-600 hover:text-purple-600 font-semibold transition-colors duration-200 relative group py-2"
-            >
-              Contact Us
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full"></span>
-            </Link>
+            <NavLink href="/showcase">{t('showcase')}</NavLink>
+            <NavLink href="/about">{t('about')}</NavLink>
+            <NavLink href="/contact">{t('contact')}</NavLink>
           </nav>
 
-          {/* CTA Button - Desktop */}
-          <Link
-            href="/products"
-            className="hidden lg:block bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-2xl font-bold hover:shadow-purple-500/25 hover:shadow-2xl hover:-translate-y-0.5 active:scale-95 transition-all duration-300 shrink-0"
-          >
-            Shop Now
-          </Link>
-
-          {/* Mobile Menu Button */}
-          <button 
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            )}
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden mt-4 pb-6 animate-in slide-in-from-top-4 duration-300">
-            {/* Mobile Search */}
-            <form onSubmit={handleSearch} className="mb-6">
-              <div className="relative w-full">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search products..."
-                  className="w-full px-4 py-3 pl-11 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
-                />
-                <svg
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+          {/* Right Side Actions */}
+          <div className="flex items-center gap-6 shrink-0 relative z-10">
+             {/* Search Container */}
+             <div className="hidden xl:flex items-center">
+                <form 
+                  onSubmit={handleSearch} 
+                  className={cn(
+                    "relative flex items-center overflow-hidden transition-all duration-700 ease-[0.16, 1, 0.3, 1]",
+                    "bg-gray-100 hover:bg-gray-200",
+                    "rounded-2xl border border-transparent group/search"
+                  )}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  <div className="absolute left-4 z-10">
+                     <Search className={cn(
+                       "w-4 h-4 transition-colors duration-500",
+                       "text-gray-500 group-hover/search:text-slate-950"
+                     )} />
+                  </div>
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder={t('searchPlaceholder')}
+                    className={cn(
+                      "w-48 focus:w-72 px-11 py-3.5 outline-none bg-transparent font-bold text-xs ring-0 transition-all duration-700",
+                      "text-slate-950 placeholder:text-gray-500"
+                    )}
                   />
-                </svg>
-              </div>
-            </form>
+                  {searchQuery && (
+                    <button 
+                      type="button"
+                      onClick={() => setSearchQuery('')}
+                      className="absolute right-4 hover:scale-110 transition-transform"
+                    >
+                      <X size={14} className="text-gray-400" />
+                    </button>
+                  )}
+                </form>
+             </div>
 
-            {/* Mobile Navigation Links */}
-            <nav className="flex flex-col gap-1">
-              <Link
-                href="/"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-4 py-3.5 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-2xl transition font-bold"
-              >
-                Home
-              </Link>
-              <div className="flex flex-col">
+             {/* Action Buttons */}
+             <div className="flex items-center gap-3">
+                <div className="hidden sm:flex h-10 w-[1px] bg-gray-200" />
+                
                 <Link
                   href="/products"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="px-4 py-3.5 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-2xl transition font-bold flex items-center justify-between"
+                  className={cn(
+                    "hidden sm:flex items-center gap-3 px-8 py-3.5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all duration-700 relative overflow-hidden group shadow-xl active:scale-95",
+                    "bg-slate-950 text-white hover:bg-amber-600 hover:shadow-amber-500/30",
+                  )}
                 >
-                  Products
+                  <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-amber-700 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                  <span className="relative z-10">{t('shopNow')}</span>
+                  <ShoppingBag size={18} className="relative z-10 group-hover:rotate-12 transition-transform duration-500" />
                 </Link>
-                {/* Mobile Categories Submenu (Simplified) */}
-                <div className="pl-6 flex flex-col gap-1">
-                  {categories.slice(0, 5).map(cat => (
-                    <Link
-                      key={cat.id}
-                      href={`/products?category=${cat.slug}`}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="px-4 py-2 text-gray-500 hover:text-purple-600 transition text-sm font-medium"
-                    >
-                      {cat.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-              <Link
-                href="/about"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-4 py-3.5 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-2xl transition font-bold"
-              >
-                About Us
-              </Link>
-              <Link
-                href="/contact"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-4 py-3.5 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-2xl transition font-bold"
-              >
-                Contact Us
-              </Link>
-              <Link
-                href="/products"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="mt-4 px-4 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl font-bold shadow-xl shadow-purple-500/20 text-center active:scale-95 transition-transform"
-              >
-                Shop Now
-              </Link>
-            </nav>
+
+                {/* Mobile Toggle */}
+                <button
+                  className={cn(
+                    "lg:hidden p-3.5 rounded-2xl transition-all duration-500 hover:rotate-90",
+                    "bg-slate-950 text-white"
+                  )}
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                >
+                  {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                </button>
+             </div>
           </div>
-        )}
+        </div>
+
+        {/* Mobile Menu Overlay */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5, ease: "circOut" }}
+              className="lg:hidden absolute top-full left-0 w-full bg-white shadow-2xl border-t border-gray-100 z-50 overflow-hidden"
+            >
+               <div className="p-8 flex flex-col gap-10 bg-mesh">
+                  <nav className="flex flex-col gap-6">
+                      {[
+                        { name: tc('home'), href: '/', tag: 'New' },
+                        { name: t('products'), href: '/products', tag: 'Luxury' },
+                        { name: t('showcase'), href: '/showcase' },
+                        { name: t('about'), href: '/about' },
+                        { name: t('contact'), href: '/contact' }
+                      ].map((item, i) => (
+                       <Link 
+                        key={i}
+                        href={item.href}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="group flex items-center justify-between py-2"
+                       >
+                         <div className="flex items-center gap-4">
+                            <span className="text-4xl font-black tracking-tighter text-slate-950 group-hover:text-amber-700 transition-all duration-500">
+                               {item.name}
+                            </span>
+                            {item.tag && (
+                               <span className="px-3 py-1 bg-amber-100 text-amber-700 text-[8px] font-black uppercase tracking-widest rounded-full">
+                                  {item.tag}
+                               </span>
+                            )}
+                         </div>
+                         <div className="w-12 h-12 rounded-full border border-gray-100 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-all duration-500">
+                            <ArrowRight size={20} className="-rotate-45 group-hover:rotate-0 transition-transform duration-500" />
+                         </div>
+                       </Link>
+                     ))}
+                  </nav>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="bg-slate-900 p-10 rounded-[3rem] flex flex-col gap-8 relative overflow-hidden">
+                         <div className="relative z-10">
+                            <h4 className="text-white font-black text-2xl mb-2">Artisanal Experience</h4>
+                            <p className="text-white/40 text-xs leading-relaxed max-w-xs">{t('masterpieces')}</p>
+                         </div>
+                         <div className="relative z-10 flex gap-3">
+                            {languages.slice(0, 3).map((lang) => (
+                               <button 
+                                 key={lang.code}
+                                 onClick={() => {
+                                   handleLanguageChange(lang.code);
+                                   setIsMobileMenuOpen(false);
+                                 }} 
+                                 className={cn(
+                                   "w-12 h-12 rounded-2xl flex items-center justify-center text-lg transition-all",
+                                   locale === lang.code ? "bg-amber-600 shadow-xl scale-110" : "bg-white/5 hover:bg-white/10"
+                                 )}
+                               >
+                                 {lang.flag}
+                               </button>
+                            ))}
+                         </div>
+                         <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-amber-600/20 rounded-full blur-3xl" />
+                      </div>
+
+                      <div className="flex flex-col gap-4">
+                         <form onSubmit={handleSearch} className="relative group">
+                            <input
+                               type="text"
+                               value={searchQuery}
+                               onChange={(e) => setSearchQuery(e.target.value)}
+                               placeholder={t('searchPlaceholder')}
+                               className="w-full px-8 py-6 bg-gray-100 rounded-[2.5rem] outline-none font-bold text-slate-950 focus:ring-2 ring-amber-200 transition-all"
+                            />
+                            <div className="absolute right-6 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg">
+                               <Search size={18} className="text-slate-900" />
+                            </div>
+                         </form>
+                         
+                         <Link 
+                           href="/products"
+                           className="flex items-center justify-between bg-slate-950 text-white p-6 rounded-[2.5rem] font-black uppercase tracking-widest text-xs group"
+                           onClick={() => setIsMobileMenuOpen(false)}
+                         >
+                           <div className="flex items-center gap-3">
+                              <ShoppingBag size={20} className="text-amber-500" />
+                              {t('shopNow')}
+                           </div>
+                           <Zap size={18} className="animate-pulse text-amber-500" />
+                         </Link>
+                      </div>
+                  </div>
+               </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </header>
   );
 }
+

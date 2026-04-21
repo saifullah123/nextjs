@@ -1,5 +1,7 @@
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import PromoBar from '@/components/PromoBar';
+import { BackgroundAnimation } from "@/components/BackgroundAnimation";
 
 export default function PublicLayout({
   children,
@@ -8,11 +10,15 @@ export default function PublicLayout({
 }) {
   return (
     <>
-      <Header />
-      <main className="min-h-screen">
-        {children}
-      </main>
-      <Footer />
+      <BackgroundAnimation />
+      <div className="relative z-10 min-h-screen flex flex-col">
+        <PromoBar />
+        <Header />
+        <main className="flex-grow">
+          {children}
+        </main>
+        <Footer />
+      </div>
     </>
   );
 }

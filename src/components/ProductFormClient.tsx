@@ -1,10 +1,13 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import { ImageUpload } from '@/components/ImageUpload';
 import { SeoAnalysis } from '@/components/SeoAnalysis';
 import { useRouter } from 'next/navigation';
 import { FullScreenLoader } from '@/components/FullScreenLoader';
+import { getMediaUrl } from '@/lib/media_utils';
+import { MediaPicker } from './MediaPicker';
+import { Upload, Search, Trash2, X, Image as ImageIcon } from 'lucide-react';
 
 interface ProductFormClientProps {
   categories: Array<{ id: string; name: string }>;
@@ -41,10 +44,25 @@ export function ProductFormClient({
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [galleryError, setGalleryError] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const [isGalleryPickerOpen, setIsGalleryPickerOpen] = useState(false);
   const [existingImages, setExistingImages] = useState<string[]>(
     initialData?.galleryImages ? initialData.galleryImages.split(',').filter(Boolean) : []
   );
+
+  const handleGalleryLibrarySelect = (url: string) => {
+    if (existingImages.length + newFiles.length < 5) {
+      setExistingImages(prev => [...prev, url]);
+    } else {
+      setGalleryError('Maximum 5 images allowed in gallery');
+    }
+  };
   const [newFiles, setNewFiles] = useState<File[]>([]);
   const [newPreviews, setNewPreviews] = useState<string[]>([]);
 
@@ -315,37 +333,63 @@ export function ProductFormClient({
             </div>
 
             <div className="col-span-2">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <div className="block text-sm font-semibold text-gray-700 mb-2">
                 Gallery Images (Max 5)
-              </label>
+              </div>
               
-              <div className="mb-4">
-                {(existingImages.length + newPreviews.length) < 5 && (
-                  <label className="w-full border-2 border-dashed border-gray-300 rounded-lg p-8 flex flex-col items-center justify-center cursor-pointer hover:border-purple-500 hover:bg-purple-50 transition">
+              {!isMounted ? (
+                <div className="h-40 bg-gray-50 border-2 border-dashed border-gray-200 rounded-2xl flex items-center justify-center text-gray-400">
+                  Loading gallery uploader...
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  {/* Upload Box */}
+                  <div
+                    className={`relative border-2 border-dashed rounded-2xl p-8 text-center transition-all ${
+                      (existingImages.length + newFiles.length) >= 5 ? 'opacity-50 cursor-not-allowed border-gray-200' : 'border-gray-200 hover:border-amber-300 bg-gray-50/50 cursor-pointer'
+                    }`}
+                  >
                     <input
                       type="file"
                       accept="image/*"
                       multiple
+                      disabled={(existingImages.length + newFiles.length) >= 5}
                       onChange={handleGalleryChange}
-                      className="hidden"
+                      className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed"
                     />
-                    <svg className="h-10 w-10 text-gray-400 mb-2" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                      <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    <span className="text-sm text-gray-600 font-medium">Click to add gallery images</span>
-                    <span className="text-xs text-gray-500 mt-1">
-                      {existingImages.length + newPreviews.length === 0 
-                        ? 'Add up to 5 images' 
-                        : `${5 - (existingImages.length + newPreviews.length)} slots remaining`}
-                    </span>
-                  </label>
-                )}
-              </div>
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center text-gray-400">
+                        <Upload className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <span className="text-sm font-bold text-slate-900">Upload new files</span>
+                        <p className="text-xs text-gray-400 mt-1">Select from computer</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Library Box */}
+                  <div 
+                    onClick={() => (existingImages.length + newFiles.length) < 5 && setIsGalleryPickerOpen(true)}
+                    className={`border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center bg-gray-50/50 flex flex-col items-center justify-center gap-4 transition-all ${
+                      (existingImages.length + newFiles.length) >= 5 ? 'opacity-50 cursor-not-allowed' : 'hover:border-amber-300 cursor-pointer'
+                    }`}
+                  >
+                    <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center text-gray-400">
+                      <Search className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <span className="text-sm font-bold text-slate-900">Choose from Library</span>
+                      <p className="text-xs text-gray-400 mt-1">Select from previously uploaded</p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <div className="grid grid-cols-4 lg:grid-cols-5 gap-4">
                 {existingImages.map((src, idx) => (
                   <div key={`existing-${idx}`} className="relative aspect-square rounded-lg overflow-hidden border-2 border-gray-200 group">
-                    <img src={src} alt={`Gallery Existing ${idx + 1}`} className="w-full h-full object-cover" />
+                    <img src={getMediaUrl(src)} alt={`Gallery Existing ${idx + 1}`} className="w-full h-full object-cover" />
                     <button
                       type="button"
                       onClick={() => removeExistingImage(idx)}
@@ -486,6 +530,13 @@ export function ProductFormClient({
         </div>
       </div>
     </div>
+    
+    {isGalleryPickerOpen && (
+      <MediaPicker 
+        onClose={() => setIsGalleryPickerOpen(false)} 
+        onSelect={handleGalleryLibrarySelect} 
+      />
+    )}
     </>
   );
 }

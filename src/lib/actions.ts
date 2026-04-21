@@ -1,40 +1,28 @@
 'use server';
 
-import { supabase } from '@/lib/supabase';
+import { prisma } from '@/lib/prisma';
 
 export async function getCategories() {
     try {
-        const { data: categories, error } = await supabase
-            .from('Category')
-            .select(`
-                id,
-                name,
-                slug,
-                description,
-                Product (
-                    id,
-                    title,
-                    slug,
-                    price,
-                    mainImage,
-                    isFeatured,
-                    status,
-                    isActive
-                )
-            `)
-            .eq('isActive', true)
-            .eq('Product.isActive', true)
-            .order('name', { ascending: true });
+        const categories = await prisma.category.findMany({
+            where: {
+                isActive: true,
+            },
+            include: {
+                products: {
+                    where: {
+                        isActive: true
+                    }
+                }
+            },
+            orderBy: {
+                name: 'asc'
+            }
+        });
 
-        if (error) {
-            console.error('Error fetching categories from Supabase:', error);
-            return [];
-        }
-
-        // Return categories with their products formatted
-        return (categories || []).map(cat => ({
+        return categories.map(cat => ({
             ...cat,
-            products: (cat.Product as any[] || []).map(p => ({
+            products: cat.products.map(p => ({
                 ...p,
                 price: p.price.toString()
             }))
@@ -47,19 +35,22 @@ export async function getCategories() {
 
 export async function getFeaturedProducts() {
     try {
-        const { data: products, error } = await supabase
-            .from('Product')
-            .select('id, title, slug, mainImage, price')
-            .eq('isFeatured', true)
-            .eq('isActive', true)
-            .limit(4);
+        const products = await prisma.product.findMany({
+            where: {
+                isFeatured: true,
+                isActive: true
+            },
+            take: 4,
+            select: {
+                id: true,
+                title: true,
+                slug: true,
+                mainImage: true,
+                price: true
+            }
+        });
 
-        if (error) {
-            console.error('Error fetching featured products from Supabase:', error);
-            return [];
-        }
-
-        return (products || []).map(product => ({
+        return products.map(product => ({
             ...product,
             price: product.price.toString()
         }));
@@ -71,18 +62,16 @@ export async function getFeaturedProducts() {
 
 export async function getTestimonials() {
     try {
-        const { data: testimonials, error } = await supabase
-            .from('Testimonial')
-            .select('*')
-            .eq('isActive', true)
-            .order('createdAt', { ascending: false });
+        const testimonials = await prisma.testimonial.findMany({
+            where: {
+                isActive: true
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        });
 
-        if (error) {
-            console.error('Error fetching testimonials from Supabase:', error);
-            return [];
-        }
-
-        return testimonials || [];
+        return testimonials;
     } catch (error) {
         console.error('Error fetching testimonials:', error);
         return [];
@@ -91,18 +80,16 @@ export async function getTestimonials() {
 
 export async function getBanners() {
     try {
-        const { data: banners, error } = await supabase
-            .from('Banner')
-            .select('*')
-            .eq('isActive', true)
-            .order('order', { ascending: true });
+        const banners = await prisma.banner.findMany({
+            where: {
+                isActive: true
+            },
+            orderBy: {
+                order: 'asc'
+            }
+        });
 
-        if (error) {
-            console.error('Error fetching banners from Supabase:', error);
-            return [];
-        }
-
-        return banners || [];
+        return banners;
     } catch (error) {
         console.error('Error fetching banners:', error);
         return [];

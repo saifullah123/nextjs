@@ -107,14 +107,15 @@ export async function saveUploadedFile(file: File, folder: string = 'products'):
 }
 
 export async function saveMultipleFiles(files: File[], folder: string = 'products'): Promise<string[]> {
-    const paths: string[] = [];
-    for (const file of files) {
+    const uploadPromises = files.map(async (file) => {
         try {
-            const path = await saveUploadedFile(file, folder);
-            paths.push(path);
+            return await saveUploadedFile(file, folder);
         } catch (error) {
             console.error(`Failed to save file ${file.name}:`, error);
+            return null;
         }
-    }
-    return paths;
+    });
+
+    const results = await Promise.all(uploadPromises);
+    return results.filter((path): path is string => path !== null);
 }

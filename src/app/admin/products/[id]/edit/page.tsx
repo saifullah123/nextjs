@@ -1,3 +1,4 @@
+export const maxDuration = 60;
 import { prisma } from '@/lib/prisma';
 import { updateProduct } from '../../actions';
 import { ProductFormClient } from '@/components/ProductFormClient';

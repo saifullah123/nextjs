@@ -18,7 +18,7 @@ export default async function ProductsPage() {
     // Serialize products for client consumption (Prisma Decimal is not a plain object)
     const serializedProducts = products.map(product => ({
       ...product,
-      price: product.price.toString(),
+      price: product.price ? product.price.toString() : '—',
       createdAt: product.createdAt.toISOString(),
       updatedAt: product.updatedAt.toISOString(),
     }));

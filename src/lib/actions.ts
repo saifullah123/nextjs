@@ -24,7 +24,7 @@ export async function getCategories() {
             ...cat,
             products: cat.products.map(p => ({
                 ...p,
-                price: p.price.toString()
+                price: p.price ? p.price.toString() : '—'
             }))
         }));
     } catch (error) {
@@ -52,7 +52,7 @@ export async function getFeaturedProducts() {
 
         return products.map(product => ({
             ...product,
-            price: product.price.toString()
+            price: product.price ? product.price.toString() : '—'
         }));
     } catch (error) {
         console.error('Error fetching featured products:', error);

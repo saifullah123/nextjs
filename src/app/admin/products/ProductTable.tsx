@@ -134,7 +134,7 @@ export default function ProductTable({ products }: ProductTableProps) {
                   </span>
                 </td>
                 <td className="px-6 py-4">
-                  <span className="text-sm font-black text-slate-900">${product.price.toString()}</span>
+                  <span className="text-sm font-black text-slate-900">${product.price}</span>
                 </td>
                 <td className="px-6 py-4">
                     <div className="flex items-center gap-2">

@@ -52,6 +52,7 @@ model Product {
   metaTitle        String?
   metaDescription  String?
   metaKeywords     String?
+  tags             String[] @default([])
   categoryId       String
   category         Category @relation(fields: [categoryId], references: [id])
   createdAt        DateTime @default(now())

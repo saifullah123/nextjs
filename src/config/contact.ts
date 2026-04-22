@@ -10,12 +10,11 @@ export const CONTACT_INFO = {
     email: 'ksaifullah680@gmail.com',
 
     // Alternative contact methods (optional)
-    // phone: '+1 (555) 123-4567', // Update with your actual phone number
-    phone: '+91 6387310357', // Update with your actual phone number
-    address: 'Your Business Address', // Update with your actual address
+    phone: '', // Removed as per request
+    address: 'India', // Updated with your requested location
 
     // Business hours (optional)
-    businessHours: 'Monday - Friday: 9:00 AM - 6:00 PM',
+    businessHours: 'Monday - Saturday: 10:00 AM - 7:00 PM',
 
     // Social media links
     social: {
@@ -27,8 +26,8 @@ export const CONTACT_INFO = {
 
     // Company information
     company: {
-        name: 'ProductCase',
-        tagline: 'Your premium destination for high-quality product cases',
-        description: 'Protecting what matters most.',
+        name: 'Net Gate',
+        tagline: 'Luxury Performance - Unrivaled Comfort For Your Companion',
+        description: 'Crafting premium equestrian gear that marries centuries-old saddlery traditions with modern performance innovation.',
     }
 } as const;

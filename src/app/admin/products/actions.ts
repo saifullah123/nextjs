@@ -91,6 +91,7 @@ export async function createProduct(formData: FormData) {
                 metaTitle: formData.get('metaTitle') as string,
                 metaDescription: formData.get('metaDescription') as string,
                 metaKeywords: formData.get('metaKeywords') as string,
+                tags: (formData.get('tags') as string)?.split(',').map(tag => tag.trim()).filter(Boolean) || [],
             }
         });
 
@@ -187,6 +188,7 @@ export async function updateProduct(id: string, formData: FormData) {
                 metaTitle: formData.get('metaTitle') as string,
                 metaDescription: formData.get('metaDescription') as string,
                 metaKeywords: formData.get('metaKeywords') as string,
+                tags: (formData.get('tags') as string)?.split(',').map(tag => tag.trim()).filter(Boolean) || [],
             }
         });
     } catch (error: any) {

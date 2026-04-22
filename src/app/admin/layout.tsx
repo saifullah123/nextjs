@@ -42,9 +42,16 @@ export default function AdminLayout({
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Mobile Header */}
       <div className="lg:hidden bg-gradient-to-r from-slate-900 to-slate-800 text-white p-4 flex items-center justify-between sticky top-0 z-50">
-        <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-          Admin Panel
-        </h1>
+        <Link href="/" className="flex items-center gap-2">
+          <img 
+            src="/footer-logo.png" 
+            alt="Logo" 
+            className="h-8 w-auto" 
+          />
+          {/* <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            Admin
+          </h1> */}
+        </Link>
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           className="text-white"
@@ -61,9 +68,16 @@ export default function AdminLayout({
       {/* Sidebar - Desktop */}
       <aside className="hidden lg:block fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-slate-900 to-slate-800 text-white shadow-2xl z-40">
         <div className="p-6 border-b border-white/10">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-            Admin Panel
-          </h1>
+        <div className="flex items-center gap-2">
+          <img 
+            src="/footer-logo.png" 
+            alt="Logo" 
+            className="h-10 w-auto" 
+          />
+          {/* <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            Admin
+          </h1> */}
+        </div>
         </div>
 
         <nav className="p-4 space-y-2">
@@ -111,9 +125,16 @@ export default function AdminLayout({
           {/* Sidebar */}
           <aside className="lg:hidden fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-slate-900 to-slate-800 text-white shadow-2xl z-50">
             <div className="p-6 border-b border-white/10">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Admin Panel
-              </h1>
+            <div className="flex items-center gap-2">
+              <img 
+                src="/footer-logo.png" 
+                alt="Logo" 
+                className="h-10 w-auto" 
+              />
+              {/* <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Admin
+              </h1> */}
+            </div>
             </div>
 
             <nav className="p-4 space-y-2">

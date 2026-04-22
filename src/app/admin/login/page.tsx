@@ -10,6 +10,11 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <div className="bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-2xl w-full max-w-md border border-white/20">
         <div className="text-center mb-8">
+          <img 
+            src="/logo.png" 
+            alt="NET GATE Logo" 
+            className="h-20 w-auto mx-auto mb-6"
+          />
           <h1 className="text-3xl font-bold text-white mb-2">Admin Login</h1>
           <p className="text-gray-300">Sign in to access the admin panel</p>
         </div>

@@ -42,9 +42,8 @@ function ContactForm() {
 
              <div className="space-y-10">
                 {[
-                  { icon: MapPin, label: 'Global Headquarters', val: 'New York, NY 10013', color: 'text-amber-700' },
-                  { icon: Mail, label: 'Direct Inquiry', val: 'concierge@equineelite.com', color: 'text-amber-600' },
-                  { icon: Phone, label: 'Elite Communications', val: '+1 (800) EQUINE-0', color: 'text-amber-500' }
+                  { icon: MapPin, label: 'Regional Presence', val: 'India', color: 'text-amber-700' },
+                  { icon: Mail, label: 'Direct Inquiry', val: 'ksaifullah680@gmail.com', color: 'text-amber-600' }
                 ].map((item, i) => (
                   <div key={i} className="flex gap-6 items-center group">
                     <div className="w-16 h-16 rounded-[2rem] bg-white border border-gray-100 shadow-sm flex items-center justify-center transition-all duration-500 group-hover:bg-amber-950 group-hover:text-white group-hover:scale-110">
@@ -57,6 +56,7 @@ function ContactForm() {
                   </div>
                 ))}
              </div>
+
           </div>
 
           {/* Right Column: Premium Form */}
@@ -118,18 +118,7 @@ function ContactForm() {
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-3 group">
-                     <label htmlFor="phone" className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-400 pl-2 group-focus-within:text-amber-600 transition-colors">Secure Line (Optional)</label>
-                     <div className="relative">
-                        <input
-                          type="tel"
-                          id="phone"
-                          name="phone"
-                          className="w-full px-8 py-5 bg-stone-50 border border-transparent rounded-[2rem] focus:bg-white focus:ring-4 focus:ring-amber-600/5 focus:border-amber-600 transition-all duration-500 outline-none font-black text-slate-950 text-sm placeholder:text-stone-300"
-                          placeholder="+1 (000) 000-0000"
-                        />
-                     </div>
-                  </div>
+
 
                   <div className="flex flex-col gap-3 group">
                      <label htmlFor="message" className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-400 pl-2 group-focus-within:text-amber-600 transition-colors">Inquiry Specification</label>

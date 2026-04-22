@@ -131,32 +131,12 @@ export default function Header() {
     >
       <div className="container mx-auto px-6 max-w-screen-2xl">
         <div className="flex items-center justify-between gap-12">
-          {/* Logo Section */}
-          <Link href="/" className="flex items-center gap-5 shrink-0 group relative z-10">
-            <div className="relative w-14 h-14">
-               <div className="absolute inset-0 bg-slate-900 rounded-[1.25rem] group-hover:scale-105 group-hover:rotate-6 transition-all duration-700 shadow-2xl" />
-               <div className="absolute inset-0 bg-gradient-to-br from-amber-500 to-amber-700 rounded-[1.25rem] opacity-0 group-hover:opacity-100 transition-all duration-700 scale-95" />
-               <div className="absolute inset-0 flex items-center justify-center">
-                  <Sparkles className="w-7 h-7 text-amber-500 group-hover:text-white transition-colors duration-700" />
-               </div>
-            </div>
-            <div className="flex flex-col">
-              <span className={cn(
-                "text-3xl font-black tracking-[-0.05em] leading-[0.8] mb-1.5 transition-colors duration-500",
-                "text-slate-950"
-              )}>
-                NET GATE
-              </span>
-              <div className="flex items-center gap-2">
-                 <div className="w-6 h-[1px] bg-amber-600" />
-                 <span className={cn(
-                   "text-[9px] uppercase tracking-[0.5em] font-black transition-all duration-500",
-                   "text-amber-700"
-                 )}>
-                   Luxury Performance
-                 </span>
-              </div>
-            </div>
+          <Link href="/" className="flex items-center shrink-0 group relative z-10">
+            <img 
+              src="/logo.png" 
+              alt="NET GATE Logo" 
+              className="h-14 w-auto object-contain transition-transform duration-700 group-hover:scale-105"
+            />
           </Link>
 
           {/* Navigation - Desktop */}

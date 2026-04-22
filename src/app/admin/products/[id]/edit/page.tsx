@@ -53,6 +53,7 @@ export default async function EditProductPage({
             metaTitle: product.metaTitle || '',
             metaDescription: product.metaDescription || '',
             metaKeywords: product.metaKeywords || '',
+            tags: product.tags,
           }}
           submitLabel="Update Product"
           isEdit={true}

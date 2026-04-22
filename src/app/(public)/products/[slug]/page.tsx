@@ -7,6 +7,7 @@ import { ArrowLeft, ArrowRight, ShieldCheck, Zap, Sparkles, Globe, Heart, Share2
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { getMediaUrl } from '@/lib/media_utils';
+import SizeSelector from '@/components/SizeSelector';
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -34,7 +35,10 @@ export async function generateMetadata({
   return {
     title: product.metaTitle || `${product.title} - Luxury ProductCase`,
     description: product.metaDescription || product.shortDescription || product.longDescription || `Discover the exceptional ${product.title}.`,
-    keywords: product.metaKeywords ? product.metaKeywords.split(',').map((k: string) => k.trim()) : [],
+    keywords: [
+      ...(product.metaKeywords ? product.metaKeywords.split(',').map((k: string) => k.trim()) : []),
+      ...(product.tags || [])
+    ],
   };
 }
 
@@ -146,6 +150,7 @@ export default async function ProductDetailPage({
             )}
 
             <div className="flex flex-col gap-4 mb-16">
+               <SizeSelector />
                {product.status !== 'out_of_stock' && product.status !== 'discontinued' ? (
                  <Link
                    href={`/contact?product=${encodeURIComponent(product.title)}`}

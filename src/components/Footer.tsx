@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { CONTACT_INFO } from '@/config/contact';
 import { motion } from 'framer-motion';
-import { Facebook, Instagram, Linkedin, Twitter, Mail, MapPin, Phone, ArrowUpRight, ShieldCheck, Zap, Heart, Sparkles } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Twitter, Mail, MapPin, ArrowUpRight, ShieldCheck, Zap, Heart, Sparkles } from 'lucide-react';
 import { useTranslations } from '@/hooks/useTranslations';
 
 export default function Footer() {
@@ -20,19 +20,12 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-20 mb-24">
           {/* Brand Identity */}
           <div className="space-y-10">
-            <Link href="/" className="flex items-center gap-4 group">
-               <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-white font-black text-3xl shadow-2xl group-hover:rotate-12 transition-all duration-700 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-amber-700 to-amber-500 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  <Sparkles className="w-8 h-8 relative z-10 text-amber-500 group-hover:scale-110 transition-transform" />
-               </div>
-               <div className="flex flex-col">
-                  <span className="text-4xl font-black tracking-tighter leading-tight font-heading group-hover:text-amber-500 transition-colors">
-                    NET GATE
-                  </span>
-                  <span className="text-[11px] uppercase tracking-[0.6em] text-amber-500 font-black -mt-1 group-hover:tracking-[0.7em] transition-all">
-                    {t('luxuryTack')}
-                  </span>
-               </div>
+            <Link href="/" className="flex items-center group">
+               <img 
+                 src="/footer-logo.png" 
+                 alt="NET GATE Logo" 
+                 className="h-16 w-auto object-contain transition-all duration-700 group-hover:scale-105"
+               />
             </Link>
             
             <p className="text-gray-400 text-lg leading-relaxed font-medium italic max-w-xs">
@@ -124,15 +117,7 @@ export default function Footer() {
                 </div>
               </a>
               
-              <div className="group flex items-center gap-5 bg-white/[0.03] border border-white/5 p-6 rounded-3xl cursor-default">
-                 <div className="w-12 h-12 bg-amber-500/10 rounded-2xl flex items-center justify-center text-amber-500">
-                   <Phone className="w-5 h-5" />
-                 </div>
-                 <div className="flex flex-col">
-                   <span className="text-[9px] uppercase font-black text-gray-500 tracking-widest">{t('contactPhone')}</span>
-                   <span className="text-sm font-black text-gray-100">{CONTACT_INFO.phone}</span>
-                 </div>
-              </div>
+
             </div>
           </div>
         </div>

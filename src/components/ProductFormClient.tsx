@@ -29,6 +29,7 @@ interface ProductFormClientProps {
     metaTitle?: string;
     metaDescription?: string;
     metaKeywords?: string;
+    tags?: string[];
   };
   submitLabel: string;
   isEdit?: boolean;
@@ -56,11 +57,20 @@ export function ProductFormClient({
     initialData?.galleryImages ? initialData.galleryImages.split(',').filter(Boolean) : []
   );
 
-  const handleGalleryLibrarySelect = (url: string) => {
-    if (existingImages.length + newFiles.length < 5) {
-      setExistingImages(prev => [...prev, url]);
+  const handleGalleryLibrarySelect = (url: string | string[]) => {
+    if (Array.isArray(url)) {
+      const remainingSlots = 5 - (existingImages.length + newFiles.length);
+      const toAdd = url.slice(0, remainingSlots);
+      setExistingImages(prev => [...prev, ...toAdd]);
+      if (url.length > remainingSlots) {
+        setGalleryError('Only added as many images as would fit (max 5)');
+      }
     } else {
-      setGalleryError('Maximum 5 images allowed in gallery');
+      if (existingImages.length + newFiles.length < 5) {
+        setExistingImages(prev => [...prev, url]);
+      } else {
+        setGalleryError('Maximum 5 images allowed in gallery');
+      }
     }
   };
   const [newFiles, setNewFiles] = useState<File[]>([]);
@@ -70,6 +80,25 @@ export function ProductFormClient({
   const [metaDescription, setMetaDescription] = useState(initialData?.metaDescription || '');
   const [metaKeywords, setMetaKeywords] = useState(initialData?.metaKeywords || '');
   const [productTitle, setProductTitle] = useState(initialData?.title || '');
+  const [tags, setTags] = useState<string[]>(initialData?.tags || []);
+  const [tagInput, setTagInput] = useState('');
+
+  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      const newTag = tagInput.trim().replace(/,$/, '');
+      if (newTag && !tags.includes(newTag)) {
+        setTags([...tags, newTag]);
+      }
+      setTagInput('');
+    } else if (e.key === 'Backspace' && !tagInput && tags.length > 0) {
+      setTags(tags.slice(0, -1));
+    }
+  };
+
+  const removeTag = (tagToRemove: string) => {
+    setTags(tags.filter(tag => tag !== tagToRemove));
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -85,6 +114,9 @@ export function ProductFormClient({
     newFiles.forEach((file) => {
       formData.append('galleryImages', file);
     });
+
+    // Add tags as comma-separated string
+    formData.append('tags', tags.join(','));
 
     startTransition(async () => {
       try {
@@ -483,18 +515,42 @@ export function ProductFormClient({
                 </div>
 
                 <div>
-                  <label htmlFor="metaKeywords" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Meta Keywords
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Product Tags (Multiple)
                   </label>
-                  <input
-                    type="text"
-                    id="metaKeywords"
-                    name="metaKeywords"
-                    value={metaKeywords}
-                    onChange={(e) => setMetaKeywords(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
-                    placeholder="keyword1, keyword2, keyword3"
-                  />
+                  <div className="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-purple-500 focus-within:border-transparent transition bg-white min-h-[50px]">
+                    {tags.map((tag, index) => (
+                      <span 
+                        key={index} 
+                        className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-bold flex items-center gap-2 group hover:bg-purple-200 transition-colors"
+                      >
+                        {tag}
+                        <button
+                          type="button"
+                          onClick={() => removeTag(tag)}
+                          className="hover:text-purple-900 focus:outline-none"
+                        >
+                          <X size={14} strokeWidth={3} />
+                        </button>
+                      </span>
+                    ))}
+                    <input
+                      type="text"
+                      value={tagInput}
+                      onChange={(e) => setTagInput(e.target.value)}
+                      onKeyDown={handleTagKeyDown}
+                      onBlur={() => {
+                        const newTag = tagInput.trim().replace(/,$/, '');
+                        if (newTag && !tags.includes(newTag)) {
+                          setTags([...tags, newTag]);
+                          setTagInput('');
+                        }
+                      }}
+                      className="flex-1 outline-none min-w-[120px] text-sm py-1 bg-transparent"
+                      placeholder={tags.length === 0 ? "Type and press Enter or comma to add tags..." : "Add more tags..."}
+                    />
+                  </div>
+                  <p className="text-xs text-secondary-text mt-2 italic font-medium">Add multiple keywords to improve SEO ranking (e.g., leather, premium, handcrafted)</p>
                 </div>
               </div>
             </div>
@@ -535,6 +591,9 @@ export function ProductFormClient({
       <MediaPicker 
         onClose={() => setIsGalleryPickerOpen(false)} 
         onSelect={handleGalleryLibrarySelect} 
+        onSelectMultiple={handleGalleryLibrarySelect}
+        multiple={true}
+        maxSelections={5 - (existingImages.length + newFiles.length)}
       />
     )}
     </>

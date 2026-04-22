@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, useEffect } from 'react';
+import { useState, useTransition, useEffect, useMemo } from 'react';
 import { ImageUpload } from '@/components/ImageUpload';
 import { SeoAnalysis } from '@/components/SeoAnalysis';
 import { useRouter } from 'next/navigation';
@@ -8,6 +8,14 @@ import { FullScreenLoader } from '@/components/FullScreenLoader';
 import { getMediaUrl } from '@/lib/media_utils';
 import { MediaPicker } from './MediaPicker';
 import { Upload, Search, Trash2, X, Image as ImageIcon } from 'lucide-react';
+import dynamic from 'next/dynamic';
+import 'react-quill-new/dist/quill.snow.css';
+
+// Dynamically import ReactQuill for client-side rendering
+const ReactQuill = dynamic(() => import('react-quill-new'), { 
+  ssr: false,
+  loading: () => <div className="h-40 bg-gray-50 animate-pulse rounded-lg border border-gray-200" />
+});
 
 interface ProductFormClientProps {
   categories: Array<{ id: string; name: string }>;
@@ -59,17 +67,17 @@ export function ProductFormClient({
 
   const handleGalleryLibrarySelect = (url: string | string[]) => {
     if (Array.isArray(url)) {
-      const remainingSlots = 5 - (existingImages.length + newFiles.length);
+      const remainingSlots = 15 - (existingImages.length + newFiles.length);
       const toAdd = url.slice(0, remainingSlots);
       setExistingImages(prev => [...prev, ...toAdd]);
       if (url.length > remainingSlots) {
-        setGalleryError('Only added as many images as would fit (max 5)');
+        setGalleryError('Only added as many images as would fit (max 15)');
       }
     } else {
-      if (existingImages.length + newFiles.length < 5) {
+      if (existingImages.length + newFiles.length < 15) {
         setExistingImages(prev => [...prev, url]);
       } else {
-        setGalleryError('Maximum 5 images allowed in gallery');
+        setGalleryError('Maximum 15 images allowed in gallery');
       }
     }
   };
@@ -80,6 +88,8 @@ export function ProductFormClient({
   const [metaDescription, setMetaDescription] = useState(initialData?.metaDescription || '');
   const [metaKeywords, setMetaKeywords] = useState(initialData?.metaKeywords || '');
   const [productTitle, setProductTitle] = useState(initialData?.title || '');
+  const [shortDescription, setShortDescription] = useState(initialData?.shortDescription || '');
+  const [longDescription, setLongDescription] = useState(initialData?.longDescription || '');
   const [tags, setTags] = useState<string[]>(initialData?.tags || []);
   const [tagInput, setTagInput] = useState('');
 
@@ -115,6 +125,10 @@ export function ProductFormClient({
       formData.append('galleryImages', file);
     });
 
+    // Add descriptions
+    formData.set('shortDescription', shortDescription);
+    formData.set('longDescription', longDescription);
+
     // Add tags as comma-separated string
     formData.append('tags', tags.join(','));
 
@@ -140,7 +154,7 @@ export function ProductFormClient({
 
     const newFilesList = Array.from(files);
     const totalCurrentImages = existingImages.length + newFiles.length;
-    const remainingSlots = 5 - totalCurrentImages;
+    const remainingSlots = 15 - totalCurrentImages;
 
     if (newFilesList.length > remainingSlots) {
       setGalleryError(`You can only upload ${remainingSlots} more image${remainingSlots !== 1 ? 's' : ''}`);
@@ -256,13 +270,12 @@ export function ProductFormClient({
 
             <div>
               <label htmlFor="price" className="block text-sm font-semibold text-gray-700 mb-2">
-                Price ($) *
+                Price ($)
               </label>
               <input
                 type="number"
                 id="price"
                 name="price"
-                required
                 step="0.01"
                 min="0"
                 defaultValue={initialData?.price}
@@ -327,31 +340,50 @@ export function ProductFormClient({
             </div>
 
             <div className="col-span-2">
-              <label htmlFor="shortDescription" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Short Description
               </label>
-              <textarea
-                id="shortDescription"
-                name="shortDescription"
-                rows={2}
-                defaultValue={initialData?.shortDescription}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
-                placeholder="Brief product description for cards..."
-              />
+              <div className="bg-white rounded-lg overflow-hidden border border-gray-300 focus-within:ring-2 focus-within:ring-purple-500 transition">
+                <ReactQuill
+                  theme="snow"
+                  value={shortDescription}
+                  onChange={setShortDescription}
+                  placeholder="Brief product description for cards..."
+                  modules={{
+                    toolbar: [
+                      ['bold', 'italic', 'underline'],
+                      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                      ['clean']
+                    ],
+                  }}
+                  className="bg-white min-h-[100px]"
+                />
+              </div>
             </div>
 
             <div className="col-span-2">
-              <label htmlFor="longDescription" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Long Description
               </label>
-              <textarea
-                id="longDescription"
-                name="longDescription"
-                rows={5}
-                defaultValue={initialData?.longDescription}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
-                placeholder="Detailed product description..."
-              />
+              <div className="bg-white rounded-lg overflow-hidden border border-gray-300 focus-within:ring-2 focus-within:ring-purple-500 transition">
+                <ReactQuill
+                  theme="snow"
+                  value={longDescription}
+                  onChange={setLongDescription}
+                  placeholder="Detailed product description..."
+                  modules={{
+                    toolbar: [
+                      [{ 'header': [1, 2, 3, false] }],
+                      ['bold', 'italic', 'underline', 'strike'],
+                      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                      [{ 'color': [] }, { 'background': [] }],
+                      ['link', 'image'],
+                      ['clean']
+                    ],
+                  }}
+                  className="bg-white min-h-[300px]"
+                />
+              </div>
             </div>
 
             <div className="col-span-2">
@@ -365,7 +397,7 @@ export function ProductFormClient({
 
             <div className="col-span-2">
               <div className="block text-sm font-semibold text-gray-700 mb-2">
-                Gallery Images (Max 5)
+                Gallery Images (Max 15)
               </div>
               
               {!isMounted ? (
@@ -377,14 +409,14 @@ export function ProductFormClient({
                   {/* Upload Box */}
                   <div
                     className={`relative border-2 border-dashed rounded-2xl p-8 text-center transition-all ${
-                      (existingImages.length + newFiles.length) >= 5 ? 'opacity-50 cursor-not-allowed border-gray-200' : 'border-gray-200 hover:border-amber-300 bg-gray-50/50 cursor-pointer'
+                      (existingImages.length + newFiles.length) >= 15 ? 'opacity-50 cursor-not-allowed border-gray-200' : 'border-gray-200 hover:border-amber-300 bg-gray-50/50 cursor-pointer'
                     }`}
                   >
                     <input
                       type="file"
                       accept="image/*"
                       multiple
-                      disabled={(existingImages.length + newFiles.length) >= 5}
+                      disabled={(existingImages.length + newFiles.length) >= 15}
                       onChange={handleGalleryChange}
                       className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed"
                     />
@@ -401,9 +433,9 @@ export function ProductFormClient({
 
                   {/* Library Box */}
                   <div 
-                    onClick={() => (existingImages.length + newFiles.length) < 5 && setIsGalleryPickerOpen(true)}
+                    onClick={() => (existingImages.length + newFiles.length) < 15 && setIsGalleryPickerOpen(true)}
                     className={`border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center bg-gray-50/50 flex flex-col items-center justify-center gap-4 transition-all ${
-                      (existingImages.length + newFiles.length) >= 5 ? 'opacity-50 cursor-not-allowed' : 'hover:border-amber-300 cursor-pointer'
+                      (existingImages.length + newFiles.length) >= 15 ? 'opacity-50 cursor-not-allowed' : 'hover:border-amber-300 cursor-pointer'
                     }`}
                   >
                     <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center text-gray-400">
@@ -592,7 +624,7 @@ export function ProductFormClient({
         onSelect={handleGalleryLibrarySelect} 
         onSelectMultiple={handleGalleryLibrarySelect}
         multiple={true}
-        maxSelections={5 - (existingImages.length + newFiles.length)}
+        maxSelections={15 - (existingImages.length + newFiles.length)}
       />
     )}
     </>

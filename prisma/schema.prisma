@@ -40,7 +40,7 @@ model Product {
   title            String
   slug             String   @unique
   sku              String?  @unique // Stock Keeping Unit
-  price            Decimal
+  price            Decimal?
   quantity         Int      @default(0) // Available quantity
   shortDescription String?
   longDescription  String?

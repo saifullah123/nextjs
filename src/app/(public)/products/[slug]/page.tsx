@@ -140,9 +140,10 @@ export default async function ProductDetailPage({
 
             {product.shortDescription && (
               <div className="relative mb-14">
-                <p className="text-gray-500 text-xl font-medium leading-relaxed italic border-l-[6px] border-purple-600/20 pl-8">
-                  "{product.shortDescription}"
-                </p>
+                <div 
+                  className="text-gray-500 text-xl font-medium leading-relaxed italic border-l-[6px] border-purple-600/20 pl-8 prose prose-slate max-w-none"
+                  dangerouslySetInnerHTML={{ __html: product.shortDescription }}
+                />
                 <div className="absolute top-0 right-0 opacity-10 grayscale pointer-events-none">
                   <Sparkles size={60} />
                 </div>
@@ -196,13 +197,10 @@ export default async function ProductDetailPage({
                    <div className="w-8 h-[1px] bg-gray-200"></div>
                    Specifications & Details
                 </h2>
-                <div className="text-gray-600 leading-relaxed font-medium space-y-8 text-lg">
-                   {product.longDescription.split('\n\n').map((para, i) => (
-                     <p key={i} className="italic text-gray-400 font-medium">
-                        {para}
-                     </p>
-                   ))}
-                </div>
+                <div 
+                  className="text-gray-600 leading-relaxed font-medium space-y-4 text-lg prose prose-slate max-w-none prose-p:text-gray-400 prose-p:italic prose-p:font-medium"
+                  dangerouslySetInnerHTML={{ __html: product.longDescription }}
+                />
               </div>
             )}
           </div>

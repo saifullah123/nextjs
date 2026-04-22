@@ -33,8 +33,13 @@ export async function submitContactForm(prevState: any, formData: FormData) {
                 phone: phone || undefined,
                 message,
             });
-        } catch (emailError) {
-            console.error('Email sending failed:', emailError);
+        } catch (emailError: any) {
+            console.error('Email sending failed details:', {
+                message: emailError.message,
+                code: emailError.code,
+                command: emailError.command,
+                stack: emailError.stack
+            });
             // Continue even if email fails - message is saved in database
         }
 

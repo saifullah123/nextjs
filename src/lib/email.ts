@@ -1,13 +1,22 @@
 import nodemailer from 'nodemailer';
 import { CONTACT_INFO } from '@/config/contact';
 
+// Debug log for environment variables (safely)
+console.log('Email Config Check:', {
+    hasUser: !!process.env.EMAIL_USER,
+    hasPass: !!process.env.EMAIL_PASSWORD,
+    userEmail: process.env.EMAIL_USER ? `${process.env.EMAIL_USER.substring(0, 3)}...` : 'N/A'
+});
+
 // Email configuration
-// You can use Gmail, Outlook, or any SMTP service
+// Using explicit host/port for better production reliability
 const transporter = nodemailer.createTransport({
-    service: 'gmail', // You can change this to 'outlook', 'yahoo', etc.
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // use SSL
     auth: {
-        user: process.env.EMAIL_USER, // Your email address
-        pass: process.env.EMAIL_PASSWORD, // Your email password or app-specific password
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
     },
 });
 

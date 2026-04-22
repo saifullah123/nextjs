@@ -42,7 +42,7 @@ export default async function EditProductPage({
             sku: product.sku || '',
             price: Number(product.price),
             quantity: product.quantity,
-            categoryId: product.categoryId,
+            categoryId: product.categoryId ?? undefined,
             shortDescription: product.shortDescription || '',
             longDescription: product.longDescription || '',
             mainImage: product.mainImage || '',

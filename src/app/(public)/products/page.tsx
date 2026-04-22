@@ -142,7 +142,7 @@ export default async function ProductsPage({
                   <div className="p-10">
                     <div className="flex flex-col gap-2 mb-8">
                        <div className="flex items-center gap-3">
-                          <span className="text-[10px] uppercase tracking-[0.3em] text-purple-600 font-black">{product.category.name}</span>
+                          <span className="text-[10px] uppercase tracking-[0.3em] text-purple-600 font-black">{product.category?.name}</span>
                           <span className="w-1 h-1 rounded-full bg-gray-200"></span>
                           <span className="text-[9px] uppercase font-black text-gray-400 tracking-widest">{product.status.replace('_', ' ')}</span>
                        </div>

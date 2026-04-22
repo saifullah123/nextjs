@@ -72,7 +72,16 @@ export async function deleteCategory(id: string) {
 }
 
 export async function deleteMultipleCategories(ids: string[]) {
+    if (!ids || ids.length === 0) return { success: true };
     try {
+        // Disconnect products first to prevent foreign key constraint errors
+        // We use $executeRaw to bypass any potential issues with stale Prisma Client types
+        // after the schema change if the dev server is holding a lock on the client files.
+        const idsList = ids.map(id => `'${id}'`).join(',');
+        await prisma.$executeRawUnsafe(
+            `UPDATE "Product" SET "categoryId" = NULL WHERE "categoryId" IN (${idsList})`
+        );
+
         await prisma.category.deleteMany({
             where: { id: { in: ids } },
         });
@@ -82,6 +91,10 @@ export async function deleteMultipleCategories(ids: string[]) {
         return { success: true };
     } catch (error) {
         console.error('Error deleting multiple categories:', error);
-        return { error: 'Failed to delete selected categories' };
+        return { 
+            error: error instanceof Error 
+                ? `Failed to delete: ${error.message}` 
+                : 'Failed to delete selected categories' 
+        };
     }
 }

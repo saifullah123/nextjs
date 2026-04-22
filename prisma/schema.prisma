@@ -53,8 +53,8 @@ model Product {
   metaDescription  String?
   metaKeywords     String?
   tags             String[] @default([])
-  categoryId       String
-  category         Category @relation(fields: [categoryId], references: [id])
+  categoryId       String?
+  category         Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 }

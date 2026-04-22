@@ -17,10 +17,10 @@ export async function createProduct(formData: FormData) {
         const price = parseFloat(formData.get('price') as string);
         const quantityStr = formData.get('quantity') as string;
         const quantity = quantityStr !== '' ? parseInt(quantityStr) : 0;
-        const categoryId = formData.get('categoryId') as string;
+        const categoryId = (formData.get('categoryId') as string) || null;
 
         if (isNaN(quantity)) return { error: 'Quantity is required' };
-        if (!title || !slug || !price || !categoryId) return { error: 'Missing required fields' };
+        if (!title || !slug || !price) return { error: 'Missing required fields' };
 
         // 2. Check Uniqueness using Prisma
         const existingSlug = await prisma.product.findUnique({ where: { slug } });
@@ -113,7 +113,7 @@ export async function updateProduct(id: string, formData: FormData) {
         const price = parseFloat(formData.get('price') as string);
         const quantityStr = formData.get('quantity') as string;
         const quantity = quantityStr !== '' ? parseInt(quantityStr) : 0;
-        const categoryId = formData.get('categoryId') as string;
+        const categoryId = (formData.get('categoryId') as string) || null;
 
         if (isNaN(quantity)) return { error: 'Quantity is required' };
 

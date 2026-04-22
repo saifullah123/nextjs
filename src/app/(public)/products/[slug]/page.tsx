@@ -111,7 +111,7 @@ export default async function ProductDetailPage({
             <div className="flex flex-col gap-6 mb-12">
                <div className="flex items-center gap-3">
                   <span className="px-6 py-2.5 bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.3em] rounded-full shadow-xl">
-                    {product.category.name}
+                    {product.category?.name || 'Uncategorized'}
                   </span>
                   {product.status === 'in_stock' ? (
                      <div className="flex items-center gap-2 text-emerald-600 text-[10px] font-black uppercase tracking-[0.2em] bg-emerald-50 px-5 py-2.5 rounded-full border border-emerald-100/50">

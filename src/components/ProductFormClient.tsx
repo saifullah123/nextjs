@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useTransition, useEffect, useMemo } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import { ImageUpload } from '@/components/ImageUpload';
 import { SeoAnalysis } from '@/components/SeoAnalysis';
 import { useRouter } from 'next/navigation';
 import { FullScreenLoader } from '@/components/FullScreenLoader';
 import { getMediaUrl } from '@/lib/media_utils';
 import { MediaPicker } from './MediaPicker';
-import { Upload, Search, Trash2, X, Image as ImageIcon } from 'lucide-react';
+import { Upload, Search, X } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import 'react-quill-new/dist/quill.snow.css';
 
@@ -53,36 +53,13 @@ export function ProductFormClient({
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [galleryError, setGalleryError] = useState<string | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
   const [isGalleryPickerOpen, setIsGalleryPickerOpen] = useState(false);
-  const [existingImages, setExistingImages] = useState<string[]>(
+  const [existingGalleryImages, setExistingGalleryImages] = useState<string[]>(
     initialData?.galleryImages ? initialData.galleryImages.split(',').filter(Boolean) : []
   );
-
-  const handleGalleryLibrarySelect = (url: string | string[]) => {
-    if (Array.isArray(url)) {
-      const remainingSlots = 15 - (existingImages.length + newFiles.length);
-      const toAdd = url.slice(0, remainingSlots);
-      setExistingImages(prev => [...prev, ...toAdd]);
-      if (url.length > remainingSlots) {
-        setGalleryError('Only added as many images as would fit (max 15)');
-      }
-    } else {
-      if (existingImages.length + newFiles.length < 15) {
-        setExistingImages(prev => [...prev, url]);
-      } else {
-        setGalleryError('Maximum 15 images allowed in gallery');
-      }
-    }
-  };
-  const [newFiles, setNewFiles] = useState<File[]>([]);
-  const [newPreviews, setNewPreviews] = useState<string[]>([]);
+  const [newGalleryFiles, setNewGalleryFiles] = useState<{file: File, preview: string}[]>([]);
 
   const [metaTitle, setMetaTitle] = useState(initialData?.metaTitle || '');
   const [metaDescription, setMetaDescription] = useState(initialData?.metaDescription || '');
@@ -92,6 +69,71 @@ export function ProductFormClient({
   const [longDescription, setLongDescription] = useState(initialData?.longDescription || '');
   const [tags, setTags] = useState<string[]>(initialData?.tags || []);
   const [tagInput, setTagInput] = useState('');
+
+  const handleGalleryLibrarySelect = (url: string | string[]) => {
+    const urls = Array.isArray(url) ? url : [url];
+    const totalCount = existingGalleryImages.length + newGalleryFiles.length;
+    const remainingSlots = 15 - totalCount;
+    
+    if (remainingSlots <= 0) {
+      setGalleryError("Maximum 15 images allowed in gallery");
+      setIsGalleryPickerOpen(false);
+      return;
+    }
+
+    const toAdd = urls.slice(0, remainingSlots);
+    setExistingGalleryImages(prev => [...prev, ...toAdd]);
+    
+    if (urls.length > remainingSlots) {
+      setGalleryError(`Maximum 15 images allowed. Added ${remainingSlots} images.`);
+    }
+    setIsGalleryPickerOpen(false);
+  };
+
+  const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    const newFilesList = Array.from(files);
+    const totalCount = existingGalleryImages.length + newGalleryFiles.length;
+    const remainingSlots = 15 - totalCount;
+
+    if (newFilesList.length > remainingSlots) {
+      setGalleryError(`Maximum 15 images allowed. You can add ${remainingSlots} more.`);
+      e.target.value = '';
+      return;
+    }
+
+    const validFiles: {file: File, preview: string}[] = [];
+    for (const file of newFilesList) {
+      if (file.size > 10 * 1024 * 1024) {
+        setGalleryError(`File "${file.name}" exceeds 10MB limit`);
+        e.target.value = '';
+        return;
+      }
+      validFiles.push({
+        file,
+        preview: URL.createObjectURL(file)
+      });
+    }
+
+    setNewGalleryFiles(prev => [...prev, ...validFiles]);
+    e.target.value = '';
+    setGalleryError(null);
+  };
+
+  const removeExistingGalleryImage = (urlToRemove: string) => {
+    setExistingGalleryImages(prev => prev.filter(url => url !== urlToRemove));
+  };
+
+  const removeNewGalleryFile = (indexToRemove: number) => {
+    setNewGalleryFiles(prev => {
+      const newFiles = [...prev];
+      URL.revokeObjectURL(newFiles[indexToRemove].preview);
+      newFiles.splice(indexToRemove, 1);
+      return newFiles;
+    });
+  };
 
   const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' || e.key === ',') {
@@ -116,20 +158,14 @@ export function ProductFormClient({
     setGalleryError(null);
 
     const formData = new FormData(e.currentTarget);
+    formData.append('existingGalleryImages', JSON.stringify(existingGalleryImages));
     
-    // Add existing images
-    formData.append('existingGalleryImages', JSON.stringify(existingImages));
-
-    // Add new gallery images
-    newFiles.forEach((file) => {
+    newGalleryFiles.forEach(({file}) => {
       formData.append('galleryImages', file);
     });
 
-    // Add descriptions
     formData.set('shortDescription', shortDescription);
     formData.set('longDescription', longDescription);
-
-    // Add tags as comma-separated string
     formData.append('tags', tags.join(','));
 
     startTransition(async () => {
@@ -139,62 +175,10 @@ export function ProductFormClient({
           setError(result.error);
         }
       } catch (err: any) {
-        // Don't catch Next.js redirect errors - let them propagate
-        if (err?.digest?.startsWith('NEXT_REDIRECT')) {
-          throw err;
-        }
+        if (err?.digest?.startsWith('NEXT_REDIRECT')) throw err;
         setError(err instanceof Error ? err.message : 'An error occurred');
       }
     });
-  };
-
-  const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-
-    const newFilesList = Array.from(files);
-    const totalCurrentImages = existingImages.length + newFiles.length;
-    const remainingSlots = 15 - totalCurrentImages;
-
-    if (newFilesList.length > remainingSlots) {
-      setGalleryError(`You can only upload ${remainingSlots} more image${remainingSlots !== 1 ? 's' : ''}`);
-      e.target.value = '';
-      return;
-    }
-
-    const validFiles: File[] = [];
-    for (const file of newFilesList) {
-      if (file.size > 10 * 1024 * 1024) {
-        setGalleryError(`File "${file.name}" exceeds the 10MB limit`);
-        e.target.value = '';
-        return;
-      }
-      validFiles.push(file);
-    }
-
-    setNewFiles(prev => [...prev, ...validFiles]);
-
-    // Generate previews
-    validFiles.forEach(file => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewPreviews(prev => [...prev, reader.result as string]);
-      };
-      reader.readAsDataURL(file);
-    });
-    
-    // Reset input to allow selecting the same file again
-    e.target.value = '';
-    setGalleryError(null);
-  };
-
-  const removeExistingImage = (index: number) => {
-    setExistingImages(prev => prev.filter((_, i) => i !== index));
-  };
-
-  const removeNewImage = (index: number) => {
-    setNewFiles(prev => prev.filter((_, i) => i !== index));
-    setNewPreviews(prev => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -246,11 +230,6 @@ export function ProductFormClient({
                   e.target.value = val.replace(/\s+/g, '-').toLowerCase();
                 }}
               />
-              {isEdit ? (
-                <p className="text-xs text-gray-500 mt-1">Slug is permanent to prevent breaking links</p>
-              ) : (
-                <p className="text-xs text-gray-500 mt-1">Must be unique</p>
-              )}
             </div>
 
             <div>
@@ -265,7 +244,6 @@ export function ProductFormClient({
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition font-mono"
                 placeholder="e.g. PLC-001"
               />
-              <p className="text-xs text-gray-500 mt-1">Optional, must be unique if provided</p>
             </div>
 
             <div>
@@ -299,7 +277,6 @@ export function ProductFormClient({
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
                 placeholder="0"
               />
-              <p className="text-xs text-gray-500 mt-1">Available quantity for sale</p>
             </div>
 
             <div className="col-span-2">
@@ -395,93 +372,90 @@ export function ProductFormClient({
               />
             </div>
 
-            <div className="col-span-2">
-              <div className="block text-sm font-semibold text-gray-700 mb-2">
-                Gallery Images (Max 15)
+            <div className="col-span-2 space-y-4">
+              <div className="flex justify-between items-center">
+                <label className="block text-sm font-bold text-gray-700">
+                  Product Gallery (Max 15)
+                </label>
+                <span className="text-xs text-gray-500 font-medium">
+                  {existingGalleryImages.length + newGalleryFiles.length} / 15 images
+                </span>
               </div>
               
-              {!isMounted ? (
-                <div className="h-40 bg-gray-50 border-2 border-dashed border-gray-200 rounded-2xl flex items-center justify-center text-gray-400">
-                  Loading gallery uploader...
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                  {/* Upload Box */}
-                  <div
-                    className={`relative border-2 border-dashed rounded-2xl p-8 text-center transition-all ${
-                      (existingImages.length + newFiles.length) >= 15 ? 'opacity-50 cursor-not-allowed border-gray-200' : 'border-gray-200 hover:border-amber-300 bg-gray-50/50 cursor-pointer'
-                    }`}
-                  >
-                    <input
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      disabled={(existingImages.length + newFiles.length) >= 15}
-                      onChange={handleGalleryChange}
-                      className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed"
-                    />
-                    <div className="flex flex-col items-center gap-4">
-                      <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center text-gray-400">
-                        <Upload className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <span className="text-sm font-bold text-slate-900">Upload new files</span>
-                        <p className="text-xs text-gray-400 mt-1">Select from computer</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Library Box */}
-                  <div 
-                    onClick={() => (existingImages.length + newFiles.length) < 15 && setIsGalleryPickerOpen(true)}
-                    className={`border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center bg-gray-50/50 flex flex-col items-center justify-center gap-4 transition-all ${
-                      (existingImages.length + newFiles.length) >= 15 ? 'opacity-50 cursor-not-allowed' : 'hover:border-amber-300 cursor-pointer'
-                    }`}
-                  >
-                    <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center text-gray-400">
-                      <Search className="w-6 h-6" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div
+                  className={`relative border-2 border-dashed rounded-2xl p-6 text-center transition-all ${
+                    (existingGalleryImages.length + newGalleryFiles.length) >= 15 ? 'opacity-50 cursor-not-allowed border-gray-200' : 'border-gray-200 hover:border-amber-400 bg-gray-50/50 cursor-pointer hover:bg-amber-50/30'
+                  }`}
+                >
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    disabled={(existingGalleryImages.length + newGalleryFiles.length) >= 15}
+                    onChange={handleGalleryChange}
+                    className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed"
+                  />
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="w-10 h-10 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center text-amber-500">
+                      <Upload className="w-5 h-5" />
                     </div>
                     <div>
-                      <span className="text-sm font-bold text-slate-900">Choose from Library</span>
-                      <p className="text-xs text-gray-400 mt-1">Select from previously uploaded</p>
+                      <span className="text-sm font-bold text-slate-900">Upload Photos</span>
+                      <p className="text-[10px] text-gray-400 mt-0.5">JPG, PNG up to 10MB</p>
                     </div>
                   </div>
                 </div>
-              )}
 
-              <div className="grid grid-cols-4 lg:grid-cols-5 gap-4">
-                {existingImages.map((src, idx) => (
-                  <div key={`existing-${idx}`} className="relative aspect-square rounded-lg overflow-hidden border-2 border-gray-200 group">
-                    <img src={getMediaUrl(src)} alt={`Gallery Existing ${idx + 1}`} className="w-full h-full object-cover" />
+                <div 
+                  onClick={() => (existingGalleryImages.length + newGalleryFiles.length) < 15 && setIsGalleryPickerOpen(true)}
+                  className={`border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center bg-gray-50/50 flex flex-col items-center justify-center gap-2 transition-all ${
+                    (existingGalleryImages.length + newGalleryFiles.length) >= 15 ? 'opacity-50 cursor-not-allowed' : 'hover:border-amber-400 cursor-pointer hover:bg-amber-50/30'
+                  }`}
+                >
+                  <div className="w-10 h-10 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center text-blue-500">
+                    <Search className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <span className="text-sm font-bold text-slate-900">Media Library</span>
+                    <p className="text-[10px] text-gray-400 mt-0.5">Select from existing</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
+                {/* Existing Images */}
+                {existingGalleryImages.map((url, index) => (
+                  <div key={`existing-${index}`} className="relative aspect-square rounded-2xl overflow-hidden border-2 border-gray-100 shadow-sm group">
+                    <img src={getMediaUrl(url)} alt="Gallery" className="w-full h-full object-cover" />
                     <button
                       type="button"
-                      onClick={() => removeExistingImage(idx)}
-                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
+                      onClick={() => removeExistingGalleryImage(url)}
+                      className="absolute top-2 right-2 bg-white/90 hover:bg-red-500 hover:text-white text-gray-600 rounded-full p-1.5 shadow-lg transition-all transform scale-0 group-hover:scale-100"
                     >
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
+                      <X size={14} strokeWidth={3} />
                     </button>
                   </div>
                 ))}
                 
-                {newPreviews.map((src, idx) => (
-                  <div key={`new-${idx}`} className="relative aspect-square rounded-lg overflow-hidden border-2 border-gray-200 group">
-                    <img src={src} alt={`Gallery New ${idx + 1}`} className="w-full h-full object-cover" />
+                {/* New Files */}
+                {newGalleryFiles.map((fileData, index) => (
+                  <div key={`new-${index}`} className="relative aspect-square rounded-2xl overflow-hidden border-2 border-amber-100 shadow-sm group">
+                    <img src={fileData.preview} alt="New Gallery" className="w-full h-full object-cover" />
                     <button
                       type="button"
-                      onClick={() => removeNewImage(idx)}
-                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
+                      onClick={() => removeNewGalleryFile(index)}
+                      className="absolute top-2 right-2 bg-white/90 hover:bg-red-500 hover:text-white text-gray-600 rounded-full p-1.5 shadow-lg transition-all transform scale-0 group-hover:scale-100"
                     >
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
+                      <X size={14} strokeWidth={3} />
                     </button>
+                    <span className="absolute bottom-2 left-2 bg-amber-500 text-[10px] text-white px-2 py-0.5 rounded-md font-bold shadow-sm uppercase">New</span>
                   </div>
                 ))}
               </div>
+
               {galleryError && (
-                <p className="text-sm text-red-600 mt-2">{galleryError}</p>
+                <p className="text-xs font-bold text-red-500 bg-red-50 px-3 py-2 rounded-lg inline-block">{galleryError}</p>
               )}
             </div>
 
@@ -513,7 +487,6 @@ export function ProductFormClient({
 
             <div className="col-span-2 border-t pt-6 mt-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">SEO Settings</h3>
-              
               <div className="space-y-4">
                 <div>
                   <label htmlFor="metaTitle" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -526,7 +499,7 @@ export function ProductFormClient({
                     value={metaTitle}
                     onChange={(e) => setMetaTitle(e.target.value)}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
-                    placeholder="SEO Title (defaults to product title if empty)"
+                    placeholder="SEO Title"
                   />
                 </div>
 
@@ -546,21 +519,32 @@ export function ProductFormClient({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Product Tags (Multiple)
+                  <label htmlFor="metaKeywords" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Meta Keywords
                   </label>
-                  <div className="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-purple-500 focus-within:border-transparent transition bg-white min-h-[50px]">
+                  <input
+                    type="text"
+                    id="metaKeywords"
+                    name="metaKeywords"
+                    value={metaKeywords}
+                    onChange={(e) => setMetaKeywords(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                    placeholder="SEO Keywords (comma separated)"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Product Tags
+                  </label>
+                  <div className="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-purple-500 transition bg-white min-h-[50px]">
                     {tags.map((tag, index) => (
                       <span 
                         key={index} 
-                        className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-bold flex items-center gap-2 group hover:bg-purple-200 transition-colors"
+                        className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-bold flex items-center gap-2"
                       >
                         {tag}
-                        <button
-                          type="button"
-                          onClick={() => removeTag(tag)}
-                          className="hover:text-purple-900 focus:outline-none"
-                        >
+                        <button type="button" onClick={() => removeTag(tag)}>
                           <X size={14} strokeWidth={3} />
                         </button>
                       </span>
@@ -570,18 +554,10 @@ export function ProductFormClient({
                       value={tagInput}
                       onChange={(e) => setTagInput(e.target.value)}
                       onKeyDown={handleTagKeyDown}
-                      onBlur={() => {
-                        const newTag = tagInput.trim().replace(/,$/, '');
-                        if (newTag && !tags.includes(newTag)) {
-                          setTags([...tags, newTag]);
-                          setTagInput('');
-                        }
-                      }}
-                      className="flex-1 outline-none min-w-[120px] text-sm py-1 bg-transparent"
-                      placeholder={tags.length === 0 ? "Type and press Enter or comma to add tags..." : "Add more tags..."}
+                      className="flex-1 outline-none text-sm py-1 bg-transparent"
+                      placeholder="Add tag..."
                     />
                   </div>
-                  <p className="text-xs text-secondary-text mt-2 italic font-medium">Add multiple keywords to improve SEO ranking (e.g., leather, premium, handcrafted)</p>
                 </div>
               </div>
             </div>
@@ -624,7 +600,7 @@ export function ProductFormClient({
         onSelect={handleGalleryLibrarySelect} 
         onSelectMultiple={handleGalleryLibrarySelect}
         multiple={true}
-        maxSelections={15 - (existingImages.length + newFiles.length)}
+        maxSelections={15 - (existingGalleryImages.length + newGalleryFiles.length)}
       />
     )}
     </>

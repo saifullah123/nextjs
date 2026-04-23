@@ -8,6 +8,7 @@ import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { getMediaUrl } from '@/lib/media_utils';
 import SizeSelector from '@/components/SizeSelector';
+import ExpandableText from '@/components/ExpandableText';
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -73,8 +74,8 @@ export default async function ProductDetailPage({
   });
 
   return (
-    <div className="py-24 md:py-40 bg-[#fafafa]">
-      <div className="container mx-auto px-6">
+    <div className="py-24 md:py-20 bg-[#fafafa]">
+      <div className="max-w-[1800px] mx-auto px-6 md:px-12">
         {/* Navigation Breadcrumb */}
         <div className="flex items-center justify-between mb-20 animate-fade-up">
           <Link
@@ -94,9 +95,9 @@ export default async function ProductDetailPage({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
           {/* Visual Showcase */}
-          <div className="lg:col-span-7 animate-fade-right">
+          <div className="lg:col-span-5 animate-fade-right">
              <div className="sticky top-40">
                 <ProductImageGallery
                   mainImage={product.mainImage}
@@ -107,8 +108,10 @@ export default async function ProductDetailPage({
           </div>
 
           {/* Product Intel */}
-          <div className="lg:col-span-5 flex flex-col pt-4 animate-fade-left">
+          <div className="lg:col-span-7 flex flex-col pt-4 animate-fade-left">
             <div className="flex flex-col gap-6 mb-12">
+               {/* Hiding tags as requested */}
+               {/* 
                <div className="flex items-center gap-3">
                   <span className="px-6 py-2.5 bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.3em] rounded-full shadow-xl">
                     {product.category?.name || 'Uncategorized'}
@@ -130,27 +133,28 @@ export default async function ProductDetailPage({
                      </div>
                   )}
                </div>
+               */}
                
-               <h1 className="text-6xl md:text-8xl font-black text-gray-950 tracking-[ -0.04em] leading-[0.9] font-heading">
+               <h1 className="text-2xl md:text-2xl font-black text-gray-950 tracking-[-0.04em] leading-[1.2] font-heading">
                  {product.title}
                </h1>
             </div>
 
 
 
-            {product.shortDescription && (
+            {/* {product.shortDescription && (
               <div className="relative mb-14">
                 <div 
-                  className="text-gray-500 text-xl font-medium leading-relaxed italic border-l-[6px] border-purple-600/20 pl-8 prose prose-slate max-w-none"
+                  className="text-gray-500 text-lg md:text-xl font-medium leading-relaxed italic prose prose-slate max-w-3xl"
                   dangerouslySetInnerHTML={{ __html: product.shortDescription }}
                 />
                 <div className="absolute top-0 right-0 opacity-10 grayscale pointer-events-none">
                   <Sparkles size={60} />
                 </div>
               </div>
-            )}
+            )} */}
 
-            <div className="flex flex-col gap-4 mb-16">
+            <div className="flex flex-col gap-4 mb-16 max-w-xl">
                <SizeSelector />
                {product.status !== 'out_of_stock' && product.status !== 'discontinued' ? (
                  <Link
@@ -172,7 +176,7 @@ export default async function ProductDetailPage({
             </div>
 
             {/* Value Propositions */}
-            <div className="grid grid-cols-2 gap-4 mb-20">
+            <div className="grid grid-cols-2 gap-4 mb-20 max-w-xl">
                {[
                  { label: 'Craftmanship', val: 'Hand-Finished', icon: Sparkles, color: 'text-yellow-500' },
                  { label: 'Security', val: 'Elite Warranty', icon: ShieldCheck, color: 'text-emerald-500' },
@@ -197,10 +201,7 @@ export default async function ProductDetailPage({
                    <div className="w-8 h-[1px] bg-gray-200"></div>
                    Specifications & Details
                 </h2>
-                <div 
-                  className="text-gray-600 leading-relaxed font-medium space-y-4 text-lg prose prose-slate max-w-none prose-p:text-gray-400 prose-p:italic prose-p:font-medium"
-                  dangerouslySetInnerHTML={{ __html: product.longDescription }}
-                />
+                <ExpandableText content={product.longDescription} />
               </div>
             )}
           </div>

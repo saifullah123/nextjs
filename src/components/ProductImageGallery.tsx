@@ -60,7 +60,7 @@ export default function ProductImageGallery({
               animate={{ opacity: 1, scale: 1, rotateY: 0 }}
               exit={{ opacity: 0, scale: 0.9, rotateY: 5 }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="aspect-square rounded-[4rem] bg-white border border-gray-100 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.1)] flex items-center justify-center p-16 overflow-hidden relative"
+              className="aspect-square rounded-[4rem] bg-white border border-gray-100 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.1)] flex items-center justify-center p-24 overflow-hidden relative"
             >
               <img
                 src={getMediaUrl(selectedImage)}

@@ -48,6 +48,26 @@ export default function ProductImageGallery({
     }
   };
 
+  const [zoomStyle, setZoomStyle] = useState<React.CSSProperties>({});
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - left) / width) * 100;
+    const y = ((e.clientY - top) / height) * 100;
+    setZoomStyle({
+      transformOrigin: `${x}% ${y}%`,
+      transform: 'scale(2.5)',
+      cursor: 'zoom-in'
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setZoomStyle({
+      transform: 'scale(1)',
+      transition: 'transform 0.5s ease-out, transform-origin 0.5s ease-out'
+    });
+  };
+
   return (
     <div className="flex flex-col gap-10">
       {/* Main Image Display with Navigation Arrows */}
@@ -60,14 +80,17 @@ export default function ProductImageGallery({
               animate={{ opacity: 1, scale: 1, rotateY: 0 }}
               exit={{ opacity: 0, scale: 0.9, rotateY: 5 }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="aspect-square rounded-[4rem] bg-white border border-gray-100 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.1)] flex items-center justify-center p-24 overflow-hidden relative"
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              className="aspect-square rounded-[4rem] bg-white border border-gray-100 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.1)] flex items-center justify-center p-24 overflow-hidden relative touch-none"
             >
               <img
                 src={getMediaUrl(selectedImage)}
                 alt={productTitle}
-                className="w-full h-full object-contain transition-transform duration-1000 ease-out group-hover:scale-105"
+                style={zoomStyle}
+                className="w-full h-full object-contain transition-transform duration-200 ease-out pointer-events-none"
               />
-              <div className="absolute inset-0 bg-gradient-to-tr from-purple-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-purple-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
             </motion.div>
           )}
         </AnimatePresence>

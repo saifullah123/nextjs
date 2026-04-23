@@ -372,7 +372,7 @@ export default function Header() {
                         className="group flex items-center justify-between py-2"
                        >
                          <div className="flex items-center gap-4">
-                            <span className="text-4xl font-black tracking-tighter text-slate-950 group-hover:text-amber-700 transition-all duration-500">
+                            <span className="text-2xl font-black tracking-tighter text-slate-950 group-hover:text-amber-700 transition-all duration-500">
                                {item.name}
                             </span>
                             {item.tag && (
@@ -387,60 +387,6 @@ export default function Header() {
                        </Link>
                      ))}
                   </nav>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="bg-slate-900 p-10 rounded-[3rem] flex flex-col gap-8 relative overflow-hidden">
-                         <div className="relative z-10">
-                            <h4 className="text-white font-black text-2xl mb-2">Artisanal Experience</h4>
-                            <p className="text-white/40 text-xs leading-relaxed max-w-xs">{t('masterpieces')}</p>
-                         </div>
-                         <div className="relative z-10 flex gap-3">
-                            {languages.slice(0, 3).map((lang) => (
-                               <button 
-                                 key={lang.code}
-                                 onClick={() => {
-                                   handleLanguageChange(lang.code);
-                                   setIsMobileMenuOpen(false);
-                                 }} 
-                                 className={cn(
-                                   "w-12 h-12 rounded-2xl flex items-center justify-center text-lg transition-all",
-                                   locale === lang.code ? "bg-amber-600 shadow-xl scale-110" : "bg-white/5 hover:bg-white/10"
-                                 )}
-                               >
-                                 {lang.flag}
-                               </button>
-                            ))}
-                         </div>
-                         <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-amber-600/20 rounded-full blur-3xl" />
-                      </div>
-
-                      <div className="flex flex-col gap-4">
-                         <form onSubmit={handleSearch} className="relative group">
-                            <input
-                               type="text"
-                               value={searchQuery}
-                               onChange={(e) => setSearchQuery(e.target.value)}
-                               placeholder={t('searchPlaceholder')}
-                               className="w-full px-8 py-6 bg-gray-100 rounded-[2.5rem] outline-none font-bold text-slate-950 focus:ring-2 ring-amber-200 transition-all"
-                            />
-                            <div className="absolute right-6 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg">
-                               <Search size={18} className="text-slate-900" />
-                            </div>
-                         </form>
-                         
-                         <Link 
-                           href="/products"
-                           className="flex items-center justify-between bg-slate-950 text-white p-6 rounded-[2.5rem] font-black uppercase tracking-widest text-xs group"
-                           onClick={() => setIsMobileMenuOpen(false)}
-                         >
-                           <div className="flex items-center gap-3">
-                              <ShoppingBag size={20} className="text-amber-500" />
-                              {t('shopNow')}
-                           </div>
-                           <Zap size={18} className="animate-pulse text-amber-500" />
-                         </Link>
-                      </div>
-                  </div>
                </div>
             </motion.div>
           )}

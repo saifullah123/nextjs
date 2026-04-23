@@ -9,6 +9,20 @@ export async function submitContactForm(prevState: any, formData: FormData) {
     const email = formData.get('email') as string;
     const phone = formData.get('phone') as string;
     const message = formData.get('message') as string;
+    const product = formData.get('product') as string;
+    const size = formData.get('size') as string;
+    const color = formData.get('color') as string;
+
+    // Construct full message with product details if available
+    let fullMessage = message;
+    if (product || size || color) {
+        fullMessage = `--- PRODUCT INQUIRY DETAILS ---\n` +
+            (product ? `Product: ${product}\n` : '') +
+            (size ? `Size: ${size}\n` : '') +
+            (color ? `Color: ${color}\n` : '') +
+            `-------------------------------\n\n` +
+            message;
+    }
 
     if (!name || !email || !message) {
         return { error: 'Please fill in all required fields' };
@@ -21,7 +35,7 @@ export async function submitContactForm(prevState: any, formData: FormData) {
                 name,
                 email,
                 phone,
-                message,
+                message: fullMessage,
             },
         });
 
@@ -31,7 +45,7 @@ export async function submitContactForm(prevState: any, formData: FormData) {
                 name,
                 email,
                 phone: phone || undefined,
-                message,
+                message: fullMessage,
             });
         } catch (emailError: any) {
             console.error('Email sending failed details:', {

@@ -70,6 +70,7 @@ export function ProductFormClient({
   const [tags, setTags] = useState<string[]>(initialData?.tags || []);
   const [tagInput, setTagInput] = useState('');
 
+
   const handleGalleryLibrarySelect = (url: string | string[]) => {
     const urls = Array.isArray(url) ? url : [url];
     const totalCount = existingGalleryImages.length + newGalleryFiles.length;
@@ -296,6 +297,34 @@ export function ProductFormClient({
                   </option>
                 ))}
               </select>
+            </div>
+
+            <div className="col-span-2">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Product Tags
+              </label>
+              <div className="flex flex-wrap gap-2 p-3 border-2 border-gray-100 rounded-xl focus-within:border-purple-500 focus-within:ring-4 focus-within:ring-purple-500/10 transition bg-white min-h-[60px]">
+                {tags.map((tag, index) => (
+                  <span 
+                    key={index} 
+                    className="bg-purple-50 text-purple-600 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider flex items-center gap-2 border border-purple-100 animate-in zoom-in-95 duration-200"
+                  >
+                    {tag}
+                    <button type="button" onClick={() => removeTag(tag)} className="hover:text-purple-800">
+                      <X size={14} strokeWidth={3} />
+                    </button>
+                  </span>
+                ))}
+                <input
+                  type="text"
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  onKeyDown={handleTagKeyDown}
+                  className="flex-1 outline-none text-sm py-1 bg-transparent font-medium"
+                  placeholder="Type and press Enter to add tags..."
+                />
+              </div>
+              <p className="text-[10px] text-gray-400 mt-2 ml-1">Use commas or press Enter to add multiple tags.</p>
             </div>
 
             <div className="col-span-2">
@@ -533,32 +562,6 @@ export function ProductFormClient({
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Product Tags
-                  </label>
-                  <div className="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-purple-500 transition bg-white min-h-[50px]">
-                    {tags.map((tag, index) => (
-                      <span 
-                        key={index} 
-                        className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-bold flex items-center gap-2"
-                      >
-                        {tag}
-                        <button type="button" onClick={() => removeTag(tag)}>
-                          <X size={14} strokeWidth={3} />
-                        </button>
-                      </span>
-                    ))}
-                    <input
-                      type="text"
-                      value={tagInput}
-                      onChange={(e) => setTagInput(e.target.value)}
-                      onKeyDown={handleTagKeyDown}
-                      className="flex-1 outline-none text-sm py-1 bg-transparent"
-                      placeholder="Add tag..."
-                    />
-                  </div>
-                </div>
               </div>
             </div>
           </div>

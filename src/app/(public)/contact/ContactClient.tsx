@@ -1,8 +1,8 @@
 'use client';
 
 import { submitContactForm } from './actions';
-import { useActionState, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useActionState, Suspense, useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Send, MapPin, Mail, Phone, MessageSquare, Sparkles, CheckCircle2 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
@@ -16,10 +16,19 @@ function ContactForm() {
   const [state, formAction, isPending] = useActionState(submitContactForm, null);
   const searchParams = useSearchParams();
   const product = searchParams.get('product');
+  const size = searchParams.get('size');
+  const color = searchParams.get('color');
+  const router = useRouter();
 
-  const defaultMessage = product
-    ? `I am interested in the product: ${product}. Please provide more details.`
-    : '';
+  useEffect(() => {
+    if (state?.success) {
+      const timer = setTimeout(() => {
+        router.replace('/contact');
+        router.refresh();
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [state?.success, router]);
 
   return (
     <div className="py-24 md:py-40 bg-[#fafafa]">
@@ -77,7 +86,7 @@ function ContactForm() {
                   </div>
                   <h2 className="text-4xl md:text-5xl font-black text-slate-950 mb-6 tracking-tighter font-heading">Protocol Successful</h2>
                   <p className="text-gray-400 text-lg font-medium mb-12 max-w-sm mx-auto leading-relaxed">
-                    Your transmission has been logged. A representative will reach out to you within the next 24 business hours.
+                    Your transmission has been logged. You will be automatically redirected to the form in 5 seconds.
                   </p>
                   <button
                     onClick={() => window.location.reload()}
@@ -118,6 +127,36 @@ function ContactForm() {
                     </div>
                   </div>
 
+                  {product && (
+                    <div className="bg-stone-50 p-8 rounded-[2.5rem] border border-stone-100 flex flex-col gap-6 animate-in fade-in slide-in-from-top-4 duration-700">
+                      <div className="flex items-center justify-between border-b border-stone-200/50 pb-4">
+                         <div className="flex flex-col">
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-400 mb-1">Inquiry Item</span>
+                            <span className="text-lg font-black text-slate-950 tracking-tight">{product}</span>
+                         </div>
+                      </div>
+                      <div className="flex gap-12">
+                        {size && (
+                          <div className="flex flex-col">
+                            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-stone-400 mb-1">Specification: Size</span>
+                            <span className="text-sm font-black text-amber-700 bg-amber-50 px-3 py-1 rounded-lg border border-amber-100 w-fit">{size}</span>
+                          </div>
+                        )}
+                        {color && (
+                          <div className="flex flex-col">
+                            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-stone-400 mb-1">Specification: Color</span>
+                            <span className="text-sm font-black text-amber-700 bg-amber-50 px-3 py-1 rounded-lg border border-amber-100 w-fit">{color}</span>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Hidden Fields for Submission */}
+                      <input type="hidden" name="product" value={product} />
+                      <input type="hidden" name="size" value={size || ''} />
+                      <input type="hidden" name="color" value={color || ''} />
+                    </div>
+                  )}
+
 
 
                   <div className="flex flex-col gap-3 group">
@@ -128,7 +167,6 @@ function ContactForm() {
                           name="message"
                           required
                           rows={6}
-                          defaultValue={defaultMessage}
                           className="w-full px-8 py-6 bg-stone-50 border border-transparent rounded-[2.5rem] focus:bg-white focus:ring-4 focus:ring-amber-600/5 focus:border-amber-600 transition-all duration-500 outline-none font-black text-slate-950 text-sm placeholder:text-stone-300 resize-none"
                           placeholder="Please elaborate on your requirements..."
                         />

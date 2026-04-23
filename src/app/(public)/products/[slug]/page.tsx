@@ -7,7 +7,7 @@ import { ArrowLeft, ArrowRight, ShieldCheck, Zap, Sparkles, Globe, Heart, Share2
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { getMediaUrl } from '@/lib/media_utils';
-import SizeSelector from '@/components/SizeSelector';
+import ProductInquirySection from '@/components/ProductInquirySection';
 import ExpandableText from '@/components/ExpandableText';
 
 function cn(...inputs: ClassValue[]) {
@@ -154,25 +154,11 @@ export default async function ProductDetailPage({
               </div>
             )} */}
 
-            <div className="flex flex-col gap-4 mb-16 max-w-xl">
-               <SizeSelector />
-               {product.status !== 'out_of_stock' && product.status !== 'discontinued' ? (
-                 <Link
-                   href={`/contact?product=${encodeURIComponent(product.title)}`}
-                   className="group flex items-center justify-between bg-slate-950 text-white p-8 rounded-[2.5rem] font-black text-xl hover:bg-purple-600 transition-all duration-700 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)]"
-                 >
-                   <span className="flex items-center gap-4">
-                     Inquire Price via Email
-                   </span>
-                   <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center group-hover:bg-white group-hover:text-purple-600 transition-all">
-                     <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-                   </div>
-                 </Link>
-               ) : (
-                 <button disabled className="w-full bg-gray-100 text-gray-400 p-8 rounded-[2.5rem] font-black text-xl cursor-not-allowed uppercase tracking-widest border-2 border-dashed border-gray-200">
-                   Currently Depleted
-                 </button>
-               )}
+            <div className="mb-16">
+               <ProductInquirySection 
+                 productTitle={product.title} 
+                 status={product.status} 
+               />
             </div>
 
             {/* Value Propositions */}

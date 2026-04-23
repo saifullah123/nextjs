@@ -31,6 +31,7 @@ export default async function EditProductPage({
 
       <div className="bg-white rounded-2xl shadow-lg p-8">
         <ProductFormClient
+          key={id}
           categories={categories}
           onSubmit={async (formData) => {
             'use server';

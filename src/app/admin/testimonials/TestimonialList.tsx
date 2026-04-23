@@ -78,11 +78,11 @@ export default function TestimonialList({ testimonials }: TestimonialListProps) 
             <div
               key={testimonial.id}
               onClick={() => toggleSelect(testimonial.id)}
-              className={`bg-white rounded-[2rem] shadow-lg p-8 hover:shadow-xl transition-all cursor-pointer border-4 ${
+              className={`bg-white rounded-[2rem] shadow-lg p-6 sm:p-8 hover:shadow-xl transition-all cursor-pointer border-4 ${
                 isSelected ? 'border-purple-500' : 'border-transparent'
               }`}
             >
-              <div className="flex items-start gap-6">
+              <div className="flex flex-col sm:flex-row items-start gap-6">
                 <div className="relative">
                    {testimonial.avatar && (
                      <img

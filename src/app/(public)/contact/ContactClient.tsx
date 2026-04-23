@@ -31,7 +31,7 @@ function ContactForm() {
   }, [state?.success, router]);
 
   return (
-    <div className="py-24 md:py-40 bg-[#fafafa]">
+    <div className="py-12 md:py-40 bg-[#fafafa]">
       <div className="container mx-auto px-6">
         <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-24 xl:gap-32">
           
@@ -41,7 +41,7 @@ function ContactForm() {
                 <div className="w-10 h-[1px] bg-amber-200"></div>
                 <span className="text-amber-900 font-black text-[10px] uppercase tracking-[0.5em]">Concierge Service</span>
              </div>
-             <h1 className="text-6xl md:text-8xl font-black text-slate-950 tracking-[-0.04em] leading-[0.9] mb-12 font-heading">
+             <h1 className="text-5xl md:text-8xl font-black text-slate-950 tracking-[-0.04em] leading-[0.9] mb-8 md:mb-12 font-heading">
                 Let's start <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-700 to-amber-500 font-heading">the dialogue.</span>
              </h1>
@@ -70,7 +70,7 @@ function ContactForm() {
 
           {/* Right Column: Premium Form */}
           <div className="lg:w-3/5">
-            <div className="bg-white p-12 md:p-16 rounded-[4rem] border border-gray-100 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.1)] relative overflow-hidden">
+            <div className="bg-white p-8 md:p-16 rounded-[2.5rem] md:rounded-[4rem] border border-gray-100 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.1)] relative overflow-hidden">
                <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
                   <Sparkles size={120} />
                </div>
@@ -135,7 +135,7 @@ function ContactForm() {
                             <span className="text-lg font-black text-slate-950 tracking-tight">{product}</span>
                          </div>
                       </div>
-                      <div className="flex gap-12">
+                      <div className="flex flex-wrap gap-y-6 gap-x-8 md:gap-12">
                         {size && (
                           <div className="flex flex-col">
                             <span className="text-[9px] font-black uppercase tracking-[0.3em] text-stone-400 mb-1">Specification: Size</span>
@@ -187,7 +187,7 @@ function ContactForm() {
                   <button
                     type="submit"
                     disabled={isPending}
-                    className="w-full flex items-center justify-between bg-slate-950 text-white p-8 rounded-[2.5rem] font-black text-xl hover:bg-amber-600 transition-all duration-700 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] disabled:opacity-50 disabled:cursor-not-allowed group"
+                    className="w-full flex items-center justify-between bg-slate-950 text-white p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] font-black text-lg md:text-xl hover:bg-amber-600 transition-all duration-700 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] disabled:opacity-50 disabled:cursor-not-allowed group"
                   >
                     <span>{isPending ? 'Propagating Transmission...' : 'Transmit Inquiry'}</span>
                     <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center group-hover:bg-white group-hover:text-amber-700 transition-all">

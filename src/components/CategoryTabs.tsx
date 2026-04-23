@@ -101,7 +101,7 @@ export default function CategoryTabs({ categories }: CategoryTabsProps) {
                 <div className="p-8">
                   <div className="flex flex-col gap-1 mb-6">
                     <span className="text-[10px] uppercase tracking-[0.3em] text-amber-700 font-black">{activeCategory.name}</span>
-                    <h3 className="text-xl font-black text-slate-950 group-hover:text-amber-700 transition-colors duration-500 tracking-tighter">
+                    <h3 className="text-lg md:text-xl font-black text-slate-950 group-hover:text-amber-700 transition-colors duration-500 tracking-tighter">
                       {product.title}
                     </h3>
                   </div>

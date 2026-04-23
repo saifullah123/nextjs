@@ -146,7 +146,7 @@ export default async function ProductsPage({
                           <span className="w-1 h-1 rounded-full bg-gray-200"></span>
                           <span className="text-[9px] uppercase font-black text-gray-400 tracking-widest">{product.status.replace('_', ' ')}</span>
                        </div>
-                       <h3 className="text-3xl font-black text-slate-950 group-hover:text-purple-600 transition-colors duration-500 tracking-tighter font-heading">
+                       <h3 className="text-2xl md:text-3xl font-black text-slate-950 group-hover:text-purple-600 transition-colors duration-500 tracking-tighter font-heading">
                          {product.title}
                        </h3>
                     </div>

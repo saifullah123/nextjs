@@ -62,116 +62,118 @@ export default function ProductTable({ products }: ProductTableProps) {
         </div>
       )}
 
-      <table className="w-full">
-        <thead className="bg-gradient-to-r from-slate-50 to-slate-100 border-b">
-          <tr>
-            <th className="px-6 py-4 text-left w-10">
-              <button onClick={toggleSelectAll} className="text-gray-400 hover:text-slate-900 transition-colors">
-                {selectedIds.length === products.length && products.length > 0 ? (
-                  <CheckSquare className="w-5 h-5 text-purple-600" />
-                ) : (
-                  <Square className="w-5 h-5" />
-                )}
-              </button>
-            </th>
-            <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Product</th>
-            <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">SKU</th>
-            <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Category</th>
-            <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Price</th>
-            <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Quantity</th>
-            <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Status</th>
-            <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">Actions</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-100">
-          {products.map((product) => {
-            const getStatusBadge = (status: string) => {
-              const badges: Record<string, { text: string; class: string }> = {
-                in_stock: { text: 'In Stock', class: 'bg-green-100 text-green-700' },
-                out_of_stock: { text: 'Out of Stock', class: 'bg-red-100 text-red-700' },
-                pre_order: { text: 'Pre-Order', class: 'bg-blue-100 text-blue-700' },
-                discontinued: { text: 'Discontinued', class: 'bg-gray-100 text-gray-700' },
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[1000px]">
+          <thead className="bg-gradient-to-r from-slate-50 to-slate-100 border-b">
+            <tr>
+              <th className="px-6 py-4 text-left w-10">
+                <button onClick={toggleSelectAll} className="text-gray-400 hover:text-slate-900 transition-colors">
+                  {selectedIds.length === products.length && products.length > 0 ? (
+                    <CheckSquare className="w-5 h-5 text-purple-600" />
+                  ) : (
+                    <Square className="w-5 h-5" />
+                  )}
+                </button>
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 w-64">Product</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">SKU</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Category</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Price</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Quantity</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Status</th>
+              <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {products.map((product) => {
+              const getStatusBadge = (status: string) => {
+                const badges: Record<string, { text: string; class: string }> = {
+                  in_stock: { text: 'In Stock', class: 'bg-green-100 text-green-700' },
+                  out_of_stock: { text: 'Out of Stock', class: 'bg-red-100 text-red-700' },
+                  pre_order: { text: 'Pre-Order', class: 'bg-blue-100 text-blue-700' },
+                  discontinued: { text: 'Discontinued', class: 'bg-gray-100 text-gray-700' },
+                };
+                return badges[status] || badges.in_stock;
               };
-              return badges[status] || badges.in_stock;
-            };
-            const statusBadge = getStatusBadge(product.status);
-            const isSelected = selectedIds.includes(product.id);
+              const statusBadge = getStatusBadge(product.status);
+              const isSelected = selectedIds.includes(product.id);
 
-            return (
-              <tr 
-                key={product.id} 
-                className={`hover:bg-slate-50 transition-colors ${isSelected ? 'bg-purple-50 hover:bg-purple-50' : ''}`}
-                onClick={() => toggleSelect(product.id)}
-              >
-                <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
-                  <button onClick={() => toggleSelect(product.id)} className="text-gray-400">
-                    {isSelected ? (
-                      <CheckSquare className="w-5 h-5 text-purple-600" />
-                    ) : (
-                      <Square className="w-5 h-5 hover:text-gray-600" />
-                    )}
-                  </button>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-3">
-                    {product.mainImage && (
-                      <img src={getMediaUrl(product.mainImage)} alt="" className="w-10 h-10 rounded-lg object-cover bg-gray-100" />
-                    )}
-                    <div>
-                      <div className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors">{product.title}</div>
-                      <div className="text-[10px] uppercase tracking-widest text-gray-400 font-black">{product.slug}</div>
+              return (
+                <tr 
+                  key={product.id} 
+                  className={`hover:bg-slate-50 transition-colors ${isSelected ? 'bg-purple-50 hover:bg-purple-50' : ''}`}
+                  onClick={() => toggleSelect(product.id)}
+                >
+                  <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
+                    <button onClick={() => toggleSelect(product.id)} className="text-gray-400">
+                      {isSelected ? (
+                        <CheckSquare className="w-5 h-5 text-purple-600" />
+                      ) : (
+                        <Square className="w-5 h-5 hover:text-gray-600" />
+                      )}
+                    </button>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      {product.mainImage && (
+                        <img src={getMediaUrl(product.mainImage)} alt="" className="w-10 h-10 rounded-lg object-cover bg-gray-100 shrink-0" />
+                      )}
+                      <div className="min-w-0">
+                        <div className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors truncate">{product.title}</div>
+                        <div className="text-[10px] uppercase tracking-widest text-gray-400 font-black truncate">{product.slug}</div>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <span className="px-2 py-1 bg-gray-100 rounded text-xs font-mono font-bold text-gray-600">
-                    {product.sku || '—'}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <span className="text-sm font-bold text-gray-600 italic">
-                    {product.category?.name || 'Uncategorized'}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <span className="text-sm font-black text-slate-900">${product.price}</span>
-                </td>
-                <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                        <span className={`text-sm font-black ${product.quantity === 0 ? 'text-red-500' : product.quantity < 10 ? 'text-orange-500' : 'text-green-500'}`}>
-                            {product.quantity}
-                        </span>
-                        {product.quantity < 10 && product.quantity > 0 && <span className="text-[10px] font-black text-orange-500 uppercase">Low</span>}
-                    </div>
-                </td>
-                <td className="px-6 py-4">
-                  <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${statusBadge.class}`}>
-                    {statusBadge.text}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>
-                    <div className="flex justify-end gap-2">
-                        <Link
-                            href={`/admin/products/${product.id}/edit`}
-                            className="p-2 hover:bg-blue-50 text-blue-600 rounded-lg transition-all"
-                            title="Edit"
-                        >
-                            <Edit className="w-4 h-4" />
-                        </Link>
-                        <GenericDeleteButton
-                            itemId={product.id}
-                            itemName="product"
-                            onDelete={async () => {
-                                await deleteProduct(product.id);
-                            }}
-                        />
-                    </div>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className="px-3 py-1 bg-gray-100 rounded text-[10px] font-mono font-bold text-gray-600 inline-block min-w-[60px] text-center">
+                      {product.sku || '—'}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className="text-sm font-bold text-gray-600 italic whitespace-nowrap">
+                      {product.category?.name || 'Uncategorized'}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className="text-sm font-black text-slate-900">${product.price}</span>
+                  </td>
+                  <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                          <span className={`text-sm font-black ${product.quantity === 0 ? 'text-red-500' : product.quantity < 10 ? 'text-orange-500' : 'text-green-500'}`}>
+                              {product.quantity}
+                          </span>
+                          {product.quantity < 10 && product.quantity > 0 && <span className="text-[10px] font-black text-orange-500 uppercase">Low</span>}
+                      </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${statusBadge.class} whitespace-nowrap`}>
+                      {statusBadge.text}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>
+                      <div className="flex justify-end gap-2">
+                          <Link
+                              href={`/admin/products/${product.id}/edit`}
+                              className="p-2 hover:bg-blue-50 text-blue-600 rounded-lg transition-all"
+                              title="Edit"
+                          >
+                              <Edit className="w-4 h-4" />
+                          </Link>
+                          <GenericDeleteButton
+                              itemId={product.id}
+                              itemName="product"
+                              onDelete={async () => {
+                                  await deleteProduct(product.id);
+                              }}
+                          />
+                      </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
 
       {products.length === 0 && (
         <div className="text-center py-20 bg-gray-50 m-6 rounded-2xl border-4 border-dashed border-gray-100">

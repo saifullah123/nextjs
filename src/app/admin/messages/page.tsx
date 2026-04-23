@@ -34,7 +34,7 @@ export default async function MessagesPage({ searchParams }: PageProps) {
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="mb-8 flex justify-between items-end">
         <div>
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-2 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-gray-900 mb-2 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">
             Contact Messages
           </h1>
           <p className="text-gray-500 font-medium italic">
@@ -50,7 +50,7 @@ export default async function MessagesPage({ searchParams }: PageProps) {
         {messages.map((message) => (
           <div
             key={message.id}
-            className="group bg-white rounded-3xl shadow-sm border border-gray-100 p-8 hover:shadow-2xl hover:border-blue-100 transition-all duration-300 transform hover:-translate-y-1"
+            className="group bg-white rounded-3xl shadow-sm border border-gray-100 p-6 sm:p-8 hover:shadow-2xl hover:border-blue-100 transition-all duration-300 transform hover:-translate-y-1"
           >
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
               <div className="flex items-center gap-4">

@@ -199,7 +199,7 @@ export default async function ProductDetailPage({
              <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-20">
                 <div className="flex flex-col gap-4">
                    <span className="text-purple-600 font-black text-[10px] uppercase tracking-[0.5em]">Curated Selection</span>
-                   <h2 className="text-5xl md:text-7xl font-black text-slate-950 tracking-tighter leading-none font-heading">Related <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">Masterpieces</span></h2>
+                   <h2 className="text-3xl sm:text-5xl md:text-7xl font-black text-slate-950 tracking-tighter leading-none font-heading">Related <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">Masterpieces</span></h2>
                 </div>
                 <Link 
                   href="/products" 

@@ -100,7 +100,7 @@ export default function HomePage() {
               
               <motion.h1 
                 variants={fadeIn}
-                className="text-4xl sm:text-6xl md:text-8xl lg:text-[10rem] font-black mb-12 leading-[1] md:leading-[0.8] tracking-tighter text-white uppercase font-heading drop-shadow-2xl"
+                className="text-3xl sm:text-5xl md:text-7xl lg:text-9xl font-black mb-8 md:mb-12 leading-[1] md:leading-[0.8] tracking-tighter text-white uppercase font-heading drop-shadow-2xl"
               >
                 {t.rich('title', {
                   br: (chunks: any) => <br />,
@@ -182,7 +182,7 @@ export default function HomePage() {
               className="max-w-2xl"
             >
               <span className="text-amber-700 font-black text-xs uppercase tracking-[0.4em] mb-6 block">{tFeatured('label')}</span>
-              <h2 className="text-3xl sm:text-5xl md:text-8xl font-black text-gray-900 tracking-tighter leading-[0.85] mb-10 font-heading">
+              <h2 className="text-2xl sm:text-4xl md:text-6xl lg:text-8xl font-black text-gray-900 tracking-tighter leading-[0.85] mb-8 md:mb-10 font-heading">
                 {tFeatured.rich('title', {
                   br: (chunks: any) => <br />,
                   BR: (chunks: any) => <br />,
@@ -236,7 +236,7 @@ export default function HomePage() {
             viewport={{ once: true, amount: 0.2 }}
             className="max-w-4xl mx-auto text-center mb-32"
           >
-             <h2 className="text-3xl sm:text-6xl md:text-[8rem] font-black mb-10 tracking-tighter leading-[0.8] uppercase font-heading text-white px-4">
+             <h2 className="text-2xl sm:text-5xl md:text-7xl lg:text-8xl font-black mb-8 md:mb-10 tracking-tighter leading-[0.8] uppercase font-heading text-white px-4">
                 {tWhy.rich('title', {
                   span: (chunks: any) => <span className="text-amber-500">{chunks}</span>,
                   br: (chunks: any) => <br />,
@@ -288,7 +288,7 @@ export default function HomePage() {
                   <Star className="w-3 h-3 fill-slate-900" />
                   {tCommunity('badge')}
                 </span>
-                <h2 className="text-3xl sm:text-5xl md:text-8xl font-black text-gray-900 tracking-tighter leading-[0.85] mb-10 uppercase font-heading">
+                <h2 className="text-2xl sm:text-4xl md:text-6xl lg:text-8xl font-black text-gray-900 tracking-tighter leading-[0.85] mb-8 md:mb-10 uppercase font-heading">
                    {tCommunity.rich('title', {
                      br: () => <br />,
                      span: (chunks: any) => <span className="text-gradient">{chunks}</span>
@@ -360,7 +360,7 @@ export default function HomePage() {
               className="text-center mb-32"
             >
                <span className="text-amber-600 font-black text-xs uppercase tracking-[0.4em] mb-6 md:mb-8 block">{tTestimonials('label')}</span>
-              <h2 className="text-3xl sm:text-5xl md:text-9xl font-black text-gray-900 tracking-tighter leading-[0.8] uppercase font-heading">
+              <h2 className="text-2xl sm:text-4xl md:text-6xl lg:text-9xl font-black text-gray-900 tracking-tighter leading-[0.8] uppercase font-heading">
                 {tTestimonials.rich('title', {
                   br: () => <br />,
                   span: (chunks: any) => <span className="text-gradient">{chunks}</span>
@@ -390,7 +390,7 @@ export default function HomePage() {
                >
                   ✉️
                </motion.div>
-               <h2 className="text-3xl sm:text-5xl md:text-9xl font-black mb-12 tracking-tighter text-white leading-[0.8] uppercase max-w-5xl font-heading">
+               <h2 className="text-2xl sm:text-4xl md:text-6xl lg:text-9xl font-black mb-8 md:mb-12 tracking-tighter text-white leading-[0.8] uppercase max-w-5xl font-heading">
                  {tNewsletter.rich('title', {
                     br: (chunks: any) => <br />,
                     BR: (chunks: any) => <br />

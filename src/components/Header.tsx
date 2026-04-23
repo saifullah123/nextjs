@@ -135,7 +135,7 @@ export default function Header() {
             <img 
               src="/logo.png" 
               alt="NET GATE Logo" 
-              className="h-14 w-auto object-contain transition-transform duration-700 group-hover:scale-105"
+              className="h-10 sm:h-12 md:h-14 w-auto object-contain transition-transform duration-700 group-hover:scale-105"
             />
           </Link>
 

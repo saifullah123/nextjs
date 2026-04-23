@@ -1,10 +1,10 @@
 {
   "Header": {
-    "products": "Artisanal Tack",
-    "collections": "Equestrian Collections",
+    "products": "Western Collection",
+    "collections": "Signature Collections",
     "about": "Our Heritage",
     "contact": "Concierge",
-    "searchPlaceholder": "Search for saddles, bridles...",
+    "searchPlaceholder": "Search for Western shirts, show pads...",
     "shopNow": "Shop Now",
     "masterpieces": "All Masterpieces",
     "showcase": "Showcase",
@@ -17,9 +17,9 @@
     "limitedStock": "Limited Artisanal Pieces Remaining"
   },
   "Hero": {
-    "badge": "Equestrian Excellence 2026",
-    "title": "Unrivaled Comfort <br/><span>for your companion.</span>",
-    "subtitle": "Discover the perfect fusion of traditional leatherwork and ergonomic design. Crafted with passion for the modern rider and their equine partner.",
+    "badge": "Western Excellence 2026",
+    "title": "Elite Western Apparel <br/><span>for the modern rider.</span>",
+    "subtitle": "Discover the perfect fusion of traditional Western craftsmanship and modern performance fabrics. Handcrafted for the arena.",
     "explore": "Explore Collection",
     "ourStory": "Our Heritage"
   },
@@ -30,18 +30,18 @@
     "viewAll": "View Full Catalog"
   },
   "WhyUs": {
-    "title": "Everything your horse <span>ever deserved.</span>",
+    "title": "Everything you and your horse <span>ever deserved.</span>",
     "military": {
-      "title": "Artisanal Leather",
-      "desc": "Hand-selected, premium grade leather that ages beautifully and ensures lasting durability."
+      "title": "Premium Fabrics",
+      "desc": "Hand-selected, high-performance fabrics that ensure maximum comfort and lasting durability in the show ring."
     },
     "eco": {
-      "title": "Ergonomic Design",
-      "desc": "Engineered for optimal weight distribution and maximum comfort for both horse and rider."
+      "title": "Show-Ready Design",
+      "desc": "Engineered for the elite competitor, featuring intricate embellishments and ergonomic fits."
     },
     "life": {
       "title": "Heirloom Quality",
-      "desc": "Timeless designs built to last generations. Just pure equestrian excellence."
+      "desc": "Timeless designs built to last. Hand-finished Western apparel that defines excellence."
     }
   },
   "Newsletter": {
@@ -51,17 +51,17 @@
     "button": "Subscribe"
   },
   "Footer": {
-    "tagline": "Crafting premium equestrian gear that merges centuries-old saddlery traditions with modern performance innovation.",
+    "tagline": "Manufacturing premium Western shirts and show pad blankets, merging traditional craftsmanship with modern arena performance.",
     "shopTitle": "The Collection",
-    "shopAll": "View All Tack",
-    "shopFeatured": "Signature Saddles",
+    "shopAll": "View All Apparel",
+    "shopFeatured": "Signature Shirts",
     "shopNew": "New Arrivals",
     "supportTitle": "Concierge Services",
     "supportFAQ": "Care & Maintenance",
     "supportShipping": "Worldwide Delivery",
     "supportReturns": "Exchange Policy",
     "contactTitle": "Direct Inquiries",
-    "luxuryTack": "Luxury Tack",
+    "luxuryTack": "Western Luxe",
     "clientService": "Client Service",
     "contactPhone": "Contact Phone",
     "verifiedMerchant": "Verified Merchant",
@@ -114,9 +114,9 @@
     "globalPriority": "Global Express"
   },
   "Showcase": {
-    "badge": "New Luxury Collection",
-    "title": "The <span>Heritage</span> <br/> Masterpiece",
-    "description": "Crafted from the finest full-grain mahogany leather, reinforced with burnished gold hardware and hand-stitched by master artisans. A saddle that defines a new era of equestrian excellence.",
+    "badge": "New Show Collection",
+    "title": "The <span>Artisanal</span> <br/> Show Shirt",
+    "description": "Crafted from the finest breathable fabrics, reinforced with hand-placed crystals and gold embellishments. A masterpiece that defines a new era of Western show excellence.",
     "premium": "Premium",
     "materials": "Materials",
     "ergonomic": "Ergonomic",

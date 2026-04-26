@@ -299,32 +299,65 @@ export function ProductFormClient({
               </select>
             </div>
 
-            <div className="col-span-2">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Product Tags
-              </label>
-              <div className="flex flex-wrap gap-2 p-3 border-2 border-gray-100 rounded-xl focus-within:border-purple-500 focus-within:ring-4 focus-within:ring-purple-500/10 transition bg-white min-h-[60px]">
+            <div className="col-span-2 space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-700">
+                  Tags
+                </label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Add tags to help people search for your listings.
+                </p>
+              </div>
+
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <input
+                    type="text"
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    onKeyDown={handleTagKeyDown}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                    placeholder="Shape, color, style, function, etc."
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newTag = tagInput.trim().replace(/,$/, '');
+                    if (newTag && !tags.includes(newTag)) {
+                      setTags([...tags, newTag]);
+                    }
+                    setTagInput('');
+                  }}
+                  className="px-6 py-3 bg-white border border-gray-300 rounded-lg font-bold text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition shadow-sm"
+                >
+                  Add
+                </button>
+              </div>
+
+              <div className="flex justify-between items-center px-1">
+                <p className="text-xs text-gray-400">
+                  {tags.length} tag{tags.length !== 1 ? 's' : ''} added
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
                 {tags.map((tag, index) => (
                   <span 
                     key={index} 
-                    className="bg-purple-50 text-purple-600 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider flex items-center gap-2 border border-purple-100 animate-in zoom-in-95 duration-200"
+                    className="bg-gray-100 text-gray-800 px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 border border-gray-200 group transition-all hover:bg-gray-200"
                   >
                     {tag}
-                    <button type="button" onClick={() => removeTag(tag)} className="hover:text-purple-800">
-                      <X size={14} strokeWidth={3} />
+                    <button 
+                      type="button" 
+                      onClick={() => removeTag(tag)} 
+                      className="text-gray-400 hover:text-red-500 transition-colors"
+                    >
+                      <X size={16} strokeWidth={2.5} />
                     </button>
                   </span>
                 ))}
-                <input
-                  type="text"
-                  value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
-                  onKeyDown={handleTagKeyDown}
-                  className="flex-1 outline-none text-sm py-1 bg-transparent font-medium"
-                  placeholder="Type and press Enter to add tags..."
-                />
               </div>
-              <p className="text-[10px] text-gray-400 mt-2 ml-1">Use commas or press Enter to add multiple tags.</p>
             </div>
 
             <div className="col-span-2">

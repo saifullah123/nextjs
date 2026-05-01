@@ -33,6 +33,36 @@ export async function getCategories() {
     }
 }
 
+export async function getSaleProducts() {
+    try {
+        const products = await prisma.product.findMany({
+            where: {
+                isOnSale: true,
+                isActive: true
+            },
+            take: 6,
+            select: {
+                id: true,
+                title: true,
+                slug: true,
+                mainImage: true,
+                price: true,
+                salePrice: true,
+                discountPercentage: true
+            }
+        });
+
+        return products.map(product => ({
+            ...product,
+            price: product.price ? product.price.toString() : '—',
+            salePrice: product.salePrice ? product.salePrice.toString() : null
+        }));
+    } catch (error) {
+        console.error('Error fetching sale products:', error);
+        return [];
+    }
+}
+
 export async function getFeaturedProducts() {
     try {
         const products = await prisma.product.findMany({
@@ -40,19 +70,22 @@ export async function getFeaturedProducts() {
                 isFeatured: true,
                 isActive: true
             },
-            take: 4,
+            take: 8,
             select: {
                 id: true,
                 title: true,
                 slug: true,
                 mainImage: true,
-                price: true
+                price: true,
+                salePrice: true,
+                discountPercentage: true
             }
         });
 
         return products.map(product => ({
             ...product,
-            price: product.price ? product.price.toString() : '—'
+            price: product.price ? product.price.toString() : '—',
+            salePrice: product.salePrice ? product.salePrice.toString() : null
         }));
     } catch (error) {
         console.error('Error fetching featured products:', error);

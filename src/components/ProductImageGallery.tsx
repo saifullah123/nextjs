@@ -8,33 +8,40 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 interface ProductImageGalleryProps {
   mainImage: string | null;
   galleryImages: string[];
+  video?: string | null;
   productTitle: string;
 }
 
 export default function ProductImageGallery({
   mainImage,
   galleryImages,
+  video,
   productTitle,
 }: ProductImageGalleryProps) {
   const allImages = [mainImage, ...galleryImages].filter((img): img is string => !!img);
-  const [selectedImage, setSelectedImage] = useState<string | null>(allImages[0] || null);
+  const allItems = [
+    ...allImages.map(img => ({ type: 'image' as const, src: img })),
+    ...(video ? [{ type: 'video' as const, src: video }] : [])
+  ];
+  
+  const [selectedItem, setSelectedItem] = useState(allItems[0] || null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const handlePrevious = () => {
-    const newIndex = (currentIndex - 1 + allImages.length) % allImages.length;
+    const newIndex = (currentIndex - 1 + allItems.length) % allItems.length;
     setCurrentIndex(newIndex);
-    setSelectedImage(allImages[newIndex]);
+    setSelectedItem(allItems[newIndex]);
   };
 
   const handleNext = () => {
-    const newIndex = (currentIndex + 1) % allImages.length;
+    const newIndex = (currentIndex + 1) % allItems.length;
     setCurrentIndex(newIndex);
-    setSelectedImage(allImages[newIndex]);
+    setSelectedItem(allItems[newIndex]);
   };
 
-  const handleThumbnailClick = (img: string, index: number) => {
-    setSelectedImage(img);
+  const handleThumbnailClick = (item: typeof allItems[0], index: number) => {
+    setSelectedItem(item);
     setCurrentIndex(index);
   };
 
@@ -73,30 +80,41 @@ export default function ProductImageGallery({
       {/* Main Image Display with Navigation Arrows */}
       <div className="relative group perspective-1000">
         <AnimatePresence mode="wait">
-          {selectedImage && (
+          {selectedItem && (
             <motion.div
-              key={selectedImage}
+              key={selectedItem.src}
               initial={{ opacity: 0, scale: 0.9, rotateY: -5 }}
               animate={{ opacity: 1, scale: 1, rotateY: 0 }}
               exit={{ opacity: 0, scale: 0.9, rotateY: 5 }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-              className="aspect-square rounded-[4rem] bg-white border border-gray-100 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.1)] flex items-center justify-center p-24 overflow-hidden relative touch-none"
+              onMouseMove={selectedItem.type === 'image' ? handleMouseMove : undefined}
+              onMouseLeave={selectedItem.type === 'image' ? handleMouseLeave : undefined}
+              className="aspect-square rounded-[4rem] bg-white border border-gray-100 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.1)] flex items-center justify-center p-8 overflow-hidden relative touch-none"
             >
-              <img
-                src={getMediaUrl(selectedImage)}
-                alt={productTitle}
-                style={zoomStyle}
-                className="w-full h-full object-contain transition-transform duration-200 ease-out pointer-events-none"
-              />
+              {selectedItem.type === 'image' ? (
+                <img
+                  src={getMediaUrl(selectedItem.src)}
+                  alt={productTitle}
+                  style={zoomStyle}
+                  className="w-full h-full object-contain transition-transform duration-200 ease-out pointer-events-none"
+                />
+              ) : (
+                <video
+                  src={getMediaUrl(selectedItem.src)}
+                  controls
+                  className="w-full h-full object-contain rounded-3xl"
+                  autoPlay
+                  muted
+                  loop
+                />
+              )}
               <div className="absolute inset-0 bg-gradient-to-tr from-purple-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
             </motion.div>
           )}
         </AnimatePresence>
 
         {/* Navigation Arrows */}
-        {allImages.length > 1 && (
+        {allItems.length > 1 && (
           <>
             <button
               onClick={handlePrevious}
@@ -120,7 +138,7 @@ export default function ProductImageGallery({
       </div>
 
       {/* Thumbnail Slider */}
-      {galleryImages.length > 0 && (
+      {allItems.length > 1 && (
         <div className="relative group/slider">
           {/* Scroll Buttons for Thumbnails */}
           <button 
@@ -134,22 +152,30 @@ export default function ProductImageGallery({
             ref={scrollContainerRef}
             className="flex gap-4 overflow-x-auto pb-4 px-2 no-scrollbar scroll-smooth"
           >
-            {galleryImages.map((img: string, index: number) => (
+            {allItems.map((item, index) => (
               <button
                 key={index}
-                onClick={() => handleThumbnailClick(img, index + 1)} // index + 1 because index 0 is mainImage
+                onClick={() => handleThumbnailClick(item, index)}
                 className={`flex-shrink-0 w-24 h-24 rounded-2xl bg-white flex items-center justify-center p-3 border-2 transition-all duration-500 relative overflow-hidden group/thumb ${
-                  selectedImage === img
+                  selectedItem?.src === item.src
                     ? 'border-slate-900 shadow-lg scale-105 z-10'
                     : 'border-transparent hover:border-gray-200 opacity-60 hover:opacity-100'
                 }`}
               >
-                <img
-                  src={getMediaUrl(img)}
-                  alt={`${productTitle} ${index + 1}`}
-                  className="w-full h-full object-contain group-hover/thumb:scale-110 transition-transform"
-                />
-                {selectedImage === img && (
+                {item.type === 'image' ? (
+                  <img
+                    src={getMediaUrl(item.src)}
+                    alt={`${productTitle} thumbnail`}
+                    className="w-full h-full object-contain group-hover/thumb:scale-110 transition-transform"
+                  />
+                ) : (
+                  <div className="relative w-full h-full flex items-center justify-center bg-gray-100 rounded-lg">
+                    <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white">
+                      <ChevronRight size={16} />
+                    </div>
+                  </div>
+                )}
+                {selectedItem?.src === item.src && (
                   <motion.div layoutId="thumb-ring" className="absolute inset-0 border-4 border-purple-600/20 pointer-events-none" />
                 )}
               </button>

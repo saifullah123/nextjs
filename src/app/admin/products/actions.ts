@@ -39,10 +39,8 @@ export async function createProduct(formData: FormData) {
             const mainImageFile = formData.get('mainImage') as File;
             
             if (mainImageFile && mainImageFile.size > 0) {
-                // New file uploaded
                 mainImage = await saveUploadedFile(mainImageFile, 'products');
             } else if (mainImageUrl) {
-                // Existing image picked from library
                 mainImage = mainImageUrl;
             }
         } catch (e) {
@@ -73,6 +71,24 @@ export async function createProduct(formData: FormData) {
 
         const galleryImages = [...existingGalleryImages, ...newGalleryPaths].join(',');
 
+        // Handle Video
+        let video = '';
+        try {
+            const videoUrl = formData.get('videoUrl') as string;
+            const videoFile = formData.get('video') as File;
+            
+            if (videoFile && videoFile.size > 0) {
+                video = await saveUploadedFile(videoFile, 'products/videos');
+            } else if (videoUrl) {
+                video = videoUrl;
+            }
+        } catch (e) {
+            console.error("Video upload failed:", e);
+        }
+
+        const sizesJson = formData.get('sizes') as string;
+        const sizes = sizesJson || "[]";
+
         // 4. Create in Database using Prisma
         await prisma.product.create({
             data: {
@@ -85,6 +101,8 @@ export async function createProduct(formData: FormData) {
                 longDescription: formData.get('longDescription') as string,
                 mainImage,
                 galleryImages,
+                video,
+                sizes,
                 isFeatured: formData.get('isFeatured') === 'on',
                 status: formData.get('status') as string || 'in_stock',
                 isActive: formData.get('isActive') === 'on',
@@ -172,6 +190,24 @@ export async function updateProduct(id: string, formData: FormData) {
 
         const galleryImages = [...existingGalleryImages, ...newGalleryPaths].join(',');
 
+        // Handle video upload
+        let video = formData.get('currentVideo') as string || '';
+        try {
+            const videoUrl = formData.get('videoUrl') as string;
+            const videoFile = formData.get('video') as File;
+
+            if (videoFile && videoFile.size > 0) {
+                video = await saveUploadedFile(videoFile, 'products/videos');
+            } else if (videoUrl) {
+                video = videoUrl;
+            }
+        } catch (e) {
+            console.error("Video upload failed:", e);
+        }
+
+        const sizesJson = formData.get('sizes') as string;
+        const sizes = sizesJson || "[]";
+
         await prisma.product.update({
             where: { id },
             data: {
@@ -183,6 +219,8 @@ export async function updateProduct(id: string, formData: FormData) {
                 longDescription: formData.get('longDescription') as string,
                 mainImage,
                 galleryImages,
+                video,
+                sizes,
                 isFeatured: formData.get('isFeatured') === 'on',
                 status: formData.get('status') as string || 'in_stock',
                 isActive: formData.get('isActive') === 'on',

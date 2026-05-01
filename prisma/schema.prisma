@@ -41,6 +41,9 @@ model Product {
   slug             String   @unique
   sku              String?  @unique // Stock Keeping Unit
   price            Decimal?
+  salePrice        Decimal?
+  discountPercentage Int?
+  isOnSale         Boolean  @default(false)
   quantity         Int      @default(0) // Available quantity
   shortDescription String?
   longDescription  String?
@@ -53,6 +56,8 @@ model Product {
   metaDescription  String?
   metaKeywords     String?
   tags             String[] @default([])
+  video            String?
+  sizes            String?  @default("[]") // JSON array of sizes
   categoryId       String?
   category         Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   createdAt        DateTime @default(now())

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import ProductFilter from '@/components/ProductFilter';
 import { Suspense } from 'react';
 import { Metadata } from 'next';
-import { ArrowRight, Sparkles, Box, Info } from 'lucide-react';
+import { ArrowRight, Sparkles, Box, Info, ShieldCheck } from 'lucide-react';
 import { getMediaUrl } from '@/lib/media_utils';
 
 export async function generateMetadata({
@@ -19,7 +19,7 @@ export async function generateMetadata({
     });
     if (categoryData) {
       return {
-        title: `${categoryData.name} - Luxury ProductCase`,
+        title: `${categoryData.name} - Net Gate Western Boutique`,
         description: categoryData.description || `Browse our exclusive ${categoryData.name} collection.`,
       };
     }
@@ -27,13 +27,13 @@ export async function generateMetadata({
 
   if (search) {
     return {
-      title: `Search: "${search}" - Luxury ProductCase`,
+      title: `Search: "${search}" - Net Gate Western Boutique`,
     };
   }
 
   return {
-    title: 'Archive of Excellence - Luxury ProductCase',
-    description: 'Explore our meticulously engineered collection of high-end protective masterpieces.',
+    title: 'Archive of Excellence - Net Gate Western Boutique',
+    description: 'Explore our meticulously curated collection of championship-grade Western horse gear and artisan tack.',
   };
 }
 
@@ -86,15 +86,15 @@ export default async function ProductsPage({
         <div className="flex flex-col items-center text-center mb-24 animate-fade-up">
            <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-[1px] bg-slate-200"></div>
-              <span className="text-slate-900 font-black text-[10px] uppercase tracking-[0.6em]">The Official Archive</span>
+              <span className="text-amber-600 font-black text-[10px] uppercase tracking-[0.6em]">The Official Archive</span>
               <div className="w-12 h-[1px] bg-slate-200"></div>
            </div>
-           <h1 className="text-6xl md:text-8xl font-black text-slate-950 tracking-[-0.04em] leading-none mb-10 font-heading">
-             Masterpieces of <br />
-             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">Pure Engineering</span>
+           <h1 className="text-6xl md:text-8xl font-black text-slate-950 tracking-[-0.04em] leading-none mb-10 font-heading uppercase italic">
+             Archive of <br />
+             <span className="text-amber-600">Western Excellence</span>
            </h1>
-           <p className="text-gray-400 text-xl md:text-2xl max-w-3xl font-medium leading-[1.6]">
-             Where uncompromising protection meets the pinnacle of modern aesthetic design. Explore our curated selection of high-end enclosures.
+           <p className="text-gray-500 text-xl md:text-2xl max-w-3xl font-medium leading-[1.6]">
+             Where artisanal tradition meets championship performance. Explore our curated selection of professional-grade saddles, tack, and show apparel.
            </p>
         </div>
 
@@ -126,7 +126,7 @@ export default async function ProductsPage({
                     <div className="absolute top-8 left-8 flex flex-col gap-2 z-10">
                       {product.isFeatured && (
                         <div className="bg-slate-950 text-white text-[9px] font-black px-5 py-2.5 rounded-2xl shadow-xl uppercase tracking-[0.2em] border border-white/10 flex items-center gap-2">
-                           <Sparkles size={12} className="text-yellow-400" />
+                           <Sparkles size={12} className="text-amber-400" />
                            Elite Choice
                         </div>
                       )}
@@ -134,7 +134,7 @@ export default async function ProductsPage({
 
                     <div className="absolute bottom-8 right-8 z-10 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
                        <div className="w-14 h-14 bg-white/90 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-2xl border border-white">
-                          <Info size={24} className="text-slate-950" />
+                          <ArrowRight size={24} className="text-slate-950" />
                        </div>
                     </div>
                   </div>
@@ -142,18 +142,22 @@ export default async function ProductsPage({
                   <div className="p-10">
                     <div className="flex flex-col gap-2 mb-8">
                        <div className="flex items-center gap-3">
-                          <span className="text-[10px] uppercase tracking-[0.3em] text-purple-600 font-black">{product.category?.name}</span>
+                          <span className="text-[10px] uppercase tracking-[0.3em] text-amber-600 font-black">{product.category?.name}</span>
                           <span className="w-1 h-1 rounded-full bg-gray-200"></span>
                           <span className="text-[9px] uppercase font-black text-gray-400 tracking-widest">{product.status.replace('_', ' ')}</span>
                        </div>
-                       <h3 className="text-2xl md:text-3xl font-black text-slate-950 group-hover:text-purple-600 transition-colors duration-500 tracking-tighter font-heading">
+                       <h3 className="text-2xl md:text-3xl font-black text-slate-950 group-hover:text-amber-600 transition-colors duration-500 tracking-tighter font-heading uppercase">
                          {product.title}
                        </h3>
                     </div>
                     
-                     <div className="flex items-center justify-end pt-8 border-t border-gray-50">
-                       <div className="w-16 h-16 bg-slate-950 text-white rounded-[2rem] flex items-center justify-center group-hover:bg-purple-600 transition-all duration-700 shadow-2xl group-hover:translate-x-2">
-                          <ArrowRight size={28} />
+                     <div className="flex items-center justify-between pt-8 border-t border-gray-50">
+                       <div className="flex items-center gap-2">
+                          <ShieldCheck size={16} className="text-emerald-600" />
+                          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Certified Quality</span>
+                       </div>
+                       <div className="w-12 h-12 bg-slate-100 text-slate-900 rounded-2xl flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-all duration-700">
+                          <ArrowRight size={20} />
                        </div>
                     </div>
                   </div>
@@ -170,7 +174,7 @@ export default async function ProductsPage({
             <p className="text-gray-400 text-xl font-medium max-w-md mx-auto mb-12">Consider refining your selection criteria or exploring a different masterpiece collection.</p>
             <Link 
               href="/products" 
-              className="inline-flex items-center gap-4 bg-slate-950 text-white px-10 py-5 rounded-2xl font-black text-sm hover:bg-purple-600 transition-all shadow-xl uppercase tracking-widest"
+              className="inline-flex items-center gap-4 bg-slate-950 text-white px-10 py-5 rounded-2xl font-black text-sm hover:bg-amber-600 transition-all shadow-xl uppercase tracking-widest"
             >
               Reset All Filters
               <ArrowRight size={18} />

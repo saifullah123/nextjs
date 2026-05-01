@@ -10,20 +10,20 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-const SIZES = [
-  { code: 'XXS', label: "Extra Extra Small" },
-  { code: 'XS', label: "Extra Small" },
-  { code: 'S', label: "Small" },
-  { code: 'M', label: "Medium" },
-  { code: 'L', label: "Large" },
-  { code: 'XL', label: "Extra Large" },
-  { code: 'XXL', label: "Double Extra Large" },
-  { code: '1X', label: "Plus Size 1X" },
-  { code: '2X', label: "Plus Size 2X" },
-  { code: '3X', label: "Plus Size 3X" },
-  { code: '4X', label: "Plus Size 4X" },
-  { code: '5X', label: "Plus Size 5X" },
-];
+const SIZE_LABELS: Record<string, string> = {
+  'XXS': "Extra Extra Small",
+  'XS': "Extra Small",
+  'S': "Small",
+  'M': "Medium",
+  'L': "Large",
+  'XL': "Extra Large",
+  'XXL': "Double Extra Large",
+  '1X': "Plus Size 1X",
+  '2X': "Plus Size 2X",
+  '3X': "Plus Size 3X",
+  '4X': "Plus Size 4X",
+  '5X': "Plus Size 5X",
+};
 
 const COLORS = [
   { name: 'Pure Black', hex: '#000000' },
@@ -38,9 +38,10 @@ const COLORS = [
 interface ProductInquirySectionProps {
   productTitle: string;
   status: string;
+  sizes?: string[];
 }
 
-export default function ProductInquirySection({ productTitle, status }: ProductInquirySectionProps) {
+export default function ProductInquirySection({ productTitle, status, sizes = [] }: ProductInquirySectionProps) {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
@@ -62,25 +63,29 @@ export default function ProductInquirySection({ productTitle, status }: ProductI
         </div>
 
         <div className="flex flex-wrap gap-3 p-1">
-          {SIZES.map((item) => (
-            <button
-              key={item.code}
-              onClick={() => setSelectedSize(item.code)}
-              className={cn(
-                "min-w-[56px] h-14 flex items-center justify-center px-4 rounded-xl border-2 font-black transition-all duration-300",
-                selectedSize === item.code 
-                  ? "border-slate-950 bg-slate-950 text-white shadow-lg scale-105" 
-                  : "border-gray-100 bg-white text-slate-800 hover:border-purple-200 hover:text-purple-600"
-              )}
-            >
-              <span className="text-sm tracking-tight">{item.code}</span>
-            </button>
-          ))}
+          {sizes.length > 0 ? (
+            sizes.map((size) => (
+              <button
+                key={size}
+                onClick={() => setSelectedSize(size)}
+                className={cn(
+                  "min-w-[56px] h-14 flex items-center justify-center px-4 rounded-xl border-2 font-black transition-all duration-300",
+                  selectedSize === size 
+                    ? "border-slate-950 bg-slate-950 text-white shadow-lg scale-105" 
+                    : "border-gray-100 bg-white text-slate-800 hover:border-purple-200 hover:text-purple-600"
+                )}
+              >
+                <span className="text-sm tracking-tight">{size}</span>
+              </button>
+            ))
+          ) : (
+            <p className="text-xs text-gray-400 pl-2">One Size / Standard</p>
+          )}
         </div>
         
         {selectedSize && (
           <p className="mt-3 text-[10px] font-black text-slate-950 uppercase tracking-widest pl-2">
-            Selected: <span className="text-purple-600">{SIZES.find(s => s.code === selectedSize)?.label}</span>
+            Selected: <span className="text-purple-600">{SIZE_LABELS[selectedSize] || selectedSize}</span>
           </p>
         )}
       </div>

@@ -91,6 +91,110 @@ async function main() {
     },
   });
 
+  await prisma.product.create({
+    data: {
+      title: 'Pro-Safety Riding Helmet',
+      slug: 'pro-safety-helmet',
+      price: 250.00,
+      quantity: 15,
+      shortDescription: 'Lightweight and high-impact resistance.',
+      longDescription: 'Our Pro-Safety helmet combines sleek aesthetics with top-tier protection technology, featuring a moisture-wicking liner and adjustable ventilation.',
+      mainImage: 'https://images.unsplash.com/photo-1605733513597-a8f8341084e6?q=80&w=1000&auto=format&fit=crop',
+      isFeatured: true,
+      categoryId: catApparel.id,
+    },
+  });
+
+  await prisma.product.create({
+    data: {
+      title: 'Classic Leather Riding Boots',
+      slug: 'classic-leather-boots',
+      price: 320.00,
+      quantity: 10,
+      shortDescription: 'Handcrafted tall boots for the perfect leg position.',
+      longDescription: 'Made from premium cowhide, these tall boots feature a reinforced sole and ergonomic design for all-day comfort in the saddle.',
+      mainImage: 'https://images.unsplash.com/photo-1601989398731-903126f5888e?q=80&w=1000&auto=format&fit=crop',
+      categoryId: catApparel.id,
+    },
+  });
+
+  await prisma.product.create({
+    data: {
+      title: 'Weather-Proof Horse Blanket',
+      slug: 'horse-blanket-weather-proof',
+      price: 150.00,
+      quantity: 30,
+      shortDescription: 'Heavy-duty protection for cold winter nights.',
+      mainImage: 'https://images.unsplash.com/photo-1598974357801-cbca100e65d3?q=80&w=1000&auto=format&fit=crop',
+      categoryId: catStable.id,
+    },
+  });
+
+  await prisma.product.create({
+    data: {
+      title: 'Deluxe Grooming Kit',
+      slug: 'deluxe-grooming-kit',
+      price: 85.00,
+      quantity: 50,
+      shortDescription: '10-piece professional grooming set.',
+      mainImage: 'https://images.unsplash.com/photo-1566411520896-01e7ca4726af?q=80&w=1000&auto=format&fit=crop',
+      categoryId: catStable.id,
+    },
+  });
+
+  // 3.1 Adding back Western Show Shirts
+  console.log('Seeding Show Shirts...');
+  await prisma.product.create({
+    data: {
+      title: 'Handcrafted Black Western Show Shirt',
+      slug: 'handcrafted-black-western-show-shirt',
+      price: 350.00,
+      quantity: 10,
+      shortDescription: 'Gold & Blue Crystal Equestrian Apparel.',
+      longDescription: 'Meticulously crafted with hand-placed crystals and reinforced stitching for lasting arena durability.',
+      mainImage: '/images/vibrant-red-show-shirt.png', // Using existing image as placeholder
+      isFeatured: true,
+      categoryId: catApparel.id,
+    },
+  });
+
+  await prisma.product.create({
+    data: {
+      title: 'Embellished Emerald Green Western Shirt',
+      slug: 'embellished-emerald-green-western-shirt',
+      price: 375.00,
+      quantity: 8,
+      shortDescription: 'Handcrafted Crystal Collar & Cuffs.',
+      mainImage: '/images/red-rainbow-stone-shirt.png',
+      categoryId: catApparel.id,
+    },
+  });
+
+  await prisma.product.create({
+    data: {
+      title: 'Net Gate Light Blue Western Show Shirt',
+      slug: 'light-blue-western-show-shirt',
+      price: 340.00,
+      quantity: 12,
+      shortDescription: 'Handcrafted Crystal Embellished Equestrian Apparel.',
+      mainImage: '/images/red-show-shirt.png',
+      categoryId: catApparel.id,
+    },
+  });
+
+  await prisma.product.create({
+    data: {
+      title: 'Premium Charcoal Grey Women\'s Show Shirt',
+      slug: 'premium-charcoal-grey-show-shirt',
+      price: 390.00,
+      quantity: 5,
+      shortDescription: 'Handcrafted Crystal & Stone Embroidery.',
+      mainImage: '/images/vibrant-red-show-shirt.png',
+      isFeatured: true,
+      categoryId: catApparel.id,
+    },
+  });
+
   // 4. Seed Banners
   console.log('Seeding Banners...');
   await prisma.banner.create({

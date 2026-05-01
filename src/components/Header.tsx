@@ -163,7 +163,7 @@ export default function Header() {
                     animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
                     exit={{ opacity: 0, y: 15, scale: 0.98, filter: 'blur(10px)' }}
                     transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-                    className="absolute top-full -left-48 w-[1000px] mt-6 pointer-events-auto"
+                    className="absolute top-full -left-48 w-[1000px] pt-6 pointer-events-auto"
                   >
                     <div className="bg-white rounded-[3rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.2)] border border-gray-100/50 overflow-hidden p-2 backdrop-blur-3xl">
                       <div className="grid grid-cols-12">
@@ -271,7 +271,6 @@ export default function Header() {
               </AnimatePresence>
             </div>
 
-            <NavLink href="/showcase">{t('showcase')}</NavLink>
             <NavLink href="/about">{t('about')}</NavLink>
             <NavLink href="/contact">{t('contact')}</NavLink>
           </nav>
@@ -361,7 +360,6 @@ export default function Header() {
                       {[
                         { name: tc('home'), href: '/', tag: 'New' },
                         { name: t('products'), href: '/products', tag: 'Luxury' },
-                        { name: t('showcase'), href: '/showcase' },
                         { name: t('about'), href: '/about' },
                         { name: t('contact'), href: '/contact' }
                       ].map((item, i) => (

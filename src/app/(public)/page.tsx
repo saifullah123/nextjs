@@ -138,13 +138,23 @@ export default function HomePage() {
             </motion.div>
           </div>
           
+          <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-4 animate-bounce">
+             <div className="w-[1px] h-20 bg-gradient-to-b from-white to-transparent opacity-50"></div>
+             <span className="text-[10px] text-white font-black uppercase tracking-[0.5em] opacity-40 [writing-mode:vertical-lr]">Scroll to Explore</span>
+          </div>
+
           <div className="absolute bottom-12 right-12 z-10 hidden xl:block">
-             <div className="glass-panel p-8 rounded-[2.5rem] flex flex-col gap-4 border-amber-500/20 max-w-xs">
+             <div className="glass-panel p-8 rounded-[2.5rem] flex flex-col gap-4 border-amber-500/20 max-w-xs group cursor-default hover:scale-105 transition-transform duration-500">
                 <div className="flex gap-1">
                    {[1,2,3,4,5].map(i => <Star key={i} className="w-4 h-4 fill-amber-500 text-amber-500" />)}
                 </div>
-                <p className="text-white font-bold italic text-sm">"The finest leatherwork I've ever experienced in my 20 years of riding."</p>
-                <span className="text-[10px] text-amber-500 font-black uppercase tracking-widest">— Sarah Jenkins, Pro Eventer</span>
+                <p className="text-white font-bold italic text-sm group-hover:text-amber-400 transition-colors">"The finest leatherwork I've ever experienced in my 20 years of riding."</p>
+                <div className="flex items-center gap-3">
+                   <div className="w-8 h-8 rounded-full border border-amber-500/50 p-0.5">
+                      <img src="/images/stable-lifestyle.png" className="w-full h-full object-cover rounded-full" />
+                   </div>
+                   <span className="text-[10px] text-amber-500 font-black uppercase tracking-widest">— Sarah Jenkins, Pro Eventer</span>
+                </div>
              </div>
           </div>
 
@@ -224,6 +234,70 @@ export default function HomePage() {
           )}
         </div>
         
+        {/* Editorial Breakdown Section - To break the template feel */}
+        <div className="container mx-auto px-6 mt-40">
+           <div className="grid lg:grid-cols-2 gap-24 items-center">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                className="relative aspect-[4/5] rounded-[4rem] overflow-hidden group shadow-[0_80px_150px_-30px_rgba(0,0,0,0.3)]"
+              >
+                 <img 
+                   src="/images/bridle-detail.png" 
+                   alt="Artisan Leather Craftsmanship" 
+                   className="w-full h-full object-cover transition-transform duration-[4000ms] group-hover:scale-110"
+                 />
+                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-16">
+                    <div className="max-w-xs">
+                       <span className="text-amber-500 font-black text-[10px] uppercase tracking-[0.5em] mb-4 block">Process</span>
+                       <h4 className="text-3xl font-black text-white uppercase italic leading-none tracking-tighter">120 Hours <br /> <span className="text-amber-500">Of Hand Carving</span></h4>
+                    </div>
+                 </div>
+              </motion.div>
+
+              <motion.div 
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1, delay: 0.2 }}
+                className="flex flex-col gap-12"
+              >
+                 <div className="flex items-center gap-4">
+                    <div className="w-12 h-[2px] bg-amber-600"></div>
+                    <span className="text-amber-700 font-black text-xs uppercase tracking-[0.4em]">The Signature Series</span>
+                 </div>
+                 <h3 className="text-5xl md:text-7xl font-black text-slate-950 uppercase italic leading-[0.9] tracking-tighter font-heading">
+                    Engineered for <br />
+                    <span className="text-amber-600">The Perfectionist.</span>
+                 </h3>
+                 <p className="text-gray-500 text-2xl font-medium leading-relaxed max-w-lg">
+                    We don't mass produce. We curate. Each saddle is a bespoke commission, balancing the rider's center of gravity with anatomically shaped trees for the ultimate equine connection.
+                 </p>
+                 
+                 <div className="grid grid-cols-2 gap-10 mt-6">
+                    <div className="flex flex-col gap-3">
+                       <div className="text-4xl font-black text-slate-900 tracking-tighter">0.1mm</div>
+                       <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Stitching Precision</div>
+                    </div>
+                    <div className="flex flex-col gap-3">
+                       <div className="text-4xl font-black text-slate-900 tracking-tighter">Grade A</div>
+                       <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Hermann Oak Leather</div>
+                    </div>
+                 </div>
+
+                 <Link 
+                   href="/about" 
+                   className="w-fit flex items-center gap-4 px-10 py-5 bg-slate-950 text-white rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-amber-600 transition-all shadow-2xl group"
+                 >
+                    Explore The Process
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                 </Link>
+              </motion.div>
+           </div>
+        </div>
+
         <div className="absolute -left-20 top-1/2 w-80 h-80 bg-amber-500/5 rounded-full blur-[100px] -z-10"></div>
         <div className="absolute -right-20 bottom-1/4 w-80 h-80 bg-orange-500/5 rounded-full blur-[100px] -z-10"></div>
       </section>

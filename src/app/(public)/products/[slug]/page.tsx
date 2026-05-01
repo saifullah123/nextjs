@@ -102,6 +102,7 @@ export default async function ProductDetailPage({
                 <ProductImageGallery
                   mainImage={product.mainImage}
                   galleryImages={galleryImages}
+                  video={product.video}
                   productTitle={product.title}
                 />
              </div>
@@ -154,12 +155,13 @@ export default async function ProductDetailPage({
               </div>
             )} */}
 
-            <div className="mb-16">
-               <ProductInquirySection 
-                 productTitle={product.title} 
-                 status={product.status} 
-               />
-            </div>
+             <div className="mb-16">
+                <ProductInquirySection 
+                  productTitle={product.title} 
+                  status={product.status} 
+                  sizes={product.sizes ? JSON.parse(product.sizes) : []}
+                />
+             </div>
 
             {/* Value Propositions */}
             <div className="grid grid-cols-2 gap-4 mb-20 max-w-xl">

@@ -42,17 +42,17 @@ function ContactForm() {
                 <span className="text-amber-900 font-black text-[10px] uppercase tracking-[0.5em]">Concierge Service</span>
              </div>
              <h1 className="text-5xl md:text-8xl font-black text-slate-950 tracking-[-0.04em] leading-[0.9] mb-8 md:mb-12 font-heading">
-                Let's start <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-700 to-amber-500 font-heading">the dialogue.</span>
+                Contact <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-700 to-amber-500 font-heading">Our Boutique.</span>
              </h1>
              <p className="text-gray-400 text-xl font-medium leading-relaxed mb-16 max-w-md">
-                Our dedicated support team is here to assist you with bespoke requests, order tracking, or partnership inquiries.
+                Our equestrian experts are here to assist with product inquiries, sizing for saddles and boots, or tracking your gear order.
              </p>
 
              <div className="space-y-10">
                 {[
-                  { icon: MapPin, label: 'Regional Presence', val: 'India', color: 'text-amber-700' },
-                  { icon: Mail, label: 'Direct Inquiry', val: 'ksaifullah680@gmail.com', color: 'text-amber-600' }
+                  { icon: MapPin, label: 'Boutique Location', val: 'India', color: 'text-amber-700' },
+                  { icon: Mail, label: 'General Inquiries', val: 'ksaifullah680@gmail.com', color: 'text-amber-600' }
                 ].map((item, i) => (
                   <div key={i} className="flex gap-6 items-center group">
                     <div className="w-16 h-16 rounded-[2rem] bg-white border border-gray-100 shadow-sm flex items-center justify-center transition-all duration-500 group-hover:bg-amber-950 group-hover:text-white group-hover:scale-110">
@@ -84,23 +84,23 @@ function ContactForm() {
                   <div className="w-28 h-28 bg-emerald-50 rounded-[2.5rem] flex items-center justify-center mx-auto mb-10 border border-emerald-100">
                     <CheckCircle2 size={48} className="text-emerald-500" />
                   </div>
-                  <h2 className="text-4xl md:text-5xl font-black text-slate-950 mb-6 tracking-tighter font-heading">Protocol Successful</h2>
+                  <h2 className="text-4xl md:text-5xl font-black text-slate-950 mb-6 tracking-tighter font-heading uppercase italic">Inquiry Received</h2>
                   <p className="text-gray-400 text-lg font-medium mb-12 max-w-sm mx-auto leading-relaxed">
-                    Your transmission has been logged. You will be automatically redirected to the form in 5 seconds.
+                    Thank you for contacting Net Gate. One of our equestrian specialists will review your inquiry and reach out to you shortly.
                   </p>
                   <button
                     onClick={() => window.location.reload()}
                     className="group flex items-center gap-4 bg-slate-950 text-white px-12 py-6 rounded-2xl font-black text-sm hover:bg-amber-600 transition-all shadow-2xl mx-auto uppercase tracking-widest"
                   >
-                    Send Another Transmission
-                    <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    Return to Form
+                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                   </button>
                 </motion.div>
               ) : (
                 <form action={formAction} className="space-y-10 relative z-10">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div className="flex flex-col gap-3 group">
-                       <label htmlFor="name" className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-400 pl-2 group-focus-within:text-amber-600 transition-colors">Client Signature</label>
+                       <label htmlFor="name" className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-400 pl-2 group-focus-within:text-amber-600 transition-colors">Your Name</label>
                        <div className="relative">
                           <input
                             type="text"
@@ -108,12 +108,12 @@ function ContactForm() {
                             name="name"
                             required
                             className="w-full px-8 py-5 bg-stone-50 border border-transparent rounded-[2rem] focus:bg-white focus:ring-4 focus:ring-amber-600/5 focus:border-amber-600 transition-all duration-500 outline-none font-black text-slate-950 text-sm placeholder:text-stone-300"
-                            placeholder="Full Legal Name"
+                            placeholder="Full Name"
                           />
                        </div>
                     </div>
                     <div className="flex flex-col gap-3 group">
-                       <label htmlFor="email" className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-400 pl-2 group-focus-within:text-amber-600 transition-colors">Transmission Node</label>
+                       <label htmlFor="email" className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-400 pl-2 group-focus-within:text-amber-600 transition-colors">Email Address</label>
                        <div className="relative">
                           <input
                             type="email"
@@ -131,36 +131,33 @@ function ContactForm() {
                     <div className="bg-stone-50 p-8 rounded-[2.5rem] border border-stone-100 flex flex-col gap-6 animate-in fade-in slide-in-from-top-4 duration-700">
                       <div className="flex items-center justify-between border-b border-stone-200/50 pb-4">
                          <div className="flex flex-col">
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-400 mb-1">Inquiry Item</span>
-                            <span className="text-lg font-black text-slate-950 tracking-tight">{product}</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-400 mb-1">Product Inquiry</span>
+                            <span className="text-lg font-black text-slate-950 tracking-tight uppercase">{product}</span>
                          </div>
                       </div>
                       <div className="flex flex-wrap gap-y-6 gap-x-8 md:gap-12">
                         {size && (
                           <div className="flex flex-col">
-                            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-stone-400 mb-1">Specification: Size</span>
+                            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-stone-400 mb-1">Selected Size</span>
                             <span className="text-sm font-black text-amber-700 bg-amber-50 px-3 py-1 rounded-lg border border-amber-100 w-fit">{size}</span>
                           </div>
                         )}
                         {color && (
                           <div className="flex flex-col">
-                            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-stone-400 mb-1">Specification: Color</span>
+                            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-stone-400 mb-1">Selected Color</span>
                             <span className="text-sm font-black text-amber-700 bg-amber-50 px-3 py-1 rounded-lg border border-amber-100 w-fit">{color}</span>
                           </div>
                         )}
                       </div>
                       
-                      {/* Hidden Fields for Submission */}
                       <input type="hidden" name="product" value={product} />
                       <input type="hidden" name="size" value={size || ''} />
                       <input type="hidden" name="color" value={color || ''} />
                     </div>
                   )}
 
-
-
                   <div className="flex flex-col gap-3 group">
-                     <label htmlFor="message" className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-400 pl-2 group-focus-within:text-amber-600 transition-colors">Inquiry Specification</label>
+                     <label htmlFor="message" className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-400 pl-2 group-focus-within:text-amber-600 transition-colors">How can we assist you?</label>
                      <div className="relative">
                         <textarea
                           id="message"
@@ -168,7 +165,7 @@ function ContactForm() {
                           required
                           rows={6}
                           className="w-full px-8 py-6 bg-stone-50 border border-transparent rounded-[2.5rem] focus:bg-white focus:ring-4 focus:ring-amber-600/5 focus:border-amber-600 transition-all duration-500 outline-none font-black text-slate-950 text-sm placeholder:text-stone-300 resize-none"
-                          placeholder="Please elaborate on your requirements..."
+                          placeholder="Please describe your requirements or custom specifications..."
                         />
                          <MessageSquare className="absolute right-8 bottom-8 text-stone-100 group-focus-within:text-amber-100 transition-colors" size={40} />
                      </div>
@@ -180,7 +177,7 @@ function ContactForm() {
                       animate={{ opacity: 1, x: 0 }}
                       className="bg-rose-50 border border-rose-100 text-rose-600 px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-sm"
                     >
-                      Protocol Error: {state.error}
+                      Error: {state.error}
                     </motion.div>
                   )}
 
@@ -189,7 +186,7 @@ function ContactForm() {
                     disabled={isPending}
                     className="w-full flex items-center justify-between bg-slate-950 text-white p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] font-black text-lg md:text-xl hover:bg-amber-600 transition-all duration-700 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] disabled:opacity-50 disabled:cursor-not-allowed group"
                   >
-                    <span>{isPending ? 'Propagating Transmission...' : 'Transmit Inquiry'}</span>
+                    <span>{isPending ? 'Sending Inquiry...' : 'Submit Inquiry'}</span>
                     <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center group-hover:bg-white group-hover:text-amber-700 transition-all">
                        <Send size={24} className={cn("transition-transform duration-500", isPending ? "animate-pulse" : "group-hover:translate-x-1 group-hover:-translate-y-1")} />
                     </div>

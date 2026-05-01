@@ -1,91 +1,91 @@
 {
   "Header": {
-    "products": "Western Collection",
-    "collections": "Signature Collections",
+    "products": "Horse Tack & Gear",
+    "collections": "Equestrian Shop",
     "about": "Our Heritage",
-    "contact": "Concierge",
-    "searchPlaceholder": "Search for Western shirts, show pads...",
-    "shopNow": "Shop Now",
-    "masterpieces": "All Masterpieces",
-    "showcase": "Showcase",
+    "contact": "Contact Us",
+    "searchPlaceholder": "Search saddles, bridles, helmets...",
+    "shopNow": "Shop Horse Gear",
+    "masterpieces": "Featured Items",
+    "showcase": "Signature Collection",
     "selectLanguage": "Select Language",
-    "globalLanguage": "Global Language"
+    "globalLanguage": "Language"
   },
   "PromoBar": {
-    "summerDrop": "Exclusive Summer Collection 2026",
-    "freeShipping": "Premium Stable Delivery Available",
-    "limitedStock": "Limited Artisanal Pieces Remaining"
+    "summerDrop": "New 2026 Crystal Show Collection Now Live",
+    "freeShipping": "Worldwide Shipping on Premium Horse Tack",
+    "limitedStock": "Bespoke Handcrafted Shirts: Limited Availability"
   },
   "Hero": {
-    "badge": "Western Excellence 2026",
-    "title": "Elite Western Apparel <br/><span>for the modern rider.</span>",
-    "subtitle": "Discover the perfect fusion of traditional Western craftsmanship and modern performance fabrics. Handcrafted for the arena.",
-    "explore": "Explore Collection",
+    "badge": "Elite Western Performance 2026",
+    "title": "Master the Arena <br/><span>With Championship Gear.</span>",
+    "subtitle": "Discover the company that champions keep. From premium Hermann Oak leather saddles to bespoke show shirts, we provide the edge you need for a winning ride.",
+    "explore": "Shop Collection",
     "ourStory": "Our Heritage"
   },
   "Featured": {
-    "label": "Curated Craftsmanship",
-    "title": "Explore Our <span>Signature Selection</span>",
-    "subtitle": "Find the perfect gear that reflects your equestrian style and professional needs. Every piece is a testament to quality.",
-    "viewAll": "View Full Catalog"
+    "label": "Curated Excellence",
+    "title": "The Artisan <span>Equestrian Series</span>",
+    "subtitle": "High-performance gear featuring precision-balanced trees and hand-carved details for the discerning rider.",
+    "viewAll": "View Full Shop"
   },
   "WhyUs": {
-    "title": "Everything you and your horse <span>ever deserved.</span>",
+    "title": "Engineered for <span>Professional Dominance.</span>",
     "military": {
-      "title": "Premium Fabrics",
-      "desc": "Hand-selected, high-performance fabrics that ensure maximum comfort and lasting durability in the show ring."
+      "title": "Artisanal Integrity",
+      "desc": "Hand-carved designs using genuine Hermann Oak leather and stainless steel hardware for arena-tested durability."
     },
     "eco": {
-      "title": "Show-Ready Design",
-      "desc": "Engineered for the elite competitor, featuring intricate embellishments and ergonomic fits."
+      "title": "Competition Ready",
+      "desc": "From lead line to World Champion classes, our gear is anatomically shaped to enhance performance and comfort."
     },
     "life": {
-      "title": "Heirloom Quality",
-      "desc": "Timeless designs built to last. Hand-finished Western apparel that defines excellence."
+      "title": "Master Tailoring",
+      "desc": "Bespoke show apparel featuring 4-way stretch fabrics and hand-set crystals for maximum impact in the show ring."
     }
   },
   "Newsletter": {
-    "title": "Join Our Elite Circle.",
-    "subtitle": "Subscribe to our exclusive mailing list for early access to new collections and private equestrian events.",
-    "placeholder": "Your email address...",
-    "button": "Subscribe"
+    "title": "Join the Elite Circle.",
+    "subtitle": "Receive exclusive updates on new Western show collections, rodeo trends, and private boutique events.",
+    "placeholder": "Enter your professional email...",
+    "button": "Join Now"
   },
   "Footer": {
-    "tagline": "Manufacturing premium Western shirts and show pad blankets, merging traditional craftsmanship with modern arena performance.",
-    "shopTitle": "The Collection",
-    "shopAll": "View All Apparel",
-    "shopFeatured": "Signature Shirts",
+    "tagline": "The Horse Rider's Shop: The Company Champions Keep. Your premier destination for artisanal horse riding equipment and elite equestrian supplies.",
+    "shopTitle": "The Shop",
+    "shopAll": "View All Gear",
+    "shopFeatured": "Premium Saddles",
     "shopNew": "New Arrivals",
-    "supportTitle": "Concierge Services",
-    "supportFAQ": "Care & Maintenance",
-    "supportShipping": "Worldwide Delivery",
-    "supportReturns": "Exchange Policy",
-    "contactTitle": "Direct Inquiries",
-    "luxuryTack": "Western Luxe",
-    "clientService": "Client Service",
-    "contactPhone": "Contact Phone",
-    "verifiedMerchant": "Verified Merchant",
-    "fastShipping": "Fast Global Shipping",
-    "copyright": "© {year} EquineCase Archive. All Rights Reserved.",
-    "madeBy": "Crafted with passion for the equestrian community."
+    "supportTitle": "Customer Care",
+    "supportFAQ": "Gear Care Guide",
+    "supportShipping": "Shipping Info",
+    "supportReturns": "Return Policy",
+    "contactTitle": "Get In Touch",
+    "luxuryTack": "Horse Tack",
+    "clientService": "Support",
+    "contactPhone": "Call Us",
+    "verifiedMerchant": "Verified Quality",
+    "fastShipping": "Fast Shipping",
+    "copyright": "© {year} The Horse Rider's Shop. All Rights Reserved.",
+    "madeBy": "Built for the love of horses."
   },
   "Community": {
-    "badge": "Equestrian Excellence 2026",
-    "title": "Trusted by <br/> <span>Elite Collectors.</span>",
-    "description": "Join over 50,000+ elite riders who trust EquineElite with their competitive performance and daily training.",
-    "stat1": "Full Grain Leather",
-    "stat2": "Rider Rating",
-    "quote": "\"The only tack that feels as graceful as the horse it adorns.\"",
-    "artisan": "Master Artisan",
-    "experience": "12 Years Crafting"
+    "badge": "The Net Gate Legacy",
+    "title": "The Choice of <br/> <span>Champions Worldwide.</span>",
+    "description": "From local rodeos to World Champion classes, Net Gate is the trusted authority for equestrians who settle for nothing but perfection.",
+    "stat1": "Artisan Quality",
+    "stat2": "Professional Rating",
+    "quote": "\"The attention to detail and precision-balanced design is unparalleled. Net Gate helps me step into the arena with absolute confidence.\"",
+    "artisan": "Master Saddler",
+    "experience": "20+ Years Excellence"
   },
   "Testimonials": {
-    "label": "The Elite Circle",
-    "title": "Voices of <br/><span>Advocates.</span>"
+    "label": "Client Success Stories",
+    "title": "Voices from <br/><span>The Professional Ring.</span>"
   },
   "HeroSlider": {
-    "badge": "Luxury Equestrian Experience",
-    "explore": "Explore Collection"
+    "badge": "Elite Western Boutique",
+    "explore": "View Collections"
   },
   "Common": {
     "learnMore": "Learn More",
@@ -96,48 +96,66 @@
     "activeFilters": "Active Filters",
     "price": "Price",
     "msrp": "MSRP",
-    "investment": "Investment",
-    "inStock": "In Stable",
-    "outOfStock": "Out of Stock",
-    "preOrder": "Reserved",
-    "shipsWithin": "Dispatched within 24 Hours",
+    "investment": "Value",
+    "inStock": "In Stock",
+    "outOfStock": "Sold Out",
+    "preOrder": "Pre-Order",
+    "shipsWithin": "Ships within 24-48 Hours",
     "exclusivePreOrder": "Exclusive Pre-Order",
-    "temporarilyUnavailable": "Temporarily Unavailable",
-    "specifications": "Refined Details",
-    "craftsmanship": "Master Craftsmanship",
+    "temporarilyUnavailable": "Coming Soon",
+    "specifications": "Product Details",
+    "craftsmanship": "Artisanal Quality",
     "security": "Stability",
-    "material": "Leather Grade",
-    "logistics": "Logistics",
-    "handFinished": "Hand-Finished",
-    "eliteWarranty": "Legacy Warranty",
-    "spaceGrade": "Pro Grade",
-    "globalPriority": "Global Express"
+    "material": "Textile Grade",
+    "logistics": "Global Logistics",
+    "handFinished": "Bespoke Finish",
+    "eliteWarranty": "Arena Guarantee",
+    "spaceGrade": "Competition Grade",
+    "globalPriority": "Worldwide Shipping",
+    "sale": "Sale",
+    "off": "OFF",
+    "limitedTime": "Limited Time Offer"
+  },
+  "Sale": {
+    "badge": "Flash Sale",
+    "title": "The <span>Champion's</span> <br/> Exclusive Deals",
+    "subtitle": "Limited time offers on professional-grade horse tack and arena apparel. Invest in excellence without compromise.",
+    "viewDeals": "Explore Deals",
+    "endsIn": "Offers end soon"
+  },
+  "HorseItems": {
+    "title": "Elite Horse <span>Essentials</span>",
+    "subtitle": "Precision-engineered gear for the competitive Western horse.",
+    "saddles": "Precision Saddles",
+    "bridles": "Artisan Bridles",
+    "apparel": "Performance Apparel",
+    "grooming": "Luxury Grooming"
   },
   "Showcase": {
-    "badge": "New Show Collection",
-    "title": "The <span>Artisanal</span> <br/> Show Shirt",
-    "description": "Crafted from the finest breathable fabrics, reinforced with hand-placed crystals and gold embellishments. A masterpiece that defines a new era of Western show excellence.",
-    "premium": "Premium",
-    "materials": "Materials",
-    "ergonomic": "Ergonomic",
-    "construction": "Construction",
-    "inquire": "Inquire Now",
-    "owners": "+120 Owners",
-    "hotspot1": "Hand-Stitched Leather",
-    "hotspot2": "Gold-Plated Hardware",
-    "hotspot3": "Ergonomic Seat",
-    "detailsTitle": "Detail Matters",
+    "badge": "Signature Show Shirt",
+    "title": "The <span>Crystal</span> <br/> Embroidered Blouse",
+    "description": "A masterpiece of Western show apparel. Featuring over 1,000 hand-placed crystals on premium 4-way stretch fabric. Designed for maximum visual impact and moisture-wicking performance.",
+    "premium": "Elite",
+    "materials": "Fabrics",
+    "ergonomic": "Performance",
+    "construction": "Tailoring",
+    "inquire": "Check Availability",
+    "owners": "+500 Competitors",
+    "hotspot1": "Precision Embroidery",
+    "hotspot2": "Elite Show Crystals",
+    "hotspot3": "Tailored Performance Fit",
+    "detailsTitle": "Crafted for the Ring",
     "feature1": {
-      "title": "Italian Leather",
-      "desc": "Sourced from the heart of Tuscany, our leather undergoes a 6-month vegetable tanning process."
+      "title": "Hand-Placed Crystals",
+      "desc": "Each stone is set by hand to ensure a secure, high-luster finish that catches the light from every angle."
     },
     "feature2": {
-      "title": "Pure Gold Hardware",
-      "desc": "Every buckle and stud is triple-plated in 24k gold for a timeless luster that never fades."
+      "title": "4-Way Stretch Fabric",
+      "desc": "Engineered for the active rider, providing full range of motion while maintaining a crisp, professional silhouette."
     },
     "feature3": {
-      "title": "Custom Fit",
-      "desc": "Advanced 3D scanning technology ensures each saddle is matched perfectly to your horse's anatomy."
+      "title": "Moisture-Wicking Tech",
+      "desc": "Keep cool under the arena lights with our advanced breathable technology integrated into every show shirt."
     }
   }
 }

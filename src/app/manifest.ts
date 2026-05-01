@@ -2,13 +2,13 @@ import { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
     return {
-        name: 'Product Case Shop',
-        short_name: 'ProductCase',
-        description: 'Premium quality cases for your products',
+        name: 'Net Gate Western Boutique',
+        short_name: 'Net Gate',
+        description: 'Premium handcrafted Western show shirts and equestrian gear.',
         start_url: '/',
         display: 'standalone',
         background_color: '#ffffff',
-        theme_color: '#9333ea', // Purple-600
+        theme_color: '#d97706', // Amber-600
         icons: [
             {
                 src: '/favicon.ico',

@@ -7,9 +7,10 @@ import { useRouter } from 'next/navigation';
 import { FullScreenLoader } from '@/components/FullScreenLoader';
 import { getMediaUrl } from '@/lib/media_utils';
 import { MediaPicker } from './MediaPicker';
-import { Upload, Search, X } from 'lucide-react';
+import { Upload, Search, X, Video } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import 'react-quill-new/dist/quill.snow.css';
+import { VideoUpload } from '@/components/VideoUpload';
 
 // Dynamically import ReactQuill for client-side rendering
 const ReactQuill = dynamic(() => import('react-quill-new'), { 
@@ -38,6 +39,8 @@ interface ProductFormClientProps {
     metaDescription?: string;
     metaKeywords?: string;
     tags?: string[];
+    video?: string;
+    sizes?: string; // JSON string
   };
   submitLabel: string;
   isEdit?: boolean;
@@ -69,6 +72,12 @@ export function ProductFormClient({
   const [longDescription, setLongDescription] = useState(initialData?.longDescription || '');
   const [tags, setTags] = useState<string[]>(initialData?.tags || []);
   const [tagInput, setTagInput] = useState('');
+  
+  const [selectedSizes, setSelectedSizes] = useState<string[]>(
+    initialData?.sizes ? JSON.parse(initialData.sizes) : []
+  );
+
+  const AVAILABLE_SIZES = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', '1X', '2X', '3X', '4X', '5X'];
 
 
   const handleGalleryLibrarySelect = (url: string | string[]) => {
@@ -168,6 +177,7 @@ export function ProductFormClient({
     formData.set('shortDescription', shortDescription);
     formData.set('longDescription', longDescription);
     formData.append('tags', tags.join(','));
+    formData.append('sizes', JSON.stringify(selectedSizes));
 
     startTransition(async () => {
       try {
@@ -278,6 +288,37 @@ export function ProductFormClient({
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
                 placeholder="0"
               />
+            </div>
+
+            <div className="col-span-2">
+              <label className="block text-sm font-semibold text-gray-700 mb-4">
+                Available Sizes
+              </label>
+              <div className="grid grid-cols-4 sm:grid-cols-6 gap-3">
+                {AVAILABLE_SIZES.map((size) => (
+                  <button
+                    key={size}
+                    type="button"
+                    onClick={() => {
+                      setSelectedSizes(prev => 
+                        prev.includes(size) 
+                          ? prev.filter(s => s !== size) 
+                          : [...prev, size]
+                      );
+                    }}
+                    className={`h-12 flex items-center justify-center rounded-xl border-2 font-bold transition-all ${
+                      selectedSizes.includes(size)
+                        ? 'border-purple-600 bg-purple-600 text-white shadow-md scale-105'
+                        : 'border-gray-200 bg-white text-gray-600 hover:border-purple-200 hover:text-purple-600'
+                    }`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+              <p className="text-[10px] text-gray-400 mt-2 italic">
+                Selected: {selectedSizes.length > 0 ? selectedSizes.join(', ') : 'None'}
+              </p>
             </div>
 
             <div className="col-span-2">
@@ -431,6 +472,14 @@ export function ProductFormClient({
                 label="Main Product Image"
                 required={!initialData?.mainImage}
                 currentImage={initialData?.mainImage}
+              />
+            </div>
+
+            <div className="col-span-2">
+              <VideoUpload
+                name="video"
+                label="Product Showcase Video"
+                currentVideo={initialData?.video}
               />
             </div>
 

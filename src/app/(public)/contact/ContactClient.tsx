@@ -4,7 +4,7 @@ import { submitContactForm } from './actions';
 import { useActionState, Suspense, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Send, MapPin, Mail, Phone, MessageSquare, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Send, MapPin, Mail, Phone, MessageSquare, Sparkles, CheckCircle2, ArrowRight } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
